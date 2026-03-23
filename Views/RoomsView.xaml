@@ -1,0 +1,66 @@
+﻿<Page x:Class="HotelSystem.Views.RoomsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#ECF0F1">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+            <Button Content="+ Добавить номер" Click="AddRoom_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Border>
+
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
+            <DataGrid x:Name="RoomsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                    <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="120"/>
+                    <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="100"/>
+                    <DataGridTextColumn Header="Цена" Binding="{Binding Price, StringFormat={}{0:N0}}" Width="100"/>
+                    <DataGridTextColumn Header="Вместимость" Binding="{Binding Capacity}" Width="80"/>
+                    <DataGridTemplateColumn Header="Статус" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="10" Padding="8,4">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="Free"><Setter Property="Background" Value="#27AE60"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Occupied"><Setter Property="Background" Value="#E74C3C"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Cleaning"><Setter Property="Background" Value="#F39C12"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Repair"><Setter Property="Background" Value="#95A5A6"/></DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding Status}" Foreground="White" FontWeight="SemiBold" FontSize="11"/>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Расходы" Binding="{Binding TotalExpenses, StringFormat={}{0:N0}}" Width="100"/>
+                    <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="*"/>
+                    <DataGridTemplateColumn Header="Действия" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="E" Click="EditRoom_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
+                                    <Button Content="X" Click="DeleteRoom_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</Page>

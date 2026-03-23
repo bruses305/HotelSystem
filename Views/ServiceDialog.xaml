@@ -1,0 +1,31 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" x:Class="HotelSystem.Views.ServiceDialog"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Услуга" Height="370" Width="380"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#ECF0F1"
+        Closing="Window_Closing">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Услуга" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="Название" FontWeight="SemiBold" Margin="0,0,0,5"/>
+            <TextBox x:Name="NameTextBox" Padding="10" Margin="0,0,0,15"/>
+            <TextBlock Text="Описание" FontWeight="SemiBold" Margin="0,0,0,5"/>
+            <TextBox x:Name="DescriptionTextBox" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Padding="10" Margin="0,0,0,15"/>
+            <TextBlock Text="Цена" FontWeight="SemiBold" Margin="0,0,0,5"/>
+            <TextBox x:Name="PriceTextBox" Padding="10" Margin="0,0,0,15"/>
+            <CheckBox x:Name="IsActiveCheckBox" Content="Активна" IsChecked="True"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Отмена" Click="Cancel_Click" Padding="20,10" Margin="0,0,10,0"/>
+            <Button Content="Сохранить" Click="Save_Click" Background="#27AE60" Foreground="White" Padding="20,10" BorderThickness="0">
+                <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center"/></Border></ControlTemplate></Button.Template>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

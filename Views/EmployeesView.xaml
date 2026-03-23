@@ -1,0 +1,63 @@
+﻿<Page x:Class="HotelSystem.Views.EmployeesView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#ECF0F1">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+            <Button Content="+ Добавить сотрудника" Click="AddEmployee_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
+                <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate></Button.Template>
+            </Button>
+        </Border>
+
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
+            <DataGrid x:Name="EmployeesGrid" 
+                      AutoGenerateColumns="False" 
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      GridLinesVisibility="Horizontal"
+                      Background="White"
+                      BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                    <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}" Width="180"/>
+                    <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="120"/>
+                    <DataGridTextColumn Header="Должность" Binding="{Binding Position}" Width="150"/>
+                    <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="130"/>
+                    <DataGridTextColumn Header="Зарплата" Binding="{Binding Salary, StringFormat={}{0:N0}}" Width="100"/>
+                    <DataGridTemplateColumn Header="Роль" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="10" Padding="8,4">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Role}" Value="Admin"><Setter Property="Background" Value="#9B59B6"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Role}" Value="Employee"><Setter Property="Background" Value="#3498DB"/></DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding Role}" Foreground="White" FontWeight="SemiBold" FontSize="11"/>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Действия" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="E" Click="EditEmployee_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
+                                    <Button Content="X" Click="DeleteEmployee_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</Page>

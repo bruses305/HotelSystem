@@ -1,0 +1,60 @@
+﻿<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" x:Class="HotelSystem.Views.CalendarView"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#ECF0F1">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="&lt;" Click="PreviousMonth_Click" Padding="15,8" FontSize="16"/>
+                <TextBlock x:Name="MonthYearText" Grid.Column="1" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button Content="&gt;" Grid.Column="2" Click="NextMonth_Click" Padding="15,8" FontSize="16" Margin="0,0,15,0"/>
+                
+                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                    <TextBlock Text="Номер:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <ComboBox x:Name="RoomFilterComboBox" Width="120" DisplayMemberPath="Name" SelectedValuePath="Id" SelectionChanged="RoomFilter_SelectionChanged"/>
+                    <Button Content="Очистить" Click="ClearFilter_Click" Padding="10,8" Margin="5,0,0,0" Background="#E74C3C" Foreground="White" BorderThickness="0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Дни недели -->
+                <Grid Grid.Row="0" Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Пн" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#7F8C8D"/>
+                    <TextBlock Grid.Column="1" Text="Вт" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#7F8C8D"/>
+                    <TextBlock Grid.Column="2" Text="Ср" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#7F8C8D"/>
+                    <TextBlock Grid.Column="3" Text="Чт" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#7F8C8D"/>
+                    <TextBlock Grid.Column="4" Text="Пт" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#7F8C8D"/>
+                    <TextBlock Grid.Column="5" Text="Сб" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#7F8C8D"/>
+                    <TextBlock Grid.Column="6" Text="Вс" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#7F8C8D"/>
+                </Grid>
+                
+                <!-- Календарь -->
+                <UniformGrid x:Name="CalendarGrid" Grid.Row="1" Columns="7" Rows="6"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

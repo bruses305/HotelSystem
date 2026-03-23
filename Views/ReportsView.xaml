@@ -1,0 +1,62 @@
+﻿<Page xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" x:Class="HotelSystem.Views.ReportsView"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:oxy="http://oxyplot.org/wpf"
+      Background="#ECF0F1">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Период:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <DatePicker x:Name="StartDatePicker" Width="120" Margin="0,0,10,0"/>
+                <TextBlock Text=" - " VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <DatePicker x:Name="EndDatePicker" Width="120" Margin="0,0,20,0"/>
+                <Button Content="Сформировать" Click="GenerateReport_Click" Background="#3498DB" Foreground="White" Padding="15,5" BorderThickness="0">
+                    <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate></Button.Template>
+                </Button>
+            </StackPanel>
+        </Border>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <Border Grid.Row="0" Grid.Column="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,7,7">
+                <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <TextBlock Text="Загрузка отеля" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <oxy:PlotView x:Name="OccupancyChart" Grid.Row="1"/>
+                </Grid>
+            </Border>
+            <Border Grid.Row="0" Grid.Column="1" Background="White" CornerRadius="8" Padding="15" Margin="7,0,0,7">
+                <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <TextBlock Text="Доходы по месяцам" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <oxy:PlotView x:Name="IncomeChart" Grid.Row="1"/>
+                </Grid>
+            </Border>
+            <Border Grid.Row="1" Grid.Column="0" Background="White" CornerRadius="8" Padding="15" Margin="0,7,7,0">
+                <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <TextBlock Text="Прибыльность номеров" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <DataGrid x:Name="RoomProfitGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" Background="White" BorderThickness="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Номер" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Доход" Binding="{Binding Income, StringFormat=N0}" Width="80"/>
+                            <DataGridTextColumn Header="Расходы" Binding="{Binding Expenses, StringFormat=N0}" Width="80"/>
+                            <DataGridTextColumn Header="Прибыль" Binding="{Binding Profit, StringFormat=N0}" Width="80"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+            <Border Grid.Row="1" Grid.Column="1" Background="White" CornerRadius="8" Padding="15" Margin="7,7,0,0">
+                <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <TextBlock Text="Топ клиенты" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <DataGrid x:Name="TopClientsGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" Background="White" BorderThickness="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Клиент" Binding="{Binding FullName}" Width="*"/>
+                            <DataGridTextColumn Header="Потрачено" Binding="{Binding TotalSpent, StringFormat=N0}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,69 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" x:Class="HotelSystem.Views.RoomDialog"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Номер" Height="620" Width="450"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#ECF0F1"
+        Closing="Window_Closing">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Номер" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <TextBlock Text="Название" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="NameTextBox" Padding="10" Margin="0,0,0,15"/>
+                <TextBlock Text="Тип номера" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <ComboBox x:Name="TypeComboBox" Margin="0,0,0,15" Padding="10">
+                    <ComboBoxItem Content="Стандарт" Tag="Standard"/>
+                    <ComboBoxItem Content="Люкс" Tag="Lux"/>
+                    <ComboBoxItem Content="Апартаменты" Tag="Apartments"/>
+                </ComboBox>
+                <TextBlock Text="Цена за сутки" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="PriceTextBox" Padding="10" Margin="0,0,0,15"/>
+                <TextBlock Text="Вместимость (чел.)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="CapacityTextBox" Padding="10" Margin="0,0,0,15"/>
+                <TextBlock Text="Описание" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="DescriptionTextBox" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Padding="10" Margin="0,0,0,15"/>
+                <TextBlock Text="Расходы на содержание" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,0,5,0">
+                        <TextBlock Text="Вода" Margin="0,0,0,5"/>
+                        <TextBox x:Name="WaterTextBox" Padding="10"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                        <TextBlock Text="Электричество" Margin="0,0,0,5"/>
+                        <TextBox x:Name="ElectricityTextBox" Padding="10"/>
+                    </StackPanel>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,0,5,0">
+                        <TextBlock Text="Интернет" Margin="0,0,0,5"/>
+                        <TextBox x:Name="InternetTextBox" Padding="10"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                        <TextBlock Text="Уборка" Margin="0,0,0,5"/>
+                        <TextBox x:Name="CleaningTextBox" Padding="10"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Отмена" Click="Cancel_Click" Padding="20,10" Margin="0,0,10,0"/>
+            <Button Content="Сохранить" Click="Save_Click" Background="#27AE60" Foreground="White" Padding="20,10" BorderThickness="0">
+                <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center"/></Border></ControlTemplate></Button.Template>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

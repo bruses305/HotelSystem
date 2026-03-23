@@ -1,0 +1,91 @@
+﻿<Page x:Class="HotelSystem.Views.LogsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#ECF0F1">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Фильтры -->
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="LevelFilter" Width="150" Margin="0,0,10,0" SelectionChanged="FilterChanged">
+                    <ComboBoxItem Content="Все уровни" IsSelected="True"/>
+                    <ComboBoxItem Content="Обычные"/>
+                    <ComboBoxItem Content="Средние"/>
+                    <ComboBoxItem Content="Важные"/>
+                </ComboBox>
+                <DatePicker x:Name="StartDatePicker" Width="120" Margin="0,0,10,0" SelectedDateChanged="FilterChanged"/>
+                <DatePicker x:Name="EndDatePicker" Width="120" Margin="0,0,10,0" SelectedDateChanged="FilterChanged"/>
+                <Button Content="Очистить старые логи" Click="ClearOldLogs_Click" Background="#E74C3C" Foreground="White" Padding="15,5" BorderThickness="0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- Статистика -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Всего логов: " VerticalAlignment="Center"/>
+                <TextBlock x:Name="TotalLogsText" Text="0" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,30,0"/>
+                <TextBlock Text="Обычных: " VerticalAlignment="Center"/>
+                <TextBlock x:Name="LowLogsText" Text="0" FontWeight="Bold" Foreground="#27AE60" VerticalAlignment="Center" Margin="0,0,30,0"/>
+                <TextBlock Text="Средних: " VerticalAlignment="Center"/>
+                <TextBlock x:Name="MediumLogsText" Text="0" FontWeight="Bold" Foreground="#F39C12" VerticalAlignment="Center" Margin="0,0,30,0"/>
+                <TextBlock Text="Важных: " VerticalAlignment="Center"/>
+                <TextBlock x:Name="CriticalLogsText" Text="0" FontWeight="Bold" Foreground="#E74C3C" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Таблица логов -->
+        <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="15">
+            <DataGrid x:Name="LogsGrid" 
+                      AutoGenerateColumns="False" 
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      GridLinesVisibility="Horizontal"
+                      Background="White"
+                      BorderThickness="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                    <DataGridTextColumn Header="Дата" Binding="{Binding LogDate, StringFormat=dd.MM.yyyy HH:mm}" Width="150"/>
+                    <DataGridTemplateColumn Header="Уровень" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="10" Padding="8,4">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Level}" Value="Low">
+                                                    <Setter Property="Background" Value="#27AE60"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Level}" Value="Medium">
+                                                    <Setter Property="Background" Value="#F39C12"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Level}" Value="Critical">
+                                                    <Setter Property="Background" Value="#E74C3C"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding Level}" Foreground="White" FontWeight="SemiBold" FontSize="11"/>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Источник" Binding="{Binding Source}" Width="120"/>
+                    <DataGridTextColumn Header="Сообщение" Binding="{Binding Message}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</Page>

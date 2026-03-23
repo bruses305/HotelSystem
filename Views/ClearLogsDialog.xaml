@@ -1,0 +1,25 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" x:Class="HotelSystem.Views.ClearLogsDialog"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Очистка логов" Height="200" Width="280"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#ECF0F1">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Очистка старых логов" FontSize="16" FontWeight="Bold"/>
+        <StackPanel Grid.Row="1" Margin="0,20,0,0">
+            <TextBlock Text="Удалить логи старше (дней):" Margin="0,0,0,10"/>
+            <TextBox x:Name="DaysTextBox" Text="30" Padding="10"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Отмена" Click="Cancel_Click" Padding="15,8" Margin="0,0,10,0"/>
+            <Button Content="Очистить" Click="Clear_Click" Background="#E74C3C" Foreground="White" Padding="15,8" BorderThickness="0">
+                <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate></Button.Template>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

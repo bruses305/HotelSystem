@@ -1,0 +1,42 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" x:Class="HotelSystem.Views.BookingDialog"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Бронирование" Height="500" Width="420"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#ECF0F1"
+        Closing="Window_Closing">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Бронирование номера" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <TextBlock Text="Номер" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <ComboBox x:Name="RoomComboBox" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,15" Padding="10" SelectionChanged="RoomComboBox_SelectionChanged"/>
+                <TextBlock Text="Клиент" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <ComboBox x:Name="ClientComboBox" DisplayMemberPath="FullName" SelectedValuePath="Id" Margin="0,0,0,15" Padding="10"/>
+                <TextBlock Text="Дата заезда" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <DatePicker x:Name="CheckInDatePicker" Margin="0,0,0,15" Padding="10" SelectedDateChanged="CheckInDatePicker_SelectedDateChanged"/>
+                <TextBlock Text="Дата выезда" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <DatePicker x:Name="CheckOutDatePicker" Margin="0,0,0,15" Padding="10" SelectedDateChanged="CheckOutDatePicker_SelectedDateChanged"/>
+                <TextBlock Text="Примечание" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="NotesTextBox" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Padding="10" Margin="0,0,0,15"/>
+                <Border Background="#3498DB" CornerRadius="8" Padding="15" Margin="0,10,0,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Итого: " Foreground="White" FontSize="16"/>
+                        <TextBlock x:Name="TotalPriceText" Text="0" Foreground="White" FontSize="16" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Отмена" Click="Cancel_Click" Padding="20,10" Margin="0,0,10,0"/>
+            <Button Content="Сохранить" Click="Save_Click" Background="#27AE60" Foreground="White" Padding="20,10" BorderThickness="0">
+                <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center"/></Border></ControlTemplate></Button.Template>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>
