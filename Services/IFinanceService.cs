@@ -11,6 +11,27 @@ public class FinanceReport
     public Dictionary<TransactionCategory, double> ExpensesByCategory { get; set; } = new();
     public Dictionary<int, double> IncomeByRoom { get; set; } = new();
     public Dictionary<string, double> IncomeByMonth { get; set; } = new();
+    public List<BookingTransactionDetail> BookingDetails { get; set; } = new();
+    public List<ServiceTransactionDetail> ServiceDetails { get; set; } = new();
+    public List<Transaction> Transactions { get; set; } = new(); // Для использования в отчётах
+}
+
+public class BookingTransactionDetail
+{
+    public DateTime Date { get; set; }
+    public string RoomName { get; set; } = "";
+    public string ClientName { get; set; } = "";
+    public decimal Amount { get; set; }
+    public string Type { get; set; } = "";
+}
+
+public class ServiceTransactionDetail
+{
+    public DateTime Date { get; set; }
+    public string ServiceName { get; set; } = "";
+    public string ClientName { get; set; } = "";
+    public int Quantity { get; set; }
+    public decimal Amount { get; set; }
 }
 
 public interface IFinanceService

@@ -1,9 +1,7 @@
 using System.Windows;
-using HotelSystem.Views;
 using System.Windows.Controls;
 using HotelSystem.Services;
 using HotelSystem.Helpers;
-using HotelSystem.Repositories;
 using HotelSystem.Models.Entities;
 
 namespace HotelSystem.Views;
@@ -60,7 +58,7 @@ public partial class ServicesPaymentView : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Р В РЎвЂєР РЋРІвЂљВ¬Р В РЎвЂР В Р’В±Р В РЎвЂќР В Р’В° Р В Р’В·Р В Р’В°Р В РЎвЂ“Р РЋР вЂљР РЋРЎвЂњР В Р’В·Р В РЎвЂќР В РЎвЂ: {ex.Message}", "Р В РЎвЂєР РЋРІвЂљВ¬Р В РЎвЂР В Р’В±Р В РЎвЂќР В Р’В°", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -79,12 +77,12 @@ public partial class ServicesPaymentView : Page
             {
                 await _financeService.RecordServicePaymentAsync(dialog.BookingId, dialog.ServiceId, dialog.Quantity, dialog.Amount);
                 LoadPaymentsAsync();
-                MessageBox.Show($"Р В Р в‚¬Р РЋР С“Р В Р’В»Р РЋРЎвЂњР В РЎвЂ“Р В Р’В° Р В РЎвЂўР В РЎвЂ”Р В Р’В»Р В Р’В°Р РЋРІР‚РЋР В Р’ВµР В Р вЂ¦Р В Р’В°! Р В Р Р‹Р РЋРЎвЂњР В РЎВР В РЎВР В Р’В°: {dialog.Amount:N0} Р Р†РІР‚С™Р вЂ¦", "Р В Р в‚¬Р РЋР С“Р В РЎвЂ”Р В Р’ВµР РЋРІР‚В¦", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Услуга была успешно добавленна в количестве: {dialog.Amount:N0} штук", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Р В РЎвЂєР РЋРІвЂљВ¬Р В РЎвЂР В Р’В±Р В РЎвЂќР В Р’В°: {ex.Message}\n\n{ex.StackTrace}", "Р В РЎвЂєР РЋРІвЂљВ¬Р В РЎвЂР В Р’В±Р В РЎвЂќР В Р’В°", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Ошибка: {ex.Message}\n\n{ex.StackTrace}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

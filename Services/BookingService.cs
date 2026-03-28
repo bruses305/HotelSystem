@@ -68,9 +68,10 @@ public class BookingService : IBookingService
             "BookingService");
 
         var client = await _clientRepository.GetByIdAsync(booking.ClientId);
+        var bookingRoom = await _roomRepository.GetByIdAsync(booking.RoomId);
         NotificationService.Instance.AddNotification(
             "Новое бронирование",
-            $"room.Name - {client?.FullName ?? "Клиент"} ({booking.CheckInDate:dd.MM} - {booking.CheckOutDate:dd.MM})",
+            $"{bookingRoom?.Name ?? "Номер"} - {client?.FullName ?? "Клиент"} ({booking.CheckInDate:dd.MM} - {booking.CheckOutDate:dd.MM})",
             NotificationType.Booking,
             created.Id);
 
@@ -197,7 +198,7 @@ public class BookingService : IBookingService
 
         NotificationService.Instance.AddNotification(
             "Гость заселён",
-            $"booking.Room?.Name ?? room?.Name ?? booking.RoomId.ToString() - {booking.Client?.FullName ?? "Клиент"}",
+            $"{booking.Room?.Name ?? room?.Name ?? booking.RoomId.ToString()} - {booking.Client?.FullName ?? "Клиент"}",
             NotificationType.CheckIn,
             booking.Id);
     }

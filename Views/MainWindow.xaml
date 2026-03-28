@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Hotel System" Height="700" Width="1200"
         WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         Background="#ECF0F1">
     <Window.Resources>
         <Style x:Key="MenuButtonStyle" TargetType="Button">

@@ -46,7 +46,9 @@ public partial class ServicePaymentDialog : Window
         {
             var bookings = await _bookingService.GetAllBookingsWithDetailsAsync();
             _bookings = bookings
-                .Where(b => b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid)
+                .Where(b => b.Status == BookingStatus.Confirmed || 
+                           b.Status == BookingStatus.Paid || 
+                           b.Status == BookingStatus.CheckedIn)
                 .Select(b => new BookingDisplay
                 {
                     Id = b.Id,

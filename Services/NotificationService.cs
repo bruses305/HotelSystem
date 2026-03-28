@@ -146,14 +146,12 @@ public class NotificationService
             var today = DateTime.Today;
             var bookings = (await bookingService.GetAllBookingsWithDetailsAsync()).ToList();
             
-            // Р В Р в‚¬Р В РўвЂР В Р’В°Р В Р’В»Р РЋР РЏР В Р’ВµР В РЎВ Р РЋР С“Р РЋРІР‚С™Р В Р’В°Р РЋР вЂљР РЋРІР‚в„–Р В Р’Вµ Р В Р’В°Р В Р вЂ Р РЋРІР‚С™Р В РЎвЂўР В РЎВР В Р’В°Р РЋРІР‚С™Р В РЎвЂР РЋРІР‚РЋР В Р’ВµР РЋР С“Р В РЎвЂќР В РЎвЂР В Р’Вµ Р РЋРЎвЂњР В Р вЂ Р В Р’ВµР В РўвЂР В РЎвЂўР В РЎВР В Р’В»Р В Р’ВµР В Р вЂ¦Р В РЎвЂР РЋР РЏ Р В РЎвЂў Р В Р’В±Р РЋР вЂљР В РЎвЂўР В Р вЂ¦Р В РЎвЂР РЋР вЂљР В РЎвЂўР В Р вЂ Р В Р’В°Р В Р вЂ¦Р В РЎвЂР РЋР РЏР РЋРІР‚В¦
             var toRemove = Notifications.Where(n => n.BookingId.HasValue).ToList();
             foreach (var n in toRemove)
                 Notifications.Remove(n);
             
             int id = Notifications.Count > 0 ? Notifications.Max(n => n.Id) + 1 : 1;
             
-            // Р В РІР‚вЂќР В Р’В°Р В Р’ВµР В Р’В·Р В РўвЂР РЋРІР‚в„– Р РЋР С“Р В Р’ВµР В РЎвЂ“Р В РЎвЂўР В РўвЂР В Р вЂ¦Р РЋР РЏ
             foreach (var b in bookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckInDate.Date == today))
             {
                 Notifications.Add(new NotificationItem
@@ -168,7 +166,6 @@ public class NotificationService
                 });
             }
             
-            // Р В РІР‚в„ўР РЋРІР‚в„–Р В Р’ВµР В Р’В·Р В РўвЂР РЋРІР‚в„– Р РЋР С“Р В Р’ВµР В РЎвЂ“Р В РЎвЂўР В РўвЂР В Р вЂ¦Р РЋР РЏ
             foreach (var b in bookings.Where(b => (b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid) && b.CheckOutDate.Date == today))
             {
                 Notifications.Add(new NotificationItem
@@ -183,7 +180,6 @@ public class NotificationService
                 });
             }
             
-            // Р В РІР‚вЂќР В Р’В°Р В Р’ВµР В Р’В·Р В РўвЂР РЋРІР‚в„– Р В Р вЂ¦Р В Р’В° Р В Р вЂ¦Р В Р’ВµР В РўвЂР В Р’ВµР В Р’В»Р В Р’Вµ
             foreach (var b in bookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckInDate.Date > today && b.CheckInDate.Date <= today.AddDays(7)))
             {
                 Notifications.Add(new NotificationItem
@@ -198,7 +194,6 @@ public class NotificationService
                 });
             }
             
-            // Р В РІР‚в„ўР РЋРІР‚в„–Р В Р’ВµР В Р’В·Р В РўвЂР РЋРІР‚в„– Р В Р вЂ¦Р В Р’В° Р В Р вЂ¦Р В Р’ВµР В РўвЂР В Р’ВµР В Р’В»Р В Р’Вµ
             foreach (var b in bookings.Where(b => (b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid) && b.CheckOutDate.Date > today && b.CheckOutDate.Date <= today.AddDays(7)))
             {
                 Notifications.Add(new NotificationItem
