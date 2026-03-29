@@ -1,6 +1,6 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" x:Class="HotelSystem.Views.ClearLogsDialog"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Очистка логов" Height="200" Width="280"
+        Title="Очистка логов" Height="220" Width="280"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Background="#ECF0F1">

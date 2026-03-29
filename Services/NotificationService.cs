@@ -146,72 +146,70 @@ public class NotificationService
             var today = DateTime.Today;
             var bookings = (await bookingService.GetAllBookingsWithDetailsAsync()).ToList();
             
+            // Удаляем старые уведомления о бронированиях
             var toRemove = Notifications.Where(n => n.BookingId.HasValue).ToList();
             foreach (var n in toRemove)
                 Notifications.Remove(n);
             
             int id = Notifications.Count > 0 ? Notifications.Max(n => n.Id) + 1 : 1;
             
-            foreach (var b in bookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckInDate.Date == today))
-            {
-                Notifications.Add(new NotificationItem
-                {
-                    Id = id++,
-                    Title = "Р В РІР‚вЂќР В Р’В°Р В Р’ВµР В Р’В·Р В РўвЂ Р РЋР С“Р В Р’ВµР В РЎвЂ“Р В РЎвЂўР В РўвЂР В Р вЂ¦Р РЋР РЏ",
-                    Message = $"{b.Room?.Name} - {b.Client?.FullName}",
-                    Type = NotificationType.CheckIn,
-                    BookingId = b.Id,
-                    CreatedAt = DateTime.Now,
-                    IsRead = false
-                });
-            }
+            // Заезд сегодня
+            AddNotificationsForBookings(
+                bookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckInDate.Date == today),
+                id, NotificationType.CheckIn, "Заезд сегодня", b => b.CheckInDate);
             
-            foreach (var b in bookings.Where(b => (b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid) && b.CheckOutDate.Date == today))
-            {
-                Notifications.Add(new NotificationItem
-                {
-                    Id = id++,
-                    Title = "Р В РІР‚в„ўР РЋРІР‚в„–Р В Р’ВµР В Р’В·Р В РўвЂ Р РЋР С“Р В Р’ВµР В РЎвЂ“Р В РЎвЂўР В РўвЂР В Р вЂ¦Р РЋР РЏ",
-                    Message = $"{b.Room?.Name} - {b.Client?.FullName}",
-                    Type = NotificationType.CheckOut,
-                    BookingId = b.Id,
-                    CreatedAt = DateTime.Now,
-                    IsRead = false
-                });
-            }
+            // Выезд сегодня
+            AddNotificationsForBookings(
+                bookings.Where(b => (b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid) && b.CheckOutDate.Date == today),
+                id, NotificationType.CheckOut, "Выезд сегодня", b => b.CheckOutDate);
             
-            foreach (var b in bookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckInDate.Date > today && b.CheckInDate.Date <= today.AddDays(7)))
-            {
-                Notifications.Add(new NotificationItem
-                {
-                    Id = id++,
-                    Title = $"Р В РІР‚вЂќР В Р’В°Р В Р’ВµР В Р’В·Р В РўвЂ {b.CheckInDate:dd.MM}",
-                    Message = $"{b.Room?.Name} - {b.Client?.FullName}",
-                    Type = NotificationType.CheckIn,
-                    BookingId = b.Id,
-                    CreatedAt = DateTime.Now,
-                    IsRead = false
-                });
-            }
+            // Заезд на этой неделе
+            AddNotificationsForBookings(
+                bookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckInDate.Date > today && b.CheckInDate.Date <= today.AddDays(7)),
+                id, NotificationType.CheckIn, b => $"Заезд {b.CheckInDate:dd.MM}", b => b.CheckInDate);
             
-            foreach (var b in bookings.Where(b => (b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid) && b.CheckOutDate.Date > today && b.CheckOutDate.Date <= today.AddDays(7)))
-            {
-                Notifications.Add(new NotificationItem
-                {
-                    Id = id++,
-                    Title = $"Р В РІР‚в„ўР РЋРІР‚в„–Р В Р’ВµР В Р’В·Р В РўвЂ {b.CheckOutDate:dd.MM}",
-                    Message = $"{b.Room?.Name} - {b.Client?.FullName}",
-                    Type = NotificationType.CheckOut,
-                    BookingId = b.Id,
-                    CreatedAt = DateTime.Now,
-                    IsRead = false
-                });
-            }
+            // Выезд на этой неделе
+            AddNotificationsForBookings(
+                bookings.Where(b => (b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid) && b.CheckOutDate.Date > today && b.CheckOutDate.Date <= today.AddDays(7)),
+                id, NotificationType.CheckOut, b => $"Выезд {b.CheckOutDate:dd.MM}", b => b.CheckOutDate);
             
             SaveToFile();
             NotificationsChanged?.Invoke();
         }
         catch { }
+    }
+
+    private void AddNotificationsForBookings(
+        IEnumerable<Booking> bookings,
+        int startId,
+        NotificationType type,
+        Func<Booking, string> titleFunc,
+        Func<Booking, DateTime> dateFunc)
+    {
+        int id = startId;
+        foreach (var b in bookings)
+        {
+            Notifications.Add(new NotificationItem
+            {
+                Id = id++,
+                Title = titleFunc(b),
+                Message = $"{b.Room?.Name} - {b.Client?.FullName}",
+                Type = type,
+                BookingId = b.Id,
+                CreatedAt = DateTime.Now,
+                IsRead = false
+            });
+        }
+    }
+
+    private void AddNotificationsForBookings(
+        IEnumerable<Booking> bookings,
+        int startId,
+        NotificationType type,
+        string fixedTitle,
+        Func<Booking, DateTime> dateFunc)
+    {
+        AddNotificationsForBookings(bookings, startId, type, _ => fixedTitle, dateFunc);
     }
 }
 

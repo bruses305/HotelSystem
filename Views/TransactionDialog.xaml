@@ -1,5 +1,5 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="HotelSystem.Views.TransactionDialog"
-        Title="Транзакция" Height="350" Width="380"
+        Title="Транзакция" Height="450" Width="380"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Background="#ECF0F1">
