@@ -8,17 +8,23 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
-            <Button Content="+ Добавить услугу" Click="AddService_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
+            <Button x:Name="AddServiceButton" Content="+ Добавить услугу" Click="AddService_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
                 <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate></Button.Template>
             </Button>
         </Border>
         <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
-            <DataGrid x:Name="ServicesGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" Background="White" BorderThickness="0">
+            <DataGrid x:Name="ServicesGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" Background="White" BorderThickness="0" MouseDoubleClick="ServicesGrid_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="200"/>
                     <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="*"/>
-                    <DataGridTextColumn Header="Цена" Binding="{Binding Price, StringFormat={}{0:N0}}" Width="120"/>
+                    <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="{Binding Price, Converter={StaticResource SmartDecimalConverter}}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTemplateColumn Header="Статус" Width="80">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate><CheckBox IsChecked="{Binding IsActive, Mode=OneWay}" IsEnabled="False" HorizontalAlignment="Center"/></DataTemplate>

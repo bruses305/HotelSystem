@@ -45,7 +45,7 @@
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <Button Content="Экспорт Excel" Click="ExportExcel_Click" Background="#27AE60" Foreground="White" Padding="15,5" Margin="0,0,10,0" BorderThickness="0">
+                    <Button x:Name="ExportExcelBtn" Content="Экспорт Excel" Click="ExportExcel_Click" Background="#27AE60" Foreground="White" Padding="15,5" Margin="0,0,10,0" BorderThickness="0">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
@@ -54,7 +54,7 @@
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <Button Content="Сохранить графики" Click="ExportCharts_Click" Background="#9B59B6" Foreground="White" Padding="15,5" BorderThickness="0">
+                    <Button x:Name="ExportChartsBtn" Content="Сохранить графики" Click="ExportCharts_Click" Background="#9B59B6" Foreground="White" Padding="15,5" BorderThickness="0">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
@@ -158,9 +158,27 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Номер" Binding="{Binding Name}" Width="*"/>
                             <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="70"/>
-                            <DataGridTextColumn Header="Доход" Binding="{Binding Income, StringFormat=N0}" Width="90"/>
-                            <DataGridTextColumn Header="Расходы" Binding="{Binding Expenses, StringFormat=N0}" Width="90"/>
-                            <DataGridTextColumn Header="Прибыль" Binding="{Binding Profit, StringFormat=N0}" Width="90"/>
+                            <DataGridTextColumn Header="Доход" Binding="{Binding Income}" Width="90">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding Income, Converter={StaticResource SmartDecimalConverter}}"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Расходы" Binding="{Binding Expenses}" Width="90">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding Expenses, Converter={StaticResource SmartDecimalConverter}}"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Прибыль" Binding="{Binding Profit}" Width="90">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding Profit, Converter={StaticResource SmartDecimalConverter}}"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -178,7 +196,13 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Клиент" Binding="{Binding FullName}" Width="*"/>
                             <DataGridTextColumn Header="Бронирований" Binding="{Binding BookingsCount}" Width="90"/>
-                            <DataGridTextColumn Header="Потрачено" Binding="{Binding TotalSpent, StringFormat=N0}" Width="100"/>
+                            <DataGridTextColumn Header="Потрачено" Binding="{Binding TotalSpent}" Width="100">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding TotalSpent, Converter={StaticResource SmartDecimalConverter}}"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

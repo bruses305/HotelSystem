@@ -19,10 +19,17 @@ public partial class MainWindow : Window
 
         if (user.Role != UserRole.Admin)
         {
-            EmployeesMenuItem.Visibility = Visibility.Collapsed;
-            LogsMenuItem.Visibility = Visibility.Collapsed;
-            ReportsMenuItem.Visibility = Visibility.Collapsed;
-            SettingsMenuItem.Visibility = Visibility.Collapsed;
+            // Для не-админов скрываем пункты меню на основе прав
+            if (!PermissionChecker.CanView(PermissionCategory.Employees))
+                EmployeesMenuItem.Visibility = Visibility.Collapsed;
+            if (!PermissionChecker.CanView(PermissionCategory.Logs))
+                LogsMenuItem.Visibility = Visibility.Collapsed;
+            if (!PermissionChecker.CanView(PermissionCategory.Reports))
+                ReportsMenuItem.Visibility = Visibility.Collapsed;
+            if (!PermissionChecker.CanView(PermissionCategory.Settings))
+                SettingsMenuItem.Visibility = Visibility.Collapsed;
+            if (!PermissionChecker.CanView(PermissionCategory.RoleManagement))
+                RolesMenuItem.Visibility = Visibility.Collapsed;
         }
 
         NavigateToBookings();
@@ -148,5 +155,18 @@ public partial class MainWindow : Window
             loginWindow.Show();
             Close();
         }
+    }
+
+    private void ManageRoles_Click(object sender, RoutedEventArgs e)
+    {
+        if (!PermissionChecker.CanView(PermissionCategory.RoleManagement))
+        {
+            MessageBox.Show("Недостаточно прав для управления ролями!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
+        var dialog = new RoleManagerWindow();
+        dialog.Owner = this;
+        dialog.ShowDialog();
     }
 }

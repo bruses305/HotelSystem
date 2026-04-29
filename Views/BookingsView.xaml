@@ -17,7 +17,7 @@
 <ColumnDefinition Width="Auto"/>
 </Grid.ColumnDefinitions>
 
-<Button Content="+ Новое бронирование" Click="AddBooking_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" Cursor="Hand">
+<Button x:Name="AddBookingButton" Content="+ Новое бронирование" Click="AddBooking_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" Cursor="Hand">
 <Button.Template>
 <ControlTemplate TargetType="Button">
 <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
@@ -51,7 +51,7 @@
 </Border>
 
 <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
-<DataGrid x:Name="BookingsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0">
+<DataGrid x:Name="BookingsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0" MouseDoubleClick="BookingsGrid_MouseDoubleClick">
 <DataGrid.Columns>
 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
 <DataGridTextColumn Header="Номер" Binding="{Binding Room.Name}" Width="100"/>
@@ -59,8 +59,20 @@
 <DataGridTextColumn Header="Заезд" Binding="{Binding CheckInDate, StringFormat=dd.MM.yyyy}" Width="100"/>
 <DataGridTextColumn Header="Выезд" Binding="{Binding CheckOutDate, StringFormat=dd.MM.yyyy}" Width="100"/>
 <DataGridTextColumn Header="Дней" Binding="{Binding Days}" Width="60"/>
-<DataGridTextColumn Header="Сумма" Binding="{Binding TotalPrice, StringFormat={}{0:N0}}" Width="100"/>
-<DataGridTextColumn Header="Оплачено" Binding="{Binding PaidAmount, StringFormat={}{0:N0}}" Width="100"/>
+<DataGridTextColumn Header="Сумма" Binding="{Binding TotalPrice}" Width="100">
+<DataGridTextColumn.ElementStyle>
+<Style TargetType="TextBlock">
+<Setter Property="Text" Value="{Binding TotalPrice, Converter={StaticResource SmartDecimalConverter}}"/>
+</Style>
+</DataGridTextColumn.ElementStyle>
+</DataGridTextColumn>
+<DataGridTextColumn Header="Оплачено" Binding="{Binding PaidAmount}" Width="100">
+<DataGridTextColumn.ElementStyle>
+<Style TargetType="TextBlock">
+<Setter Property="Text" Value="{Binding PaidAmount, Converter={StaticResource SmartDecimalConverter}}"/>
+</Style>
+</DataGridTextColumn.ElementStyle>
+</DataGridTextColumn>
 <DataGridTemplateColumn Header="Статус" Width="110">
 <DataGridTemplateColumn.CellTemplate>
 <DataTemplate>

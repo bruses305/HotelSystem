@@ -33,6 +33,9 @@ public class AuthService : IAuthService
 
         _currentEmployee = await _employeeRepository.GetByLoginAsync(login);
         
+        // Инициализируем PermissionChecker после входа
+        PermissionChecker.Initialize();
+        
         await _logService.LogAsync(LogLevel.Medium, 
             $"Пользователь {_currentEmployee?.FullName} вошол в аккаунт", "AuthService");
         

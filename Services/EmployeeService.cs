@@ -22,7 +22,7 @@ public class EmployeeService : IEmployeeService
         return await _employeeRepository.GetAllAsync();
     }
 
-    public async Task<Employee?> GetEmployeeByIdAsync(int id)
+public async Task<Employee?> GetEmployeeByIdAsync(int id)
     {
         return await _employeeRepository.GetByIdAsync(id);
     }
@@ -79,7 +79,7 @@ public class EmployeeService : IEmployeeService
         return true;
     }
 
-    public async Task<IEnumerable<Employee>> GetActiveEmployeesAsync()
+public async Task<IEnumerable<Employee>> GetActiveEmployeesAsync()
     {
         return await _employeeRepository.GetActiveEmployeesAsync();
     }

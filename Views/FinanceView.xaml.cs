@@ -1,8 +1,10 @@
 using System.Windows;
+using System.Windows.Input;
 using HotelSystem.Views;
 using System.Windows.Controls;
 using HotelSystem.Services;
 using HotelSystem.Helpers;
+using HotelSystem.Models.Entities;
 
 namespace HotelSystem.Views;
 
@@ -15,6 +17,15 @@ public partial class FinanceView : Page
         InitializeComponent();
         _financeService = ServiceLocator.GetService<IFinanceService>();
         Loaded += FinanceView_Loaded;
+        CheckPermissions();
+    }
+
+    private void CheckPermissions()
+    {
+        if (!PermissionChecker.CanCreate(PermissionCategory.Finance) && FindName("AddTransactionButton") is Button addButton)
+        {
+            addButton.Visibility = Visibility.Collapsed;
+        }
     }
 
     private void FinanceView_Loaded(object sender, RoutedEventArgs e)
@@ -50,6 +61,12 @@ public partial class FinanceView : Page
 
     private async void AddTransaction_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanCreate(PermissionCategory.Finance))
+        {
+            MessageBox.Show("Недостаточно прав для создания транзакций!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         var dialog = new TransactionDialog();
         dialog.Owner = Window.GetWindow(this);
         if (dialog.ShowDialog() == true)
@@ -57,6 +74,22 @@ public partial class FinanceView : Page
             _ = _financeService.AddTransactionAsync(dialog.Transaction);
             LoadDataAsync();
             MessageBox.Show("Транзакция успешно добавлена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    private void TransactionsGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (TransactionsGrid.SelectedItem is Transaction transaction)
+        {
+            MessageBox.Show(
+                $"Дата: {transaction.TransactionDate:dd.MM.yyyy HH:mm}\n" +
+                $"Тип: {transaction.Type}\n" +
+                $"Категория: {transaction.Category}\n" +
+                $"Сумма: {transaction.Amount}\n" +
+                $"Описание: {transaction.Description ?? "-"}",
+                "Информация о транзакции",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
     }
 }

@@ -1,9 +1,8 @@
 using System.Windows;
-using HotelSystem.Views;
+using System.Windows.Input;
 using System.Windows.Controls;
 using HotelSystem.Services;
 using HotelSystem.Helpers;
-using HotelSystem.Repositories;
 using HotelSystem.Models.Entities;
 
 namespace HotelSystem.Views;
@@ -42,7 +41,7 @@ public partial class LogsView : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Ошибка загрузки логов°: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Ошибка загрузки логов: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -95,6 +94,21 @@ public partial class LogsView : Page
             {
                 MessageBox.Show($"Ошибка при отчистке старых логов: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+    }
+
+    private void LogsGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (LogsGrid.SelectedItem is SystemLog log)
+        {
+            MessageBox.Show(
+                $"Дата: {log.LogDate:dd.MM.yyyy HH:mm:ss}\n" +
+                $"Уровень: {log.Level}\n" +
+                $"Сообщение: {log.Message}\n" +
+                $"Источник: {log.Source}",
+                "Детали лога",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
     }
 }

@@ -1,21 +1,42 @@
 using System.Windows;
 using System.Windows.Threading;
+using HotelSystem.Data;
 using HotelSystem.Helpers;
 using HotelSystem.Views;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelSystem;
 
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
         
-        // Р“Р»РѕР±Р°Р»СЊРЅС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє РёСЃРєР»СЋС‡РµРЅРёР№
+        // Глобальный обработчик исключений
         DispatcherUnhandledException += App_DispatcherUnhandledException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         
         ServiceLocator.Initialize();
+        
+        // Заполнение базы данных тестовыми данными
+        try
+        {
+            var connectionString = "Data Source=hotel.db";
+            using var context = new HotelDbContext(connectionString);
+            
+            // Убеждаемся, что база данных создана
+            context.Database.EnsureCreated();
+            
+            // Заполняем данными
+            //await SeedData.SeedAsync(context);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Ошибка при заполнении БД: {ex.Message}");
+            MessageBox.Show($"Ошибка при заполнении БД: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        
         var loginWindow = new LoginWindow();
         loginWindow.Show();
     }

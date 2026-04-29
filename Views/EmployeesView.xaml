@@ -1,6 +1,7 @@
 ﻿<Page x:Class="HotelSystem.Views.EmployeesView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:entities="clr-namespace:HotelSystem.Models.Entities"
       Background="#ECF0F1">
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -9,42 +10,76 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
-            <Button Content="+ Добавить сотрудника" Click="AddEmployee_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
+            <Button x:Name="AddEmployeeButton" Content="+ Добавить сотрудника" Click="AddEmployee_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
                 <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate></Button.Template>
             </Button>
         </Border>
 
-        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
+<Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
             <DataGrid x:Name="EmployeesGrid" 
                       AutoGenerateColumns="False" 
-                      IsReadOnly="True"
+                      IsReadOnly="False"
                       CanUserAddRows="False"
                       GridLinesVisibility="Horizontal"
+                      HeadersVisibility="Column"
                       Background="White"
-                      BorderThickness="0">
+                      BorderThickness="0"
+                      MouseDoubleClick="EmployeesGrid_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}" Width="180"/>
                     <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="120"/>
                     <DataGridTextColumn Header="Должность" Binding="{Binding Position}" Width="150"/>
                     <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="130"/>
-                    <DataGridTextColumn Header="Зарплата" Binding="{Binding Salary, StringFormat={}{0:N0}}" Width="100"/>
-                    <DataGridTemplateColumn Header="Роль" Width="100">
+                    <DataGridTextColumn Header="Зарплата" Binding="{Binding Salary}" Width="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="{Binding Salary, Converter={StaticResource SmartDecimalConverter}}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Роль" Width="140">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Border CornerRadius="10" Padding="8,4">
                                     <Border.Style>
                                         <Style TargetType="Border">
+                                            <Setter Property="Background" Value="{Binding RoleEntity.BackgroundColor}"/>
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Role}" Value="Admin"><Setter Property="Background" Value="#9B59B6"/></DataTrigger>
-                                                <DataTrigger Binding="{Binding Role}" Value="Employee"><Setter Property="Background" Value="#3498DB"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Role}" Value="Admin">
+                                                    <Setter Property="Background" Value="#9B59B6"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding RoleEntity.BackgroundColor}" Value="{x:Null}">
+                                                    <Setter Property="Background" Value="#95A5A6"/>
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
-                                    <TextBlock Text="{Binding Role}" Foreground="White" FontWeight="SemiBold" FontSize="11"/>
+                                    <TextBlock Text="{Binding RoleName}" Foreground="{Binding RoleEntity.TextColor}" FontWeight="SemiBold" FontSize="11">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding RoleEntity.TextColor}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Role}" Value="Admin">
+                                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                 </Border>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <ComboBox x:Name="RoleComboBox" 
+                                          ItemsSource="{Binding DataContext.Roles, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                          DisplayMemberPath="Name"
+                                          SelectedValuePath="Id"
+                                          SelectedValue="{Binding RoleId, Mode=TwoWay}"
+                                          Padding="5,2"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Действия" Width="100">
                         <DataGridTemplateColumn.CellTemplate>

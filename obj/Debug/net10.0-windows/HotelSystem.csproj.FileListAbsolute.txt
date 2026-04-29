@@ -205,3 +205,9 @@ D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\runtimes\tizen-armel\nati
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\runtimes\tizen-x86\native\libSkiaSharp.so
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\runtimes\win-x64\native\libSkiaSharp.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\runtimes\win-x86\native\libSkiaSharp.dll
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\GeneratedInternalTypeHelper.g.cs
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\HotelSystem_MarkupCompile.lref
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\RoleManagerWindow.baml
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\RoleManagerWindow.g.cs
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\ColorPickerDialog.baml
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\ColorPickerDialog.g.cs

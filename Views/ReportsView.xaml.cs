@@ -49,6 +49,19 @@ public partial class ReportsView : Page
         
         LoadLastExportPath();
         LoadReportAsync();
+        CheckPermissions();
+    }
+
+    private void CheckPermissions()
+    {
+        // Экспорт требует права Create (т.к. создаёт файл)
+        if (!PermissionChecker.CanCreate(PermissionCategory.Reports))
+        {
+            if (FindName("ExportExcelBtn") is Button excelBtn)
+                excelBtn.Visibility = Visibility.Collapsed;
+            if (FindName("ExportChartsBtn") is Button chartsBtn)
+                chartsBtn.Visibility = Visibility.Collapsed;
+        }
     }
 
     private void LoadLastExportPath()
@@ -295,6 +308,12 @@ public partial class ReportsView : Page
 
     private async void ExportExcel_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanCreate(PermissionCategory.Reports))
+        {
+            MessageBox.Show("Недостаточно прав для экспорта отчётов!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         try
         {
             var dialog = new SaveFileDialog
@@ -328,6 +347,12 @@ public partial class ReportsView : Page
 
     private async void ExportCharts_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanCreate(PermissionCategory.Reports))
+        {
+            MessageBox.Show("Недостаточно прав для экспорта графиков!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         try
         {
             var dialog = new SaveFileDialog

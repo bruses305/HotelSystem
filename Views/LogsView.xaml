@@ -47,14 +47,16 @@
         </Border>
 
         <!-- Таблица логов -->
-        <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="15">
+<Border Grid.Row="2" Background="White" CornerRadius="8" Padding="15">
             <DataGrid x:Name="LogsGrid" 
                       AutoGenerateColumns="False" 
                       IsReadOnly="True"
                       CanUserAddRows="False"
                       GridLinesVisibility="Horizontal"
+                      HeadersVisibility="Column"
                       Background="White"
-                      BorderThickness="0">
+                      BorderThickness="0"
+                      MouseDoubleClick="LogsGrid_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="Дата" Binding="{Binding LogDate, StringFormat=dd.MM.yyyy HH:mm}" Width="150"/>

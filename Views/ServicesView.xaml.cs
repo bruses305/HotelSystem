@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Input;
 using HotelSystem.Views;
 using System.Windows.Controls;
 using HotelSystem.Repositories;
@@ -11,19 +12,43 @@ namespace HotelSystem.Views;
 public partial class ServicesView : Page
 {
     private readonly IServiceService _serviceService;
+    
     public ServicesView()
     {
         InitializeComponent();
         _serviceService = ServiceLocator.GetService<IServiceService>();
         LoadServicesAsync();
+        CheckPermissions();
     }
+    
+    private void CheckPermissions()
+    {
+        // Проверяем права на создание услуг
+        if (!PermissionChecker.CanCreate(PermissionCategory.Services))
+        {
+            // Находим кнопку добавления и скрываем
+            if (FindName("AddServiceButton") is Button addButton)
+            {
+                addButton.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
+    
     private async void LoadServicesAsync()
     {
         try { ServicesGrid.ItemsSource = await _serviceService.GetAllServicesAsync(); }
         catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
     }
+    
     private async void AddService_Click(object sender, RoutedEventArgs e)
     {
+        // Проверка права на создание
+        if (!PermissionChecker.CanCreate(PermissionCategory.Services))
+        {
+            MessageBox.Show("Недостаточно прав для создания услуг!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         var dialog = new ServiceDialog();
         dialog.Owner = Window.GetWindow(this);
         if (dialog.ShowDialog() == true)
@@ -32,8 +57,16 @@ public partial class ServicesView : Page
             catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
     }
+    
     private void EditService_Click(object sender, RoutedEventArgs e)
     {
+        // Проверка права на редактирование
+        if (!PermissionChecker.CanEdit(PermissionCategory.Services))
+        {
+            MessageBox.Show("Недостаточно прав для редактирования услуг!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         if (sender is Button btn && btn.Tag is Service service)
         {
             var dialog = new ServiceDialog(service);
@@ -41,12 +74,41 @@ public partial class ServicesView : Page
             if (dialog.ShowDialog() == true) { _ = _serviceService.UpdateServiceAsync(dialog.Service); LoadServicesAsync(); }
         }
     }
+    
     private async void DeleteService_Click(object sender, RoutedEventArgs e)
     {
+        // Проверка права на удаление
+        if (!PermissionChecker.CanDelete(PermissionCategory.Services))
+        {
+            MessageBox.Show("Недостаточно прав для удаления услуг!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         if (sender is Button btn && btn.Tag is Service service)
         {
             var result = MessageBox.Show($"Удалить услугу {service.Name}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes) { await _serviceService.DeleteServiceAsync(service.Id); LoadServicesAsync(); }
+        }
+    }
+
+    private void ServicesGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        // Проверка права на редактирование (двойной клик = редактирование)
+        if (!PermissionChecker.CanEdit(PermissionCategory.Services))
+        {
+            MessageBox.Show("Недостаточно прав для редактирования услуг!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
+        if (ServicesGrid.SelectedItem is Service service)
+        {
+            var dialog = new ServiceDialog(service);
+            dialog.Owner = Window.GetWindow(this);
+            if (dialog.ShowDialog() == true)
+            {
+                _ = _serviceService.UpdateServiceAsync(dialog.Service);
+                LoadServicesAsync();
+            }
         }
     }
 }

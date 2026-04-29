@@ -76,6 +76,9 @@
                         <Button Content="Логи" Style="{StaticResource MenuButtonStyle}" Click="NavigateToLogs" x:Name="LogsMenuItem"/>
                         <Button Content="Отчёты" Style="{StaticResource MenuButtonStyle}" Click="NavigateToReports" x:Name="ReportsMenuItem"/>
                         <Button Content="Настройки" Style="{StaticResource MenuButtonStyle}" Click="NavigateToSettings" x:Name="SettingsMenuItem"/>
+                        
+                        <TextBlock Text="СИСТЕМА" Style="{StaticResource SectionHeaderStyle}"/>
+                        <Button Content="👤 Управление ролями" Style="{StaticResource MenuButtonStyle}" Click="ManageRoles_Click" x:Name="RolesMenuItem"/>
                     </StackPanel>
                 </ScrollViewer>
 

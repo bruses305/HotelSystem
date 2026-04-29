@@ -28,6 +28,15 @@ public partial class BookingsView : Page
         
         LoadRoomsForFilter();
         LoadBookingsAsync();
+        CheckPermissions();
+    }
+
+    private void CheckPermissions()
+    {
+        if (!PermissionChecker.CanCreate(PermissionCategory.Bookings) && FindName("AddBookingButton") is Button addButton)
+        { 
+            addButton.Visibility = Visibility.Collapsed;
+        }
     }
 
     private async void LoadRoomsForFilter()
@@ -44,7 +53,7 @@ public partial class BookingsView : Page
     private async void LoadBookingsAsync()
     {
         try 
-        { 
+        {
             var bookings = (await _bookingService.GetAllBookingsWithDetailsAsync()).ToList();
             
             foreach (var booking in bookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckOutDate < DateTime.Today))
@@ -56,7 +65,7 @@ public partial class BookingsView : Page
             BookingsGrid.ItemsSource = bookings;
             
             if (_highlightBookingId.HasValue)
-            { 
+            {
                 var index = bookings.ToList().FindIndex(b => b.Id == _highlightBookingId.Value);
                 if (index >= 0)
                 {
@@ -70,6 +79,12 @@ public partial class BookingsView : Page
 
     private async void AddBooking_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanCreate(PermissionCategory.Bookings))
+        {
+            MessageBox.Show("Недостаточно прав для создания бронирований!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         var dialog = new BookingDialog();
         dialog.Owner = Window.GetWindow(this);
         if (dialog.ShowDialog() == true)
@@ -80,26 +95,38 @@ public partial class BookingsView : Page
                 LoadBookingsAsync(); 
                 MessageBox.Show("Бронирование успешно создано!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information); 
             }
-catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
+            catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
     }
 
     private void EditBooking_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanEdit(PermissionCategory.Bookings))
+        {
+            MessageBox.Show("Недостаточно прав для редактирования бронирований!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         if (sender is Button btn && btn.Tag is Booking booking)
         {
             var dialog = new BookingDialog(booking);
             dialog.Owner = Window.GetWindow(this);
-            if (dialog.ShowDialog() == true) 
-            { 
-                _ = _bookingService.UpdateBookingAsync(dialog.Booking); 
-                LoadBookingsAsync(); 
+            if (dialog.ShowDialog() == true)
+            {
+                _ = _bookingService.UpdateBookingAsync(dialog.Booking);
+                LoadBookingsAsync();
             }
         }
     }
 
     private async void DeleteBooking_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanDelete(PermissionCategory.Bookings))
+        {
+            MessageBox.Show("Недостаточно прав для удаления бронирований!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         if (sender is Button btn && btn.Tag is Booking booking)
         {
             var result = MessageBox.Show("Удалить бронирование?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
@@ -223,9 +250,21 @@ catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошиб�
 
     private void BookingsGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
+        if (!PermissionChecker.CanEdit(PermissionCategory.Bookings))
+        {
+            MessageBox.Show("Недостаточно прав для редактирования бронирований!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         if (BookingsGrid.SelectedItem is Booking booking)
         {
-            EditBooking_Click(sender, new RoutedEventArgs());
+            var dialog = new BookingDialog(booking);
+            dialog.Owner = Window.GetWindow(this);
+            if (dialog.ShowDialog() == true)
+            {
+                _ = _bookingService.UpdateBookingAsync(dialog.Booking);
+                LoadBookingsAsync();
+            }
         }
     }
 }

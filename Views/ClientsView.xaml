@@ -15,7 +15,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Content="+ Добавить клиента" Click="AddClient_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
+                <Button x:Name="AddClientButton" Content="+ Добавить клиента" Click="AddClient_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
                     <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate></Button.Template>
                 </Button>
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
@@ -26,14 +26,20 @@
         </Border>
 
         <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
-            <DataGrid x:Name="ClientsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0">
+            <DataGrid x:Name="ClientsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0" MouseDoubleClick="ClientsGrid_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}" Width="180"/>
                     <DataGridTextColumn Header="Паспорт" Binding="{Binding Passport}" Width="120"/>
                     <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="130"/>
                     <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="180"/>
-                    <DataGridTextColumn Header="Потрачено" Binding="{Binding TotalSpent, StringFormat={}{0:N0}}" Width="130"/>
+                    <DataGridTextColumn Header="Потрачено" Binding="{Binding TotalSpent}" Width="130">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="{Binding TotalSpent, Converter={StaticResource SmartDecimalConverter}}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTemplateColumn Header="Действия" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

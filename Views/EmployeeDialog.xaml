@@ -21,17 +21,12 @@
                 <TextBlock Text="Телефон" FontWeight="SemiBold" Margin="0,0,0,5"/><TextBox x:Name="PhoneTextBox" Padding="10" Margin="0,0,0,15"/>
                 <TextBlock Text="Зарплата" FontWeight="SemiBold" Margin="0,0,0,5"/><TextBox x:Name="SalaryTextBox" Padding="10" Margin="0,0,0,15"/>
                 <TextBlock Text="Роль" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                <ComboBox x:Name="RoleComboBox" Padding="10" Margin="0,0,0,15">
-                    <ComboBoxItem Content="Администратор" Tag="Admin"/>
-                    <ComboBoxItem Content="Работник" Tag="Employee" IsSelected="True"/>
-                </ComboBox>
+                <ComboBox x:Name="RoleComboBox" Padding="10" Margin="0,0,0,15" DisplayMemberPath="Name"/>
             </StackPanel>
         </ScrollViewer>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-            <Button Content="Отмена" Click="Cancel_Click" Padding="20,10" Margin="0,0,10,0"/>
-            <Button Content="Сохранить" Click="Save_Click" Background="#27AE60" Foreground="White" Padding="20,10" BorderThickness="0">
-                <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center"/></Border></ControlTemplate></Button.Template>
-            </Button>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Сохранить" Click="Save_Click" Padding="15,10" Margin="0,0,10,0"/>
+            <Button Content="Отмена" Click="Cancel_Click" Padding="15,10"/>
         </StackPanel>
     </Grid>
 </Window>

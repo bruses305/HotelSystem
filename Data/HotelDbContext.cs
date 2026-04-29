@@ -14,6 +14,9 @@ public class HotelDbContext : DbContext
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<SystemLog> Logs { get; set; }
+    public DbSet<Permission> Permissions { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<RolePermission> RolePermissions { get; set; }
 
     private readonly string? _connectionString;
 
@@ -160,53 +163,53 @@ public class HotelDbContext : DbContext
             entity.HasIndex(e => e.Level);
         });
 
-        // Seed Data - Создание администратора по умолчанию
-        modelBuilder.Entity<Employee>().HasData(new Employee
+        // Permission
+        modelBuilder.Entity<Permission>(entity =>
         {
-            Id = 1,
-            FullName = "Администратор",
-            Login = "admin",
-            PasswordHash = HashPassword("admin123"), // Пароль: admin123
-            Role = UserRole.Admin,
-            Phone = "+7 (999) 000-00-00",
-            Position = "Администратор",
-            Salary = 50000,
-            IsActive = true,
-            CreatedAt = DateTime.Now
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.Resource).IsRequired().HasMaxLength(100);
+            entity.HasIndex(e => new { e.Category, e.Type }).IsUnique();
         });
 
-        // Seed Data - Номера
-        modelBuilder.Entity<Room>().HasData(
-            new Room { Id = 1, Name = "101", Type = RoomType.Standard, Price = 3000, Status = RoomStatus.Free, Capacity = 2, Description = "Стандартный номер на первом этаже", WaterExpense = 500, ElectricityExpense = 300, InternetExpense = 200, CleaningExpense = 400 },
-            new Room { Id = 2, Name = "102", Type = RoomType.Standard, Price = 3500, Status = RoomStatus.Free, Capacity = 2, Description = "Стандартный номер с видом на сад", WaterExpense = 500, ElectricityExpense = 300, InternetExpense = 200, CleaningExpense = 400 },
-            new Room { Id = 3, Name = "201", Type = RoomType.Lux, Price = 6000, Status = RoomStatus.Free, Capacity = 4, Description = "Люкс с джакузи", WaterExpense = 800, ElectricityExpense = 500, InternetExpense = 300, CleaningExpense = 600 },
-            new Room { Id = 4, Name = "202", Type = RoomType.Lux, Price = 6500, Status = RoomStatus.Free, Capacity = 4, Description = "Люкс с террасой", WaterExpense = 800, ElectricityExpense = 500, InternetExpense = 300, CleaningExpense = 600 },
-            new Room { Id = 5, Name = "301", Type = RoomType.Apartments, Price = 10000, Status = RoomStatus.Free, Capacity = 6, Description = "Апартаменты с кухней", WaterExpense = 1200, ElectricityExpense = 800, InternetExpense = 500, CleaningExpense = 1000 }
-        );
+        // Role
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(500);
+        });
 
-        // Seed Data - Услуги
-        modelBuilder.Entity<Service>().HasData(
-            new Service { Id = 1, Name = "Завтрак", Description = "Завтрак \"Шведский стол\"", Price = 500 },
-            new Service { Id = 2, Name = "Обед", Description = "Обед в ресторане отеля", Price = 800 },
-            new Service { Id = 3, Name = "Ужин", Description = "Ужин в ресторане отеля", Price = 1000 },
-            new Service { Id = 4, Name = "Трансфер", Description = "Трансфер из/в аэропорт", Price = 2000 },
-            new Service { Id = 5, Name = "Прачечная", Description = "Стирка и глажка белья", Price = 300 },
-            new Service { Id = 6, Name = "SPA", Description = "Посещение SPA-центра", Price = 1500 }
-        );
+        // RolePermission
+        modelBuilder.Entity<RolePermission>(entity =>
+        {
+            entity.HasKey(e => new { e.RoleId, e.PermissionId });
+            entity.HasOne(e => e.Role)
+                  .WithMany(r => r.RolePermissions)
+                  .HasForeignKey(e => e.RoleId)
+                  .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.Permission)
+                  .WithMany()
+                  .HasForeignKey(e => e.PermissionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
 
-        // Seed Data - Клиенты
-        modelBuilder.Entity<Client>().HasData(
-            new Client { Id = 1, FullName = "Иванов Иван Иванович", Passport = "4500 123456", Phone = "+7 (900) 111-22-33", Email = "ivanov@mail.ru" },
-            new Client { Id = 2, FullName = "Петрова Анна Сергеевна", Passport = "4501 654321", Phone = "+7 (900) 222-33-44", Email = "petrova@gmail.com" },
-            new Client { Id = 3, FullName = "Сидоров Алексей Дмитриевич", Passport = "4502 111222", Phone = "+7 (900) 333-44-55", Email = "sidorov@yandex.ru" }
-        );
-    }
-
-    private static string HashPassword(string password)
-    {
-        using var sha256 = System.Security.Cryptography.SHA256.Create();
-        var bytes = System.Text.Encoding.UTF8.GetBytes(password);
-        var hash = sha256.ComputeHash(bytes);
-        return Convert.ToBase64String(hash);
+        // Employee
+        modelBuilder.Entity<Employee>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.FullName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Login).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.PasswordHash).IsRequired();
+            entity.Property(e => e.Phone).HasMaxLength(20);
+            entity.Property(e => e.Position).HasMaxLength(100);
+            entity.Property(e => e.Salary).HasColumnType("decimal(18,2)");
+            entity.HasIndex(e => e.Login).IsUnique();
+            entity.HasOne(e => e.RoleEntity)
+                  .WithMany(r => r.Employees)
+                  .HasForeignKey(e => e.RoleId)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
     }
 }

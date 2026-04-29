@@ -13,7 +13,7 @@ public static class ServiceLocator
     public static IServiceProvider ServiceProvider => _serviceProvider 
         ?? throw new InvalidOperationException("ServiceProvider not initialized");
 
-    public static void Initialize()
+    public static async void Initialize()
     {
         var services = new ServiceCollection();
         var connectionString = "Data Source=hotel.db";
@@ -34,10 +34,22 @@ public static class ServiceLocator
         services.AddScoped<ILogService, LogService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<INavigationService, NavigationService>();
+        services.AddScoped<PermissionService>();
+        services.AddScoped<RoleService>();
         _serviceProvider = services.BuildServiceProvider();
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<HotelDbContext>();
         context.Database.EnsureCreated();
+        
+        // Инициализация прав доступа
+        try
+        {
+            await PermissionInitializer.InitializePermissionsAsync(context);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Ошибка инициализации прав: {ex.Message}");
+        }
     }
 
     public static T GetService<T>() where T : notnull

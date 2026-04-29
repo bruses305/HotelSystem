@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Controls;
 using HotelSystem.Services;
 using HotelSystem.Helpers;
@@ -26,6 +27,15 @@ public partial class ServicesPaymentView : Page
         InitializeComponent();
         _financeService = ServiceLocator.GetService<IFinanceService>();
         Loaded += ServicesPaymentView_Loaded;
+        CheckPermissions();
+    }
+
+    private void CheckPermissions()
+    {
+        if (!PermissionChecker.CanCreate(PermissionCategory.ServicesPayment) && FindName("AddServicePaymentButton") is Button addButton)
+        {
+            addButton.Visibility = Visibility.Collapsed;
+        }
     }
 
     private void ServicesPaymentView_Loaded(object sender, RoutedEventArgs e)
@@ -64,6 +74,12 @@ public partial class ServicesPaymentView : Page
 
     private async void AddServicePayment_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanCreate(PermissionCategory.ServicesPayment))
+        {
+            MessageBox.Show("Недостаточно прав для создания оплаты услуг!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         try
         {
             var dialog = new ServicePaymentDialog();
@@ -83,6 +99,24 @@ public partial class ServicesPaymentView : Page
         catch (Exception ex)
         {
             MessageBox.Show($"Ошибка: {ex.Message}\n\n{ex.StackTrace}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void PaymentsGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        // Для услуг редактирование через диалог не реализовано, показываем информацию
+        if (PaymentsGrid.SelectedItem is ServicePaymentDisplay payment)
+        {
+            MessageBox.Show(
+                $"Услуга: {payment.ServiceName}\n" +
+                $"Клиент: {payment.ClientName}\n" +
+                $"Номер: {payment.RoomName}\n" +
+                $"Количество: {payment.Quantity}\n" +
+                $"Сумма: {payment.Amount:N0}\n" +
+                $"Дата: {payment.TransactionDate:dd.MM.yyyy HH:mm}",
+                "Информация об услуге",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
     }
 }

@@ -33,14 +33,14 @@
                 <TextBlock Text="-" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 <DatePicker x:Name="EndDatePicker" Width="120" Margin="0,0,10,0"/>
                 <Button Content="Применить" Click="ApplyFilter_Click" Padding="15,5"/>
-                <Button Content="+ Добавить транзакцию" Click="AddTransaction_Click" Margin="20,0,0,0" Background="#27AE60" Foreground="White" Padding="15,5" BorderThickness="0">
+                <Button x:Name="AddTransactionButton" Content="+ Добавить транзакцию" Click="AddTransaction_Click" Margin="20,0,0,0" Background="#27AE60" Foreground="White" Padding="15,5" BorderThickness="0">
                     <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate></Button.Template>
                 </Button>
             </StackPanel>
         </Border>
 
         <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="15">
-            <DataGrid x:Name="TransactionsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0">
+            <DataGrid x:Name="TransactionsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0" MouseDoubleClick="TransactionsGrid_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="Дата" Binding="{Binding TransactionDate, StringFormat=dd.MM.yyyy}" Width="100"/>
@@ -62,7 +62,13 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Категория" Binding="{Binding Category}" Width="150"/>
-                    <DataGridTextColumn Header="Сумма" Binding="{Binding Amount, StringFormat={}{0:N0}}" Width="120"/>
+                    <DataGridTextColumn Header="Сумма" Binding="{Binding Amount}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="{Binding Amount, Converter={StaticResource SmartDecimalConverter}}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>

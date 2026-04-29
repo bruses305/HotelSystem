@@ -15,7 +15,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Content="+ Добавить услугу" Click="AddServicePayment_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
+                <Button x:Name="AddServicePaymentButton" Content="+ Добавить услугу" Click="AddServicePayment_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
@@ -28,14 +28,20 @@
         </Border>
 
         <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
-            <DataGrid x:Name="PaymentsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0">
+            <DataGrid x:Name="PaymentsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0" MouseDoubleClick="PaymentsGrid_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="Дата" Binding="{Binding TransactionDate, StringFormat=dd.MM.yyyy HH:mm}" Width="120"/>
                     <DataGridTextColumn Header="Клиент" Binding="{Binding ClientName}" Width="150"/>
                     <DataGridTextColumn Header="Услуга" Binding="{Binding ServiceName}" Width="150"/>
                     <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="70"/>
-                    <DataGridTextColumn Header="Сумма" Binding="{Binding Amount, StringFormat={}{0:N0}}" Width="100"/>
+                    <DataGridTextColumn Header="Сумма" Binding="{Binding Amount}" Width="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="{Binding Amount, Converter={StaticResource SmartDecimalConverter}}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
