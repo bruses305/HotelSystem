@@ -114,7 +114,8 @@ public static class PermissionInitializer
         // Отчёты
         permissions.AddRange(CreatePermissions(PermissionCategory.Reports, "Reports",
             ("Просмотр отчётов", "Право на просмотр отчётов", PermissionType.View),
-            ("Экспорт отчётов", "Право на экспорт отчётов", PermissionType.Create)
+            ("Экспорт отчётов", "Право на экспорт отчётов", PermissionType.Create),
+            ("Прогнозирование", "Право на использование прогнозов", PermissionType.Create)
         ));
         
         // Логи

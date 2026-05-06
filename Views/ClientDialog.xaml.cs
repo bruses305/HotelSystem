@@ -27,6 +27,11 @@ public partial class ClientDialog : Window
  {
  InitializeForm();
  }
+ else
+ {
+ // Для нового клиента вызываем InitializeForm чтобы подготовить поля
+ InitializeForm();
+ }
  }
 
  private void InitializeForm()

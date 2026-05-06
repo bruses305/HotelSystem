@@ -36,6 +36,9 @@
                 <Button x:Name="AddTransactionButton" Content="+ Добавить транзакцию" Click="AddTransaction_Click" Margin="20,0,0,0" Background="#27AE60" Foreground="White" Padding="15,5" BorderThickness="0">
                     <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate></Button.Template>
                 </Button>
+                <Button x:Name="ForecastButton" Content="📊 Прогноз" Click="ForecastButton_Click" Margin="20,0,0,0" Background="#9B59B6" Foreground="White" Padding="15,5" BorderThickness="0">
+                    <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate></Button.Template>
+                </Button>
             </StackPanel>
         </Border>
 

@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.ComponentModel;
 using HotelSystem.Models.Entities;
 using HotelSystem.Services;
 using HotelSystem.Helpers;
@@ -89,6 +90,7 @@ public partial class RoleManagerWindow : Window
             vm.IsSelected = rolePermissionIds.Contains(vm.Permission.Id);
         }
         
+        PermissionsItemsControl.ItemsSource = null;
         PermissionsItemsControl.ItemsSource = _allPermissions;
     }
     

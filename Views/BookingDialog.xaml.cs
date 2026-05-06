@@ -4,6 +4,7 @@ using HotelSystem.Repositories;
 using HotelSystem.Services;
 using HotelSystem.Models.Entities;
 using HotelSystem.Helpers;
+using HotelSystem.Controls;
 
 namespace HotelSystem.Views;
 
@@ -16,6 +17,7 @@ public partial class BookingDialog : Window
     private readonly bool _isEdit;
     private List<Room> _allRooms = new();
     private bool _isSaved = false;
+    private Window? _tempParent;
 
     // Для отслеживания изменений
     private int _originalRoomId;
@@ -42,15 +44,23 @@ public partial class BookingDialog : Window
         RoomComboBox.DisplayMemberPath = "Name";
         RoomComboBox.SelectedValuePath = "Id";
         
+        // Настройка автокомплита для клиента
         var clients = await _clientService.GetAllClientsAsync();
-        ClientComboBox.ItemsSource = clients;
-        ClientComboBox.DisplayMemberPath = "FullName";
-        ClientComboBox.SelectedValuePath = "Id";
+        ClientAutoComplete.SetClients(clients.ToList());
+        
+        // Обработчик выбора клиента
+        ClientAutoComplete.SetClientSelectedHandler(async client => await OnClientSelectedAsync(client));
+        
+        // Обработчик создания нового клиента
+        ClientAutoComplete.SetCreateClientHandler(async () => await CreateNewClientAsync());
         
         if (_isEdit)
         {
             RoomComboBox.SelectedValue = Booking.RoomId;
-            ClientComboBox.SelectedValue = Booking.ClientId;
+            if (Booking.Client != null)
+            {
+                ClientAutoComplete.InputText = Booking.Client.FullName;
+            }
             CheckInDatePicker.SelectedDate = Booking.CheckInDate;
             CheckOutDatePicker.SelectedDate = Booking.CheckOutDate;
             NotesTextBox.Text = Booking.Notes;
@@ -72,6 +82,76 @@ public partial class BookingDialog : Window
         UpdatePrice();
     }
 
+    private async Task OnClientSelectedAsync(Client? client)
+    {
+        if (client != null)
+        {
+            Booking.ClientId = client.Id;
+        }
+    }
+
+    private async Task<Client?> CreateNewClientAsync()
+    {
+        var clientName = ClientAutoComplete.InputText.Trim();
+        if (string.IsNullOrEmpty(clientName))
+            return null;
+
+        // Проверяем права на создание клиента
+        if (!PermissionChecker.CanCreate(PermissionCategory.Clients))
+        {
+            MessageBox.Show("Недостаточно прав для создания клиента!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return null;
+        }
+
+        // Сохраняем данные бронирования (они сохранятся в Booking)
+        var currentRoomId = RoomComboBox.SelectedValue as int? ?? 0;
+        var currentCheckIn = CheckInDatePicker.SelectedDate ?? DateTime.Today;
+        var currentCheckOut = CheckOutDatePicker.SelectedDate ?? DateTime.Today.AddDays(1);
+        var currentNotes = NotesTextBox.Text ?? "";
+
+        // Скрываем окно бронирования
+        _tempParent = Owner;
+        Owner = null;
+        Hide();
+
+        // Создаём диалог клиента
+        var clientDialog = new ClientDialog();
+        clientDialog.Owner = _tempParent;
+        
+        // Устанавливаем имя если есть
+        if (!string.IsNullOrEmpty(clientName))
+        {
+            clientDialog.Client.FullName = clientName;
+        }
+
+        var result = clientDialog.ShowDialog();
+        
+        // Возвращаемся в окно бронирования
+        Owner = _tempParent;
+        Show();
+        Activate();
+
+        if (result == true && clientDialog.Client != null)
+        {
+            var newClient = clientDialog.Client;
+            
+            // Сохраняем клиента
+            await _clientService.CreateClientAsync(newClient);
+            
+            // Обновляем список клиентов
+            var clients = await _clientService.GetAllClientsAsync();
+            ClientAutoComplete.SetClients(clients.ToList());
+            
+            // Выбираем созданного клиента
+            ClientAutoComplete.InputText = newClient.FullName;
+            Booking.ClientId = newClient.Id;
+            
+            return newClient;
+        }
+
+        return null;
+    }
+
     private async void UpdatePrice()
     {
         if (RoomComboBox.SelectedValue is int roomId && CheckInDatePicker.SelectedDate.HasValue && CheckOutDatePicker.SelectedDate.HasValue)
@@ -91,9 +171,9 @@ public partial class BookingDialog : Window
             return;
         }
 
-        if (ClientComboBox.SelectedValue == null)
+        if (ClientAutoComplete.SelectedClient == null)
         {
-            MessageBox.Show("Выберите клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Выберите или создайте клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -110,6 +190,7 @@ public partial class BookingDialog : Window
         }
 
         var roomId = (int)RoomComboBox.SelectedValue;
+        var clientId = ClientAutoComplete.SelectedClient.Id;
         var checkIn = CheckInDatePicker.SelectedDate.Value;
         var checkOut = CheckOutDatePicker.SelectedDate.Value;
 
@@ -119,7 +200,6 @@ public partial class BookingDialog : Window
 
         if (!isAvailable)
         {
-            // Получаем подробную информацию о пересечениях
             var allBookings = await _bookingService.GetBookingsByDateRangeAsync(checkIn.AddDays(-30), checkOut.AddDays(30));
             var overlaps = allBookings.Where(b =>
                 b.RoomId == roomId &&
@@ -147,7 +227,7 @@ public partial class BookingDialog : Window
         }
 
         Booking.RoomId = roomId;
-        Booking.ClientId = (int)ClientComboBox.SelectedValue;
+        Booking.ClientId = clientId;
         Booking.CheckInDate = checkIn;
         Booking.CheckOutDate = checkOut;
         Booking.Notes = NotesTextBox.Text;
@@ -166,9 +246,8 @@ public partial class BookingDialog : Window
     {
         if (_isSaved) return;
 
-        // Проверяем наличие изменений
         var currentRoomId = RoomComboBox.SelectedValue as int? ?? 0;
-        var currentClientId = ClientComboBox.SelectedValue as int? ?? 0;
+        var currentClientId = ClientAutoComplete.SelectedClient?.Id ?? 0;
         var currentCheckIn = CheckInDatePicker.SelectedDate ?? DateTime.MinValue;
         var currentCheckOut = CheckOutDatePicker.SelectedDate ?? DateTime.MinValue;
         var currentNotes = NotesTextBox.Text ?? "";

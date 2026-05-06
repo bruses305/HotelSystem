@@ -1,8 +1,6 @@
 using System.Windows;
 using System.Windows.Input;
-using HotelSystem.Views;
 using System.Windows.Controls;
-using HotelSystem.Repositories;
 using HotelSystem.Services;
 using HotelSystem.Models.Entities;
 using HotelSystem.Helpers;
@@ -12,6 +10,7 @@ namespace HotelSystem.Views;
 public partial class ServicesView : Page
 {
     private readonly IServiceService _serviceService;
+    private List<Service> _allServices = new();
     
     public ServicesView()
     {
@@ -21,12 +20,46 @@ public partial class ServicesView : Page
         CheckPermissions();
     }
     
+    private async void LoadServicesAsync()
+    {
+        try 
+        {
+            _allServices = (List<Service>)await _serviceService.GetAllServicesAsync();
+            ApplyFilter();
+        }
+        catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
+    }
+
+    private void ApplyFilter()
+    {
+        var searchQuery = SearchTextBox.Text;
+        var filtered = SearchHelper.FilterServices(_allServices, searchQuery);
+        ServicesGrid.ItemsSource = filtered.ToList();
+    }
+
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        ApplyFilter();
+    }
+
+    private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            ApplyFilter();
+        }
+    }
+
+    private void ResetFilter_Click(object sender, RoutedEventArgs e)
+    {
+        SearchTextBox.Text = "";
+        ApplyFilter();
+    }
+    
     private void CheckPermissions()
     {
-        // Проверяем права на создание услуг
         if (!PermissionChecker.CanCreate(PermissionCategory.Services))
         {
-            // Находим кнопку добавления и скрываем
             if (FindName("AddServiceButton") is Button addButton)
             {
                 addButton.Visibility = Visibility.Collapsed;
@@ -34,15 +67,8 @@ public partial class ServicesView : Page
         }
     }
     
-    private async void LoadServicesAsync()
+    private void AddService_Click(object sender, RoutedEventArgs e)
     {
-        try { ServicesGrid.ItemsSource = await _serviceService.GetAllServicesAsync(); }
-        catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
-    }
-    
-    private async void AddService_Click(object sender, RoutedEventArgs e)
-    {
-        // Проверка права на создание
         if (!PermissionChecker.CanCreate(PermissionCategory.Services))
         {
             MessageBox.Show("Недостаточно прав для создания услуг!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -53,14 +79,13 @@ public partial class ServicesView : Page
         dialog.Owner = Window.GetWindow(this);
         if (dialog.ShowDialog() == true)
         {
-            try { await _serviceService.CreateServiceAsync(dialog.Service); LoadServicesAsync(); MessageBox.Show("Услуга добавлена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information); }
+            try { _ = _serviceService.CreateServiceAsync(dialog.Service); LoadServicesAsync(); MessageBox.Show("Услуга добавлена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information); }
             catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
     }
     
     private void EditService_Click(object sender, RoutedEventArgs e)
     {
-        // Проверка права на редактирование
         if (!PermissionChecker.CanEdit(PermissionCategory.Services))
         {
             MessageBox.Show("Недостаточно прав для редактирования услуг!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -77,7 +102,6 @@ public partial class ServicesView : Page
     
     private async void DeleteService_Click(object sender, RoutedEventArgs e)
     {
-        // Проверка права на удаление
         if (!PermissionChecker.CanDelete(PermissionCategory.Services))
         {
             MessageBox.Show("Недостаточно прав для удаления услуг!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -93,7 +117,6 @@ public partial class ServicesView : Page
 
     private void ServicesGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        // Проверка права на редактирование (двойной клик = редактирование)
         if (!PermissionChecker.CanEdit(PermissionCategory.Services))
         {
             MessageBox.Show("Недостаточно прав для редактирования услуг!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -112,5 +135,3 @@ public partial class ServicesView : Page
         }
     }
 }
-
-

@@ -14,6 +14,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="AddServicePaymentButton" Content="+ Добавить услугу" Click="AddServicePayment_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
                     <Button.Template>
@@ -24,6 +25,20 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="20,0,0,0">
+                    <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBox x:Name="SearchTextBox" Width="200" Padding="8" TextChanged="SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="20,0,0,0">
+                    <TextBlock Text="С:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <DatePicker x:Name="StartDatePicker" Width="120" SelectedDateChanged="DateFilterChanged"/>
+                    <TextBlock Text="По:" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                    <DatePicker x:Name="EndDatePicker" Width="120" SelectedDateChanged="DateFilterChanged"/>
+                </StackPanel>
+                
+                <Button Grid.Column="3" Content="🔄" Click="ResetFilters_Click" Background="Transparent" BorderThickness="0" Padding="10" FontSize="14" Margin="10,0,0,0"/>
             </Grid>
         </Border>
 

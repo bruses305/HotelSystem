@@ -43,7 +43,11 @@ public partial class CalendarView : Page
         {
             var startDate = _currentMonth.AddMonths(-1);
             var endDate = _currentMonth.AddMonths(2);
-            _allBookings = (await _bookingService.GetBookingsByDateRangeAsync(startDate, endDate)).ToList();
+            var allBookings = (await _bookingService.GetBookingsByDateRangeAsync(startDate, endDate)).ToList();
+            
+            // Фильтруем отменённые бронирования
+            _allBookings = allBookings.Where(b => b.Status != BookingStatus.Cancelled).ToList();
+            
             RenderCalendar();
         }
         catch (Exception ex)

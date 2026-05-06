@@ -45,7 +45,24 @@ public partial class LoginWindow : Window
         try
         {
             var employee = await _authService.LoginAsync(login, password);
-            if (employee != null)
+            
+            if (employee == null)
+            {
+                ShowError("Неверный логин или пароль");
+                PasswordBox.Clear();
+                return;
+            }
+            
+            // Проверка на null
+            if (employee.Id == 0 || string.IsNullOrEmpty(employee.FullName))
+            {
+                ShowError("Ошибка данных сотрудника");
+                PasswordBox.Clear();
+                return;
+            }
+            
+            // Создаём главное окно
+            try
             {
                 var mainWindow = new MainWindow(employee);
                 
@@ -55,15 +72,16 @@ public partial class LoginWindow : Window
                 mainWindow.Show();
                 Close(); // Закрываем login window
             }
-            else
+            catch (Exception ex)
             {
-                ShowError("Неверный логин или пароль");
+                ShowError($"Ошибка открытия главного окна: {ex.Message}");
                 PasswordBox.Clear();
             }
         }
         catch (Exception ex)
         {
             ShowError($"Ошибка входа: {ex.Message}");
+            PasswordBox.Clear();
         }
     }
 

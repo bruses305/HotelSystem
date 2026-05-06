@@ -1,5 +1,6 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" x:Class="HotelSystem.Views.BookingDialog"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:HotelSystem.Controls"
         Title="Бронирование" Height="500" Width="420"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
@@ -17,7 +18,7 @@
                 <TextBlock Text="Номер" FontWeight="SemiBold" Margin="0,0,0,5"/>
                 <ComboBox x:Name="RoomComboBox" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,15" Padding="10" SelectionChanged="RoomComboBox_SelectionChanged"/>
                 <TextBlock Text="Клиент" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                <ComboBox x:Name="ClientComboBox" DisplayMemberPath="FullName" SelectedValuePath="Id" Margin="0,0,0,15" Padding="10"/>
+                <controls:ClientAutoCompleteBox x:Name="ClientAutoComplete" Margin="0,0,0,15"/>
                 <TextBlock Text="Дата заезда" FontWeight="SemiBold" Margin="0,0,0,5"/>
                 <DatePicker x:Name="CheckInDatePicker" Margin="0,0,0,15" Padding="10" SelectedDateChanged="CheckInDatePicker_SelectedDateChanged"/>
                 <TextBlock Text="Дата выезда" FontWeight="SemiBold" Margin="0,0,0,5"/>

@@ -28,16 +28,19 @@
 </Button>
 
 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="20,0">
+<TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+<TextBox x:Name="SearchTextBox" Width="200" Padding="8" TextChanged="SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown" Margin="0,0,15,0"/>
+                    
 <TextBlock Text="С:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-<DatePicker x:Name="FilterStartDatePicker" Width="120" Margin="0,0,10,0"/>
+<DatePicker x:Name="FilterStartDatePicker" Width="120" Margin="0,0,10,0" SelectedDateChanged="FilterChanged"/>
 <TextBlock Text="По:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-<DatePicker x:Name="FilterEndDatePicker" Width="120" Margin="0,0,15,0"/>
+<DatePicker x:Name="FilterEndDatePicker" Width="120" Margin="0,0,15,0" SelectedDateChanged="FilterChanged"/>
                     
 <TextBlock Text="Номер:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-<ComboBox x:Name="FilterRoomComboBox" Width="150" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,10,0"/>
+<ComboBox x:Name="FilterRoomComboBox" Width="150" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,10,0" SelectionChanged="FilterChanged"/>
                     
 <TextBlock Text="Статус:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-<ComboBox x:Name="FilterStatusComboBox" Width="130" Margin="0,0,10,0">
+<ComboBox x:Name="FilterStatusComboBox" Width="130" Margin="0,0,10,0" SelectionChanged="FilterChanged">
 <ComboBoxItem Content="Все статусы" Tag="All" IsSelected="True"/>
 <ComboBoxItem Content="Ожидание" Tag="Pending"/>
 <ComboBoxItem Content="Подтверждено" Tag="Confirmed"/>

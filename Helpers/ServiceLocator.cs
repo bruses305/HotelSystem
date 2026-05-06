@@ -13,7 +13,7 @@ public static class ServiceLocator
     public static IServiceProvider ServiceProvider => _serviceProvider 
         ?? throw new InvalidOperationException("ServiceProvider not initialized");
 
-    public static async void Initialize()
+    public static void Initialize()
     {
         var services = new ServiceCollection();
         var connectionString = "Data Source=hotel.db";
@@ -44,7 +44,8 @@ public static class ServiceLocator
         // Инициализация прав доступа
         try
         {
-            await PermissionInitializer.InitializePermissionsAsync(context);
+            var task = PermissionInitializer.InitializePermissionsAsync(context);
+            task.Wait(); // Ждём завершения синхронно
         }
         catch (Exception ex)
         {

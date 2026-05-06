@@ -26,6 +26,11 @@ public partial class FinanceView : Page
         {
             addButton.Visibility = Visibility.Collapsed;
         }
+        
+        if (!PermissionChecker.HasPermission(PermissionCategory.Reports, PermissionType.Create) && FindName("ForecastButton") is Button forecastButton)
+        {
+            forecastButton.Visibility = Visibility.Collapsed;
+        }
     }
 
     private void FinanceView_Loaded(object sender, RoutedEventArgs e)
@@ -91,6 +96,19 @@ public partial class FinanceView : Page
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
         }
+    }
+
+    private void ForecastButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!PermissionChecker.HasPermission(PermissionCategory.Reports, PermissionType.Create))
+        {
+            MessageBox.Show("Недостаточно прав для использования прогнозов!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
+        var forecastWindow = new ForecastWindow();
+        forecastWindow.Owner = Window.GetWindow(this);
+        forecastWindow.ShowDialog();
     }
 }
 

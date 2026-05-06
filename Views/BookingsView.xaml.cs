@@ -16,6 +16,7 @@ public partial class BookingsView : Page
     private readonly IClientService _clientService;
     private readonly IFinanceService _financeService;
     private int? _highlightBookingId;
+    private List<Booking> _allBookings = new List<Booking>();
     
     public BookingsView(int? highlightBookingId = null)
     {
@@ -54,19 +55,19 @@ public partial class BookingsView : Page
     {
         try 
         {
-            var bookings = (await _bookingService.GetAllBookingsWithDetailsAsync()).ToList();
+            _allBookings = (await _bookingService.GetAllBookingsWithDetailsAsync()).ToList();
             
-            foreach (var booking in bookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckOutDate < DateTime.Today))
+            foreach (var booking in _allBookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckOutDate < DateTime.Today))
             {
                 booking.Status = BookingStatus.Completed;
                 await _bookingService.UpdateBookingAsync(booking);
             }
             
-            BookingsGrid.ItemsSource = bookings;
+            ApplyFilter();
             
             if (_highlightBookingId.HasValue)
             {
-                var index = bookings.ToList().FindIndex(b => b.Id == _highlightBookingId.Value);
+                var index = _allBookings.FindIndex(b => b.Id == _highlightBookingId.Value);
                 if (index >= 0)
                 {
                     BookingsGrid.SelectedIndex = index;
@@ -75,6 +76,60 @@ public partial class BookingsView : Page
             }
         }
         catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Данные не загруженны", MessageBoxButton.OK, MessageBoxImage.Error); }
+    }
+
+    private void ApplyFilter()
+    {
+        if (_allBookings == null)
+            return;
+        
+        var startDate = FilterStartDatePicker.SelectedDate;
+        var endDate = FilterEndDatePicker.SelectedDate;
+        var roomId = FilterRoomComboBox.SelectedValue as int?;
+        var status = (FilterStatusComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString();
+        var searchQuery = SearchTextBox.Text;
+        
+        var filtered = _allBookings.AsQueryable();
+        
+        if (startDate.HasValue)
+            filtered = filtered.Where(b => b.CheckOutDate >= startDate.Value);
+        
+        if (endDate.HasValue)
+            filtered = filtered.Where(b => b.CheckInDate <= endDate.Value.AddDays(1));
+        
+        if (roomId.HasValue && roomId.Value > 0)
+            filtered = filtered.Where(b => b.RoomId == roomId.Value);
+        
+        if (!string.IsNullOrEmpty(status) && status != "All")
+            filtered = filtered.Where(b => b.Status.ToString() == status);
+        
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            var query = searchQuery.Trim().ToLower();
+            filtered = filtered.Where(b =>
+                b.Id.ToString().Contains(query) ||
+                (b.Client != null && b.Client.FullName.ToLower().Contains(query)) ||
+                (b.Client != null && b.Client.Phone != null && b.Client.Phone.ToLower().Contains(query)) ||
+                b.Room.Name.ToLower().Contains(query) ||
+                b.CheckInDate.ToString("dd.MM.yyyy").Contains(query)
+            );
+        }
+        
+        BookingsGrid.ItemsSource = filtered.ToList();
+    }
+
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        try { ApplyFilter(); }
+        catch { /* Игнорируем ошибки при вводе */ }
+    }
+
+    private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            ApplyFilter();
+        }
     }
 
     private async void AddBooking_Click(object sender, RoutedEventArgs e)
@@ -90,9 +145,9 @@ public partial class BookingsView : Page
         if (dialog.ShowDialog() == true)
         {
             try 
-            { 
+            {
                 await _bookingService.CreateBookingAsync(dialog.Booking); 
-                LoadBookingsAsync(); 
+                LoadBookingsAsync();
                 MessageBox.Show("Бронирование успешно создано!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information); 
             }
             catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
@@ -138,45 +193,20 @@ public partial class BookingsView : Page
         }
     }
 
-    private async void ApplyFilter_Click(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var startDate = FilterStartDatePicker.SelectedDate;
-            var endDate = FilterEndDatePicker.SelectedDate;
-            var roomId = FilterRoomComboBox.SelectedValue as int?;
-            
-            var allBookings = (await _bookingService.GetAllBookingsWithDetailsAsync()).ToList();
-            var filtered = allBookings.AsEnumerable();
-            
-            if (startDate.HasValue)
-            {
-                filtered = filtered.Where(b => b.CheckOutDate >= startDate.Value);
-            }
-            if (endDate.HasValue)
-            {
-                filtered = filtered.Where(b => b.CheckInDate <= endDate.Value);
-            }
-            
-            if (roomId.HasValue && roomId.Value > 0)
-            {
-                filtered = filtered.Where(b => b.RoomId == roomId.Value);
-            }
-            
-            BookingsGrid.ItemsSource = filtered.ToList();
-        }
-        catch (Exception ex) 
-        {
-            MessageBox.Show($"Ошибка: {ex.Message}", "Фильтры не применены", MessageBoxButton.OK, MessageBoxImage.Error); 
-        }
-    }
-
     private void ClearFilter_Click(object sender, RoutedEventArgs e)
     {
+        SearchTextBox.Text = "";
         FilterStartDatePicker.SelectedDate = null;
         FilterEndDatePicker.SelectedDate = null;
         FilterRoomComboBox.SelectedIndex = 0;
-        LoadBookingsAsync();
+        FilterStatusComboBox.SelectedIndex = 0;
+        ApplyFilter();
+    }
+
+    private void FilterChanged(object sender, SelectionChangedEventArgs e)
+    {
+        try { ApplyFilter(); }
+        catch { /* Игнорируем ошибки при смене фильтров */ }
     }
 
     private async void CheckIn_Click(object sender, RoutedEventArgs e)
@@ -198,7 +228,7 @@ public partial class BookingsView : Page
             {
                 booking.Status = BookingStatus.Completed;
                 await _bookingService.CompleteBookingAsync(booking.Id);
-                LoadBookingsAsync();
+                LoadBookingsAsync(); 
                 MessageBox.Show("Гость выселен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -213,7 +243,7 @@ public partial class BookingsView : Page
             {
                 booking.Status = BookingStatus.Cancelled;
                 await _bookingService.UpdateBookingAsync(booking);
-                LoadBookingsAsync(); 
+                LoadBookingsAsync();
             }
         }
     }

@@ -1,56 +1,72 @@
 using System.Windows;
-using System.Windows.Controls;
 using HotelSystem.Models.Entities;
 using HotelSystem.Services;
-using HotelSystem.Helpers;
 
 namespace HotelSystem.Views;
 
 public partial class MainWindow : Window
 {
-    private Employee _currentUser = null!;
+    private Employee _currentUser;
 
     public MainWindow(Employee user)
     {
-        InitializeComponent();
-
-        _currentUser = user;
-        UserRoleText.Text = user.Role == UserRole.Admin ? "Администратор" : "Работник";
-
-        if (user.Role != UserRole.Admin)
+        try
         {
-            // Для не-админов скрываем пункты меню на основе прав
-            if (!PermissionChecker.CanView(PermissionCategory.Employees))
-                EmployeesMenuItem.Visibility = Visibility.Collapsed;
-            if (!PermissionChecker.CanView(PermissionCategory.Logs))
-                LogsMenuItem.Visibility = Visibility.Collapsed;
-            if (!PermissionChecker.CanView(PermissionCategory.Reports))
-                ReportsMenuItem.Visibility = Visibility.Collapsed;
-            if (!PermissionChecker.CanView(PermissionCategory.Settings))
-                SettingsMenuItem.Visibility = Visibility.Collapsed;
-            if (!PermissionChecker.CanView(PermissionCategory.RoleManagement))
-                RolesMenuItem.Visibility = Visibility.Collapsed;
-        }
+            InitializeComponent();
 
-        NavigateToBookings();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), "Employee object is null");
+            }
 
-        // Подписываемся на изменения уведомлений
-        NotificationService.Instance.NotificationsChanged += () =>
-            Dispatcher.Invoke(() => UpdateNotificationBadge());
+            _currentUser = user;
+            
+            if (UserRoleText != null)
+            {
+                UserRoleText.Text = user.Role == UserRole.Admin ? "Администратор" : "Работник";
+            }
 
-        // Генерируем уведомления о бронированиях и обновляем кружок
-        _ = NotificationService.Instance.GenerateBookingNotificationsAsync();
-        UpdateNotificationBadge();
+            if (user.Role != UserRole.Admin)
+            {
+                // Для не-админов скрываем пункты меню на основе прав
+                if (EmployeesMenuItem != null && !PermissionChecker.CanView(PermissionCategory.Employees))
+                    EmployeesMenuItem.Visibility = Visibility.Collapsed;
+                if (LogsMenuItem != null && !PermissionChecker.CanView(PermissionCategory.Logs))
+                    LogsMenuItem.Visibility = Visibility.Collapsed;
+                if (ReportsMenuItem != null && !PermissionChecker.CanView(PermissionCategory.Reports))
+                    ReportsMenuItem.Visibility = Visibility.Collapsed;
+                if (SettingsMenuItem != null && !PermissionChecker.CanView(PermissionCategory.Settings))
+                    SettingsMenuItem.Visibility = Visibility.Collapsed;
+                if (RolesMenuItem != null && !PermissionChecker.CanView(PermissionCategory.RoleManagement))
+                    RolesMenuItem.Visibility = Visibility.Collapsed;
+            }
 
-        // Запускаем таймер для периодической проверки уведомлений
-        var timer = new System.Windows.Threading.DispatcherTimer();
-        timer.Interval = TimeSpan.FromMinutes(5);
-        timer.Tick += async (s, e) =>
-        {
-            await NotificationService.Instance.GenerateBookingNotificationsAsync();
+            NavigateToBookings();
+
+            // Подписываемся на изменения уведомлений
+            NotificationService.Instance.NotificationsChanged += () =>
+                Dispatcher.Invoke(() => UpdateNotificationBadge());
+
+            // Генерируем уведомления о бронированиях и обновляем кружок
+            _ = NotificationService.Instance.GenerateBookingNotificationsAsync();
             UpdateNotificationBadge();
-        };
-        timer.Start();
+
+            // Запускаем таймер для периодической проверки уведомлений
+            var timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Interval = TimeSpan.FromMinutes(5);
+            timer.Tick += async (_, _) =>
+            {
+                await NotificationService.Instance.GenerateBookingNotificationsAsync();
+                UpdateNotificationBadge();
+            };
+            timer.Start();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка инициализации главного окна: {ex.Message}\n\n{ex.StackTrace}", 
+                "Критическая ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            throw;
+        }
     }
 
     private void UpdateNotificationBadge()
@@ -134,7 +150,7 @@ public partial class MainWindow : Window
             // Переходим на вкладку бронирований с выделением
             MainFrame.Navigate(new BookingsView(notificationsWindow.SelectedBookingId));
         }
-
+        
         // Обновляем кружок после закрытия окна
         UpdateNotificationBadge();
     }

@@ -42,6 +42,35 @@ public partial class ClientsView : Page
         }
     }
 
+    private void ApplyClientSearch()
+    {
+        try
+        {
+            var searchTerm = SearchTextBox.Text?.Trim();
+            _ = Task.Run(async () =>
+            {
+                var allClients = await _clientService.GetAllClientsAsync();
+                
+                var filtered = string.IsNullOrWhiteSpace(searchTerm)
+                    ? allClients
+                    : SearchHelper.FilterClients(allClients, searchTerm);
+                
+                var sorted = string.IsNullOrWhiteSpace(searchTerm)
+                    ? filtered
+                    : SearchHelper.SortClientsByPriority(filtered, searchTerm);
+                
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ClientsGrid.ItemsSource = sorted.ToList();
+                });
+            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка поиска: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
     private async void AddClient_Click(object sender, RoutedEventArgs e)
     {
         if (!PermissionChecker.CanCreate(PermissionCategory.Clients))
@@ -125,39 +154,21 @@ public partial class ClientsView : Page
         }
     }
 
-    private async void Search_Click(object sender, RoutedEventArgs e)
+    private void Search_Click(object sender, RoutedEventArgs e)
     {
-        try
-        {
-            var searchTerm = SearchTextBox.Text.Trim();
-            if (string.IsNullOrEmpty(searchTerm))
-            {
-                LoadClientsAsync();
-                return;
-            }
-
-            var clients = await _clientService.SearchClientsAsync(searchTerm);
-            ClientsGrid.ItemsSource = clients;
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Ошибка поиска: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        ApplyClientSearch();
     }
 
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (string.IsNullOrEmpty(SearchTextBox.Text?.Trim()))
-        {
-            LoadClientsAsync();
-        }
+        ApplyClientSearch();
     }
 
     private void SearchTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
         {
-            Search_Click(sender, e);
+            ApplyClientSearch();
         }
     }
 }

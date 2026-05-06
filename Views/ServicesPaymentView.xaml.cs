@@ -7,20 +7,10 @@ using HotelSystem.Models.Entities;
 
 namespace HotelSystem.Views;
 
-public class ServicePaymentDisplay
-{
-    public int Id { get; set; }
-    public DateTime TransactionDate { get; set; }
-    public string ClientName { get; set; } = "";
-    public string RoomName { get; set; } = "";
-    public string ServiceName { get; set; } = "";
-    public int Quantity { get; set; }
-    public decimal Amount { get; set; }
-}
-
 public partial class ServicesPaymentView : Page
 {
     private readonly IFinanceService _financeService;
+    private List<ServicePaymentDisplay> _allPayments = new();
 
     public ServicesPaymentView()
     {
@@ -53,7 +43,7 @@ public partial class ServicesPaymentView : Page
                 .OrderByDescending(t => t.TransactionDate)
                 .ToList();
 
-            var displayItems = serviceTransactions.Select(t => new ServicePaymentDisplay
+            _allPayments = serviceTransactions.Select(t => new ServicePaymentDisplay
             {
                 Id = t.Id,
                 TransactionDate = t.TransactionDate,
@@ -64,12 +54,66 @@ public partial class ServicesPaymentView : Page
                 ServiceName = t.Service?.Name ?? ""
             }).ToList();
             
-            PaymentsGrid.ItemsSource = displayItems;
+            ApplyFilters();
         }
         catch (Exception ex)
         {
             MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    private void ApplyFilters()
+    {
+        var startDate = StartDatePicker.SelectedDate;
+        var endDate = EndDatePicker.SelectedDate;
+        var searchQuery = SearchTextBox.Text;
+        
+        var filtered = _allPayments.AsQueryable();
+        
+        if (startDate.HasValue)
+            filtered = filtered.Where(p => p.TransactionDate >= startDate.Value);
+        
+        if (endDate.HasValue)
+            filtered = filtered.Where(p => p.TransactionDate <= endDate.Value.AddDays(1));
+        
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            var query = searchQuery.Trim().ToLower();
+            filtered = filtered.Where(p =>
+                p.Id.ToString().Contains(query) ||
+                p.ClientName.ToLower().Contains(query) ||
+                p.ServiceName.ToLower().Contains(query) ||
+                p.TransactionDate.ToString("dd.MM.yyyy").Contains(query)
+            );
+        }
+        
+        PaymentsGrid.ItemsSource = filtered.ToList();
+    }
+
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        ApplyFilters();
+    }
+
+    private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            ApplyFilters();
+        }
+    }
+
+    private void DateFilterChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ApplyFilters();
+    }
+
+    private void ResetFilters_Click(object sender, RoutedEventArgs e)
+    {
+        SearchTextBox.Text = "";
+        StartDatePicker.SelectedDate = null;
+        EndDatePicker.SelectedDate = null;
+        ApplyFilters();
     }
 
     private async void AddServicePayment_Click(object sender, RoutedEventArgs e)
