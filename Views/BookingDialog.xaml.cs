@@ -1,10 +1,8 @@
 using System.Windows;
 using System.Windows.Controls;
-using HotelSystem.Repositories;
 using HotelSystem.Services;
 using HotelSystem.Models.Entities;
 using HotelSystem.Helpers;
-using HotelSystem.Controls;
 
 namespace HotelSystem.Views;
 
@@ -16,7 +14,7 @@ public partial class BookingDialog : Window
     private readonly IBookingService _bookingService;
     private readonly bool _isEdit;
     private List<Room> _allRooms = new();
-    private bool _isSaved = false;
+    private bool _isSaved;
     private Window? _tempParent;
 
     // Для отслеживания изменений
@@ -93,9 +91,12 @@ public partial class BookingDialog : Window
     private async Task<Client?> CreateNewClientAsync()
     {
         var clientName = ClientAutoComplete.InputText.Trim();
+        MessageBox.Show($"client name {string.IsNullOrEmpty(clientName)}");
+        
         if (string.IsNullOrEmpty(clientName))
             return null;
 
+        MessageBox.Show("Test 1");
         // Проверяем права на создание клиента
         if (!PermissionChecker.CanCreate(PermissionCategory.Clients))
         {
@@ -103,18 +104,22 @@ public partial class BookingDialog : Window
             return null;
         }
 
+        MessageBox.Show("Test 2");
         // Сохраняем данные бронирования (они сохранятся в Booking)
         var currentRoomId = RoomComboBox.SelectedValue as int? ?? 0;
         var currentCheckIn = CheckInDatePicker.SelectedDate ?? DateTime.Today;
         var currentCheckOut = CheckOutDatePicker.SelectedDate ?? DateTime.Today.AddDays(1);
         var currentNotes = NotesTextBox.Text ?? "";
 
+        MessageBox.Show("Test 3");
         // Скрываем окно бронирования
         _tempParent = Owner;
         Owner = null;
+        MessageBox.Show("Hide Dialog");
         Hide();
 
         // Создаём диалог клиента
+        MessageBox.Show("Create Client Dialog");
         var clientDialog = new ClientDialog();
         clientDialog.Owner = _tempParent;
         

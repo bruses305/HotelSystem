@@ -269,6 +269,8 @@ public class ClientAutoCompleteBox : UserControl
                 
             case Key.Enter:
                 {
+                    MessageBox.Show($"1{_filteredClients.Count == 0} && {_onCreateClient != null} && {_listBox.SelectedItem is Client} && {_listBox.SelectedItem == null}");
+
                     if (_listBox.SelectedItem is Client c)
                     {
                         SelectClient(c);

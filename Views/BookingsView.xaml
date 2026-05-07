@@ -43,8 +43,8 @@
 <ComboBox x:Name="FilterStatusComboBox" Width="130" Margin="0,0,10,0" SelectionChanged="FilterChanged">
 <ComboBoxItem Content="Все статусы" Tag="All" IsSelected="True"/>
 <ComboBoxItem Content="Ожидание" Tag="Pending"/>
-<ComboBoxItem Content="Подтверждено" Tag="Confirmed"/>
 <ComboBoxItem Content="Оплачено" Tag="Paid"/>
+<ComboBoxItem Content="Заселён" Tag="CheckedIn"/>
 <ComboBoxItem Content="Отменено" Tag="Cancelled"/>
 <ComboBoxItem Content="Завершено" Tag="Completed"/>
 </ComboBox>

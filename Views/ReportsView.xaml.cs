@@ -5,6 +5,7 @@ using OxyPlot.Series;
 using HotelSystem.Services;
 using HotelSystem.Helpers;
 using HotelSystem.Helpers.Reports;
+using HotelSystem.Repositories;
 using Microsoft.Win32;
 using System.IO;
 using HotelSystem.Models.Entities;
@@ -19,13 +20,15 @@ public partial class ReportsView : Page
     private readonly IBookingService _bookingService;
     private readonly IServiceService _serviceService;
     private readonly ILogService _logService;
+    private readonly FinanceCalculator _financeCalculator;
     private ExcelExporter? _excelExporter;
     
     private DateTime _startDate;
     private DateTime _endDate;
     private FinanceReport? _currentReport;
     private string _lastExportPath = "";
-    private bool _showIncomeByDay = false;
+    private bool _showIncomeByDay;
+    private bool _showExpenses;
     private readonly string _configPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "HotelSystem",
@@ -40,6 +43,10 @@ public partial class ReportsView : Page
         _bookingService = ServiceLocator.GetService<IBookingService>();
         _serviceService = ServiceLocator.GetService<IServiceService>();
         _logService = ServiceLocator.GetService<ILogService>();
+        _financeCalculator = new FinanceCalculator(
+            ServiceLocator.GetService<IBookingRepository>(),
+            ServiceLocator.GetService<ITransactionRepository>()
+        );
         
         StartDatePicker.SelectedDate = DateTime.Today.AddMonths(-1);
         EndDatePicker.SelectedDate = DateTime.Today;
@@ -77,7 +84,10 @@ public partial class ReportsView : Page
                 }
             }
         }
-        catch { }
+        catch
+        {
+            // ignored
+        }
     }
 
     private void SaveLastExportPath(string path)
@@ -92,7 +102,10 @@ public partial class ReportsView : Page
             _lastExportPath = path;
             OpenLastExportBtn.IsEnabled = true;
         }
-        catch { }
+        catch
+        {
+            // ignored
+        }
     }
 
     private void OpenLastExport_Click(object sender, RoutedEventArgs e)
@@ -233,14 +246,38 @@ public partial class ReportsView : Page
 
     private void GenerateReport_Click(object sender, RoutedEventArgs e)
     {
+        if (_startDate > _endDate)
+        {
+            MessageBox.Show("Дата начала не может быть позже даты окончания!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         LoadReportAsync();
     }
 
     private void SwitchChart_Click(object sender, RoutedEventArgs e)
     {
         _showIncomeByDay = !_showIncomeByDay;
+        
         SwitchChartBtn.Content = _showIncomeByDay ? "По месяцам" : "По дням";
-        IncomeChartTitle.Text = _showIncomeByDay ? "Доходы по дням" : "Доходы по месяцам";
+        
+        IncomeChartTitle.Text = _showExpenses ? 
+            (_showIncomeByDay ? "Расходы по месяцам" : "Расходы по дням") : 
+            (_showIncomeByDay ? "Доходы по месяцам" : "Доходы по дням");
+        
+        UpdateIncomeChart();
+    }
+
+    private async void ToggleExpenses_Click(object sender, RoutedEventArgs e)
+    {
+        _showExpenses = !_showExpenses;
+        
+        var btn = sender as Button;
+        btn.Content = _showExpenses ? "Показать доходы" : "Показать расходы";
+        
+        IncomeChartTitle.Text = _showExpenses ? 
+            (_showIncomeByDay ? "Расходы по месяцам" : "Расходы по дням") : 
+            (_showIncomeByDay ? "Доходы по месяцам" : "Доходы по дням");
         
         UpdateIncomeChart();
     }
@@ -249,99 +286,148 @@ public partial class ReportsView : Page
     {
         try
         {
-            if (_currentReport == null) return;
-            
             var startDate = _startDate.Date;
             var endDate = _endDate.Date.AddDays(1).AddSeconds(-1);
             
-            var allBookings = await _bookingService.GetBookingsByDateRangeAsync(startDate, endDate);
-            var allBookingsList = allBookings.ToList();
-            
-            var incomeModel = new PlotModel { Title = _showIncomeByDay ? "Доходы по дням" : "Доходы по месяцам" };
-            var incomeSeries = new BarSeries { FillColor = OxyColor.FromRgb(39, 174, 96) };
+            var incomeModel = new PlotModel { Title = IncomeChartTitle.Text };
+            var incomeSeries = new BarSeries { FillColor = _showExpenses ? OxyColor.FromRgb(231, 76, 60) : OxyColor.FromRgb(39, 174, 96) };
             
             if (_showIncomeByDay)
             {
-                var bookingIncomeByDay = allBookingsList
-                    .Where(b => b.PaidAmount > 0)
-                    .GroupBy(b => b.CreatedAt.Date)
-                    .ToDictionary(g => g.Key, g => g.Sum(b => b.PaidAmount));
+                Dictionary<DateTime, decimal> periodData;
                 
-                var txIncomeByDay = _currentReport.Transactions
-                    .Where(t => t.Type == TransactionType.Income)
-                    .GroupBy(t => t.TransactionDate.Date)
-                    .ToDictionary(g => g.Key, g => g.Sum(t => t.Amount));
+                if (_showExpenses)
+                {
+                    periodData = await _financeCalculator.GetExpenseByDayAsync(startDate, endDate);
+                }
+                else
+                {
+                    periodData = await _financeCalculator.GetIncomeByDayAsync(startDate, endDate);
+                }
                 
-                var allDays = bookingIncomeByDay.Keys.Union(txIncomeByDay.Keys)
+                var allDays = periodData.Keys
                     .Where(d => d >= startDate && d <= endDate)
                     .OrderBy(d => d).Take(31);
                 
                 foreach (var day in allDays)
                 {
-                    decimal dayTotal = 0;
-                    if (bookingIncomeByDay.ContainsKey(day)) dayTotal += bookingIncomeByDay[day];
-                    if (txIncomeByDay.ContainsKey(day)) dayTotal += txIncomeByDay[day];
-                    incomeSeries.Items.Add(new BarItem { Value = (double)dayTotal });
+                    incomeSeries.Items.Add(new BarItem { Value = (double)periodData[day] });
                 }
                 
-                var categoryAxis = new OxyPlot.Axes.CategoryAxis { Position = OxyPlot.Axes.AxisPosition.Bottom };
+                // Y axis - категории (даты)
+                var categoryAxis = new OxyPlot.Axes.CategoryAxis 
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Left
+                };
                 foreach (var day in allDays)
                     categoryAxis.Labels.Add(day.ToString("dd.MM"));
                 incomeModel.Axes.Add(categoryAxis);
+                
+                // X axis - числовые значения
+                var linearAxis = new OxyPlot.Axes.LinearAxis
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Bottom,
+                    Title = "Сумма (Br)",
+                    StringFormat = "0"
+                };
+                incomeModel.Axes.Add(linearAxis);
             }
             else
             {
-                foreach (var month in _currentReport.IncomeByMonth.OrderBy(m => m.Key))
+                Dictionary<string, decimal> periodData;
+                
+                if (_showExpenses)
+                {
+                    periodData = await _financeCalculator.GetExpenseByMonthAsync(startDate, endDate);
+                }
+                else
+                {
+                    periodData = await _financeCalculator.GetIncomeByMonthAsync(startDate, endDate);
+                }
+                
+                foreach (var month in periodData.OrderBy(m => m.Key))
                     incomeSeries.Items.Add(new BarItem { Value = (double)month.Value });
                 
-                var categoryAxis = new OxyPlot.Axes.CategoryAxis { Position = OxyPlot.Axes.AxisPosition.Bottom };
-                foreach (var month in _currentReport.IncomeByMonth.OrderBy(m => m.Key))
-                    categoryAxis.Labels.Add(month.Key);
+                // Y axis - категории (месяцы)
+                var categoryAxis = new OxyPlot.Axes.CategoryAxis 
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Left
+                };
+                string[] monthNames =
+                [
+                    "Янв", "Фев", "Мар", "Апр", "Май", "Июн", 
+                    "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"
+                ];
+                foreach (var month in periodData.OrderBy(m => m.Key))
+                {
+                    var monthKey = month.Key.Split('-')[1]; // Получаем MM из yyyy-MM
+                    var monthIndex = int.Parse(monthKey) - 1;
+                    categoryAxis.Labels.Add(monthNames[monthIndex]);
+                }
                 incomeModel.Axes.Add(categoryAxis);
+                
+                // X axis - числовые значения
+                var linearAxis = new OxyPlot.Axes.LinearAxis
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Bottom,
+                    Title = "Сумма (Br)",
+                    StringFormat = "0"
+                };
+                incomeModel.Axes.Add(linearAxis);
             }
-            
+                
             incomeModel.Series.Add(incomeSeries);
             IncomeChart.Model = incomeModel;
         }
-        catch { }
+        catch
+        {
+            // ignored
+        }
     }
 
     private async void ExportExcel_Click(object sender, RoutedEventArgs e)
     {
-        if (!PermissionChecker.CanCreate(PermissionCategory.Reports))
-        {
-            MessageBox.Show("Недостаточно прав для экспорта отчётов!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-        
         try
         {
-            var dialog = new SaveFileDialog
+            if (!PermissionChecker.CanCreate(PermissionCategory.Reports))
             {
-                Filter = "Excel files (*.xlsx)|*.xlsx",
-                DefaultExt = "xlsx",
-                FileName = $"HotelReport_{DateTime.Now:yyyyMMdd}"
-            };
+                MessageBox.Show("Недостаточно прав для экспорта отчётов!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+        
+            try
+            {
+                var dialog = new SaveFileDialog
+                {
+                    Filter = "Excel files (*.xlsx)|*.xlsx",
+                    DefaultExt = "xlsx",
+                    FileName = $"HotelReport_{DateTime.Now:yyyyMMdd}"
+                };
 
-            if (dialog.ShowDialog() == true)
+                if (dialog.ShowDialog() == true)
+                {
+                    // Инициализируем экспортер
+                    _excelExporter = new ExcelExporter(
+                        _financeService, _roomService, _clientService, _bookingService, _serviceService);
+                
+                    await _excelExporter.ExportAsync(_startDate.Date, _endDate.Date, dialog.FileName);
+                
+                    SaveLastExportPath(dialog.FileName);
+                
+                    await _logService.LogAsync(LogLevel.Medium, 
+                        $"Создан финансовый отчёт Excel: {dialog.FileName}", "ReportsView");
+                
+                    MessageBox.Show($"Отчёт сохранён: {dialog.FileName}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
             {
-                // Инициализируем экспортер
-                _excelExporter = new ExcelExporter(
-                    _financeService, _roomService, _clientService, _bookingService, _serviceService);
-                
-                await _excelExporter.ExportAsync(_startDate.Date, _endDate.Date, dialog.FileName);
-                
-                SaveLastExportPath(dialog.FileName);
-                
-                await _logService.LogAsync(LogLevel.Medium, 
-                    $"Создан финансовый отчёт Excel: {dialog.FileName}", "ReportsView");
-                
-                MessageBox.Show($"Отчёт сохранён: {dialog.FileName}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Ошибка экспорта: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        catch (Exception ex)
+        catch 
         {
-            MessageBox.Show($"Ошибка экспорта: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            // ignored
         }
     }
 

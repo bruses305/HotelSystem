@@ -101,7 +101,13 @@ public partial class BookingsView : Page
             filtered = filtered.Where(b => b.RoomId == roomId.Value);
         
         if (!string.IsNullOrEmpty(status) && status != "All")
-            filtered = filtered.Where(b => b.Status.ToString() == status);
+        {
+            // Для статуса Ожидание показываем и Pending и CheckedIn
+            if (status == "Pending")
+                filtered = filtered.Where(b => b.Status == BookingStatus.Pending || b.Status == BookingStatus.CheckedIn);
+            else
+                filtered = filtered.Where(b => b.Status.ToString() == status);
+        }
         
         if (!string.IsNullOrWhiteSpace(searchQuery))
         {

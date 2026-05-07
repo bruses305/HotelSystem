@@ -129,10 +129,21 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Name="IncomeChartTitle" Text="Доходы по месяцам" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" VerticalAlignment="Center"/>
                         <Button x:Name="SwitchChartBtn" Grid.Column="1" Content="По дням" Click="SwitchChart_Click" 
-                                Background="#3498DB" Foreground="White" Padding="10,5" BorderThickness="0" Margin="0,0,0,10">
+                                Background="#3498DB" Foreground="White" Padding="10,5" BorderThickness="0" Margin="0,0,5,10">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                        <Button x:Name="ToggleExpensesBtn" Grid.Column="2" Content="Показать расходы" Click="ToggleExpenses_Click" 
+                                Background="#95A5A6" Foreground="White" Padding="10,5" BorderThickness="0" Margin="0,0,0,10">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
