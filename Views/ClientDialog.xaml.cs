@@ -34,6 +34,16 @@ public partial class ClientDialog : Window
  }
  }
 
+ /// <summary>
+ /// Устанавливает имя клиента после создания диалога (для сценария создания из BookingDialog)
+ /// </summary>
+ public void SetClientName(string name)
+ {
+ Client.FullName = name;
+ FullNameTextBox.Text = name;
+ _originalFullName = name;
+ }
+
  private void InitializeForm()
  {
  FullNameTextBox.Text = Client.FullName;

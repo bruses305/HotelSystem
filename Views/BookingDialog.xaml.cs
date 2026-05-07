@@ -15,7 +15,6 @@ public partial class BookingDialog : Window
     private readonly bool _isEdit;
     private List<Room> _allRooms = new();
     private bool _isSaved;
-    private Window? _tempParent;
 
     // Для отслеживания изменений
     private int _originalRoomId;
@@ -91,12 +90,10 @@ public partial class BookingDialog : Window
     private async Task<Client?> CreateNewClientAsync()
     {
         var clientName = ClientAutoComplete.InputText.Trim();
-        MessageBox.Show($"client name {string.IsNullOrEmpty(clientName)}");
         
         if (string.IsNullOrEmpty(clientName))
             return null;
 
-        MessageBox.Show("Test 1");
         // Проверяем права на создание клиента
         if (!PermissionChecker.CanCreate(PermissionCategory.Clients))
         {
@@ -104,37 +101,20 @@ public partial class BookingDialog : Window
             return null;
         }
 
-        MessageBox.Show("Test 2");
-        // Сохраняем данные бронирования (они сохранятся в Booking)
-        var currentRoomId = RoomComboBox.SelectedValue as int? ?? 0;
-        var currentCheckIn = CheckInDatePicker.SelectedDate ?? DateTime.Today;
-        var currentCheckOut = CheckOutDatePicker.SelectedDate ?? DateTime.Today.AddDays(1);
-        var currentNotes = NotesTextBox.Text ?? "";
-
-        MessageBox.Show("Test 3");
-        // Скрываем окно бронирования
-        _tempParent = Owner;
-        Owner = null;
-        MessageBox.Show("Hide Dialog");
-        Hide();
-
-        // Создаём диалог клиента
-        MessageBox.Show("Create Client Dialog");
+        // Создаём диалог клиента на основе главного окна
         var clientDialog = new ClientDialog();
-        clientDialog.Owner = _tempParent;
         
-        // Устанавливаем имя если есть
+        // Показываем как модальный диалог относительно главного окна
+        var mainWindow = Application.Current.MainWindow;
+        clientDialog.Owner = mainWindow;
+        
+        // Устанавливаем имя ПЕРЕД показом диалога
         if (!string.IsNullOrEmpty(clientName))
         {
-            clientDialog.Client.FullName = clientName;
+            clientDialog.SetClientName(clientName);
         }
-
-        var result = clientDialog.ShowDialog();
         
-        // Возвращаемся в окно бронирования
-        Owner = _tempParent;
-        Show();
-        Activate();
+        var result = clientDialog.ShowDialog();
 
         if (result == true && clientDialog.Client != null)
         {
