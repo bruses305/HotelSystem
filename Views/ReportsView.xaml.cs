@@ -259,11 +259,11 @@ public partial class ReportsView : Page
     {
         _showIncomeByDay = !_showIncomeByDay;
         
-        SwitchChartBtn.Content = _showIncomeByDay ? "По месяцам" : "По дням";
+        SwitchChartBtn.Content = _showIncomeByDay ? "По дням" : "По месяцам";
         
         IncomeChartTitle.Text = _showExpenses ? 
-            (_showIncomeByDay ? "Расходы по месяцам" : "Расходы по дням") : 
-            (_showIncomeByDay ? "Доходы по месяцам" : "Доходы по дням");
+            (_showIncomeByDay ? "Расходы по дням" : "Расходы по месяцам") : 
+            (_showIncomeByDay ? "Доходы по дням" : "Доходы по месяцам");
         
         UpdateIncomeChart();
     }

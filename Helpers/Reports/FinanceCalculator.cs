@@ -7,7 +7,7 @@ namespace HotelSystem.Helpers.Reports;
 /// Единый класс для расчёта финансовых показателей
 /// Используется как единственный источник правды для всех финансовых вычислений
 /// </summary>
-public class FinanceCalculator
+public class FinanceCalculator : IFinanceCalculator
 {
     private readonly IBookingRepository _bookingRepository;
     private readonly ITransactionRepository _transactionRepository;
@@ -37,8 +37,9 @@ public class FinanceCalculator
             {
                 Date = tx.TransactionDate,
                 Amount = tx.Amount,
-                Source = "Service",
+                SourceType = "Service",
                 SourceId = tx.ServiceId,
+                RoomId = tx.RoomId,
                 Description = tx.Description
             });
         }
@@ -51,7 +52,7 @@ public class FinanceCalculator
             {
                 Date = tx.TransactionDate,
                 Amount = tx.Amount,
-                Source = "OtherIncome",
+                SourceType = "OtherIncome",
                 SourceId = null,
                 Description = tx.Description
             });
@@ -66,8 +67,9 @@ public class FinanceCalculator
             {
                 Date = tx.TransactionDate,
                 Amount = tx.Amount,
-                Source = "Booking",
+                SourceType = "Booking",
                 SourceId = tx.BookingId,
+                RoomId = tx.RoomId,
                 Description = tx.Description
             });
         }
@@ -92,7 +94,7 @@ public class FinanceCalculator
                 Date = tx.TransactionDate,
                 Amount = tx.Amount,
                 Category = tx.Category,
-                Source = tx.BookingId.HasValue ? "Booking" : 
+                SourceType = tx.BookingId.HasValue ? "Booking" : 
                         tx.RoomId.HasValue ? "Room" :
                         tx.EmployeeId.HasValue ? "Salary" : "Other",
                 SourceId = tx.BookingId ?? tx.RoomId ?? tx.EmployeeId,
@@ -190,6 +192,130 @@ public class FinanceCalculator
         var expense = await GetTotalExpenseAsync(startDate, endDate);
         return income - expense;
     }
+
+    /// <summary>
+    /// Получает доходы по периодам
+    /// </summary>
+    public async Task<Dictionary<TKey, decimal>> GetIncomeByPeriodAsync<TKey>(
+        DateTime startDate, DateTime endDate, PeriodType periodType) where TKey : notnull
+    {
+        var incomes = await GetAllIncomesAsync(startDate, endDate);
+        var result = new Dictionary<TKey, decimal>();
+        
+        foreach (var income in incomes)
+        {
+            TKey key = periodType switch
+            {
+                PeriodType.Day => (TKey)(object)income.Date.Date,
+                PeriodType.Week => (TKey)(object)GetWeekStart(income.Date),
+                PeriodType.Month => (TKey)(object)income.Date.ToString("yyyy-MM"),
+                PeriodType.Year => (TKey)(object)income.Date.ToString("yyyy"),
+                _ => (TKey)(object)income.Date.Date
+            };
+            
+            if (result.ContainsKey(key))
+                result[key] += income.Amount;
+            else
+                result[key] = income.Amount;
+        }
+        
+        return result;
+    }
+
+    /// <summary>
+    /// Получает расходы по периодам
+    /// </summary>
+    public async Task<Dictionary<TKey, decimal>> GetExpenseByPeriodAsync<TKey>(
+        DateTime startDate, DateTime endDate, PeriodType periodType) where TKey : notnull
+    {
+        var expenses = await GetAllExpensesAsync(startDate, endDate);
+        var result = new Dictionary<TKey, decimal>();
+        
+        foreach (var expense in expenses)
+        {
+            TKey key = periodType switch
+            {
+                PeriodType.Day => (TKey)(object)expense.Date.Date,
+                PeriodType.Week => (TKey)(object)GetWeekStart(expense.Date),
+                PeriodType.Month => (TKey)(object)expense.Date.ToString("yyyy-MM"),
+                PeriodType.Year => (TKey)(object)expense.Date.ToString("yyyy"),
+                _ => (TKey)(object)expense.Date.Date
+            };
+            
+            if (result.ContainsKey(key))
+                result[key] += expense.Amount;
+            else
+                result[key] = expense.Amount;
+        }
+        
+        return result;
+    }
+
+    /// <summary>
+    /// Получает сводную финансовую информацию
+    /// </summary>
+    public async Task<FinancialSummary> GetSummaryAsync(DateTime startDate, DateTime endDate)
+    {
+        var incomes = await GetAllIncomesAsync(startDate, endDate);
+        var expenses = await GetAllExpensesAsync(startDate, endDate);
+        var bookings = await _bookingRepository.GetBookingsByDateRangeAsync(startDate, endDate);
+        
+        var summary = new FinancialSummary
+        {
+            TotalIncome = incomes.Sum(i => i.Amount),
+            TotalExpense = expenses.Sum(e => e.Amount),
+            BookingCount = incomes.Count(i => i.SourceType == "Booking"),
+            ServiceCount = incomes.Count(i => i.SourceType == "Service"),
+            IncomeByMonth = await GetIncomeByPeriodAsync<string>(startDate, endDate, PeriodType.Month) as Dictionary<string, decimal> ?? new(),
+            IncomeByRoom = await GetIncomeByRoomAsync(startDate, endDate),
+            IncomeByCategory = await GetIncomeByCategoryAsync(startDate, endDate)
+        };
+        
+        summary.Profit = summary.TotalIncome - summary.TotalExpense;
+        summary.AverageBookingIncome = summary.BookingCount > 0 
+            ? incomes.Where(i => i.SourceType == "Booking").Sum(i => i.Amount) / summary.BookingCount 
+            : 0;
+        summary.AverageServiceIncome = summary.ServiceCount > 0
+            ? incomes.Where(i => i.SourceType == "Service").Sum(i => i.Amount) / summary.ServiceCount
+            : 0;
+        
+        return summary;
+    }
+
+    /// <summary>
+    /// Получает доходы по номерам
+    /// </summary>
+    public async Task<Dictionary<int, decimal>> GetIncomeByRoomAsync(DateTime startDate, DateTime endDate)
+    {
+        var incomes = await GetAllIncomesAsync(startDate, endDate);
+        return incomes
+            .Where(i => i.RoomId.HasValue)
+            .GroupBy(i => i.RoomId.Value)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Sum(i => i.Amount)
+            );
+    }
+
+    /// <summary>
+    /// Получает доходы по категориям
+    /// </summary>
+    public async Task<Dictionary<string, decimal>> GetIncomeByCategoryAsync(DateTime startDate, DateTime endDate)
+    {
+        var incomes = await GetAllIncomesAsync(startDate, endDate);
+        return incomes
+            .GroupBy(i => i.SourceType)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Sum(i => i.Amount)
+            );
+    }
+
+    private DateTime GetWeekStart(DateTime date)
+    {
+        int days = (int)date.DayOfWeek;
+        return date.AddDays(-days).Date;
+    }
 }
 
 /// <summary>
@@ -199,8 +325,10 @@ public class IncomeEntry
 {
     public DateTime Date { get; set; }
     public decimal Amount { get; set; }
-    public string Source { get; set; } // "Booking", "Service", "OtherIncome"
+    public string SourceType { get; set; } = ""; // "Booking", "Service", "OtherIncome"
     public int? SourceId { get; set; }
+    public int? RoomId { get; set; }
+    public int? ClientId { get; set; }
     public string? Description { get; set; }
 }
 
@@ -212,7 +340,7 @@ public class ExpenseEntry
     public DateTime Date { get; set; }
     public decimal Amount { get; set; }
     public TransactionCategory Category { get; set; }
-    public string Source { get; set; } // "Booking", "Room", "Salary", "Other"
+    public string SourceType { get; set; } = ""; // "Booking", "Room", "Salary", "Other"
     public int? SourceId { get; set; }
     public string? Description { get; set; }
 }

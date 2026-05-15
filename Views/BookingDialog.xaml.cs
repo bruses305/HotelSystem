@@ -1,12 +1,14 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.ComponentModel;
 using HotelSystem.Services;
 using HotelSystem.Models.Entities;
 using HotelSystem.Helpers;
+using HotelSystem.Controls;
 
 namespace HotelSystem.Views;
 
-public partial class BookingDialog : Window
+public partial class BookingDialog : DialogBase
 {
     public Booking Booking { get; private set; }
     private readonly IRoomService _roomService;
@@ -14,8 +16,7 @@ public partial class BookingDialog : Window
     private readonly IBookingService _bookingService;
     private readonly bool _isEdit;
     private List<Room> _allRooms = new();
-    private bool _isSaved;
-
+        
     // Для отслеживания изменений
     private int _originalRoomId;
     private int _originalClientId;
@@ -34,6 +35,92 @@ public partial class BookingDialog : Window
         InitializeForm();
     }
 
+    protected override bool HasChanges => 
+        RoomComboBox.SelectedValue as int? != _originalRoomId ||
+        ClientAutoComplete.SelectedClient?.Id != _originalClientId ||
+        CheckInDatePicker.SelectedDate != _originalCheckIn ||
+        CheckOutDatePicker.SelectedDate != _originalCheckOut ||
+        NotesTextBox.Text != _originalNotes;
+    
+    protected override async void Save()
+    {
+        if (RoomComboBox.SelectedValue == null)
+        {
+            MessageBoxHelper.ShowError("Выберите номер");
+            return;
+        }
+
+        if (ClientAutoComplete.SelectedClient == null)
+        {
+            MessageBoxHelper.ShowError("Выберите или создайте клиента");
+            return;
+        }
+
+        if (!CheckInDatePicker.SelectedDate.HasValue || !CheckOutDatePicker.SelectedDate.HasValue)
+        {
+            MessageBoxHelper.ShowError("Выберите даты");
+            return;
+        }
+        
+        if (CheckOutDatePicker.SelectedDate <= CheckInDatePicker.SelectedDate)
+        {
+            MessageBoxHelper.ShowError("Дата выезда должна быть позже даты заезда");
+            return;
+        }
+
+        var roomId = (int)RoomComboBox.SelectedValue;
+        var clientId = ClientAutoComplete.SelectedClient.Id;
+        var checkIn = CheckInDatePicker.SelectedDate.Value;
+        var checkOut = CheckOutDatePicker.SelectedDate.Value;
+
+        // Проверяем доступность номера
+        var excludeId = _isEdit ? Booking.Id : (int?)null;
+        var isAvailable = await _bookingService.IsRoomAvailableAsync(roomId, checkIn, checkOut, excludeId);
+
+        if (!isAvailable)
+        {
+            var allBookings = await _bookingService.GetBookingsByDateRangeAsync(checkIn.AddDays(-30), checkOut.AddDays(30));
+            var overlaps = allBookings.Where(b =>
+                b.RoomId == roomId &&
+                b.Id != excludeId &&
+                b.Status != BookingStatus.Cancelled &&
+                b.Status != BookingStatus.Completed &&
+                ((b.CheckInDate <= checkIn && b.CheckOutDate > checkIn) ||
+                 (b.CheckInDate < checkOut && b.CheckOutDate >= checkOut) ||
+                 (b.CheckInDate >= checkIn && b.CheckOutDate <= checkOut)))
+                .ToList();
+
+            if (overlaps.Any())
+            {
+                var overlapInfo = string.Join("\n", overlaps.Select(b =>
+                    $"- {b.Client?.FullName ?? "Клиент #" + b.ClientId}: {b.CheckInDate:dd.MM} - {b.CheckOutDate:dd.MM}"));
+
+                MessageBoxHelper.ShowWarning($"Номер занят на указанные даты бронированиями:\n\n{overlapInfo}\n\nВыберите другие даты!");
+            }
+            else
+            {
+                MessageBoxHelper.ShowError("Этот номер уже занят на выбранные даты! Выберите другие даты.");
+            }
+            return;
+        }
+
+        Booking.RoomId = roomId;
+        Booking.ClientId = clientId;
+        Booking.CheckInDate = checkIn;
+        Booking.CheckOutDate = checkOut;
+        Booking.Notes = NotesTextBox.Text;
+
+        MarkAsSaved();
+        DialogResult = true;
+        CloseWithoutPrompt();
+    }
+
+    protected override void Cancel()
+    {
+        base.Cancel();
+        CloseWithoutPrompt();
+    }
+
     private async void InitializeForm()
     {
         _allRooms = (await _roomService.GetAllRoomsAsync()).ToList();
@@ -46,7 +133,13 @@ public partial class BookingDialog : Window
         ClientAutoComplete.SetClients(clients.ToList());
         
         // Обработчик выбора клиента
-        ClientAutoComplete.SetClientSelectedHandler(async client => await OnClientSelectedAsync(client));
+        ClientAutoComplete.SetClientSelectedHandler(async client =>
+        {
+            if (client != null)
+            {
+                Booking.ClientId = client.Id;
+            }
+        });
         
         // Обработчик создания нового клиента
         ClientAutoComplete.SetCreateClientHandler(async () => await CreateNewClientAsync());
@@ -79,14 +172,6 @@ public partial class BookingDialog : Window
         UpdatePrice();
     }
 
-    private async Task OnClientSelectedAsync(Client? client)
-    {
-        if (client != null)
-        {
-            Booking.ClientId = client.Id;
-        }
-    }
-
     private async Task<Client?> CreateNewClientAsync()
     {
         var clientName = ClientAutoComplete.InputText.Trim();
@@ -97,7 +182,7 @@ public partial class BookingDialog : Window
         // Проверяем права на создание клиента
         if (!PermissionChecker.CanCreate(PermissionCategory.Clients))
         {
-            MessageBox.Show("Недостаточно прав для создания клиента!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBoxHelper.ShowError("Недостаточно прав для создания клиента!");
             return null;
         }
 
@@ -150,118 +235,17 @@ public partial class BookingDialog : Window
 
     private async void Save_Click(object sender, RoutedEventArgs e)
     {
-        if (RoomComboBox.SelectedValue == null)
-        {
-            MessageBox.Show("Выберите номер", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (ClientAutoComplete.SelectedClient == null)
-        {
-            MessageBox.Show("Выберите или создайте клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (!CheckInDatePicker.SelectedDate.HasValue || !CheckOutDatePicker.SelectedDate.HasValue)
-        {
-            MessageBox.Show("Выберите даты", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-        
-        if (CheckOutDatePicker.SelectedDate <= CheckInDatePicker.SelectedDate)
-        {
-            MessageBox.Show("Дата выезда должна быть позже даты заезда", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        var roomId = (int)RoomComboBox.SelectedValue;
-        var clientId = ClientAutoComplete.SelectedClient.Id;
-        var checkIn = CheckInDatePicker.SelectedDate.Value;
-        var checkOut = CheckOutDatePicker.SelectedDate.Value;
-
-        // Проверяем доступность номера
-        var excludeId = _isEdit ? Booking.Id : (int?)null;
-        var isAvailable = await _bookingService.IsRoomAvailableAsync(roomId, checkIn, checkOut, excludeId);
-
-        if (!isAvailable)
-        {
-            var allBookings = await _bookingService.GetBookingsByDateRangeAsync(checkIn.AddDays(-30), checkOut.AddDays(30));
-            var overlaps = allBookings.Where(b =>
-                b.RoomId == roomId &&
-                b.Id != excludeId &&
-                b.Status != BookingStatus.Cancelled &&
-                b.Status != BookingStatus.Completed &&
-                ((b.CheckInDate <= checkIn && b.CheckOutDate > checkIn) ||
-                 (b.CheckInDate < checkOut && b.CheckOutDate >= checkOut) ||
-                 (b.CheckInDate >= checkIn && b.CheckOutDate <= checkOut)))
-                .ToList();
-
-            if (overlaps.Any())
-            {
-                var overlapInfo = string.Join("\n", overlaps.Select(b =>
-                    $"- {b.Client?.FullName ?? "Клиент #" + b.ClientId}: {b.CheckInDate:dd.MM} - {b.CheckOutDate:dd.MM}"));
-
-                MessageBox.Show($"Номер занят на указанные даты бронированиями:\n\n{overlapInfo}\n\nВыберите другие даты!",
-                    "Подтверждение", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-            else
-            {
-                MessageBox.Show("Этот номер уже занят на выбранные даты! Выберите другие даты.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-            return;
-        }
-
-        Booking.RoomId = roomId;
-        Booking.ClientId = clientId;
-        Booking.CheckInDate = checkIn;
-        Booking.CheckOutDate = checkOut;
-        Booking.Notes = NotesTextBox.Text;
-
-        DialogResult = true;
-        _isSaved = true;
-        Close();
+        Save();
     }
 
     private void Cancel_Click(object sender, RoutedEventArgs e)
     {
-        Close();
+        Cancel();
     }
 
-    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    private void Window_Closing(object sender, CancelEventArgs e)
     {
-        if (_isSaved) return;
-
-        var currentRoomId = RoomComboBox.SelectedValue as int? ?? 0;
-        var currentClientId = ClientAutoComplete.SelectedClient?.Id ?? 0;
-        var currentCheckIn = CheckInDatePicker.SelectedDate ?? DateTime.MinValue;
-        var currentCheckOut = CheckOutDatePicker.SelectedDate ?? DateTime.MinValue;
-        var currentNotes = NotesTextBox.Text ?? "";
-
-        bool hasChanges = false;
-        if (_isEdit)
-        {
-            hasChanges = currentRoomId != _originalRoomId ||
-                         currentClientId != _originalClientId ||
-                         currentCheckIn != _originalCheckIn ||
-                         currentCheckOut != _originalCheckOut ||
-                         currentNotes != _originalNotes;
-        }
-        else
-        {
-            hasChanges = currentRoomId > 0 || currentClientId > 0 ||
-                         currentCheckIn != DateTime.Today ||
-                         currentCheckOut != DateTime.Today.AddDays(1) ||
-                         !string.IsNullOrEmpty(currentNotes);
-        }
-
-        if (hasChanges)
-        {
-            var result = MessageBox.Show("Есть несохранённые изменения. Закрыть?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.No)
-            {
-                e.Cancel = true;
-            }
-        }
+        // Логика перенесена в базовый класс
     }
 
     private void RoomComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

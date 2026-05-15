@@ -1,107 +1,103 @@
 using System.Windows;
+using System.ComponentModel;
 using HotelSystem.Repositories;
 using HotelSystem.Services;
 using HotelSystem.Models.Entities;
+using HotelSystem.Helpers;
 
 namespace HotelSystem.Views;
 
-public partial class ClientDialog : Window
+public partial class ClientDialog : DialogBase
 {
- public Client Client { get; private set; }
- private readonly bool _isEdit;
- private bool _isSaved = false;
-
- // Сохраняем оригинальные значения для проверки изменений
- private string _originalFullName = "";
- private string _originalPassport = "";
- private string _originalPhone = "";
- private string _originalEmail = "";
-
- public ClientDialog(Client? client = null)
- {
- InitializeComponent();
- _isEdit = client != null;
- Client = client ?? new Client();
+    public Client Client { get; private set; }
+    private readonly bool _isEdit;
         
- if (_isEdit)
- {
- InitializeForm();
- }
- else
- {
- // Для нового клиента вызываем InitializeForm чтобы подготовить поля
- InitializeForm();
- }
- }
+    private string _originalFullName = "";
+    private string _originalPassport = "";
+    private string _originalPhone = "";
+    private string _originalEmail = "";
 
- /// <summary>
- /// Устанавливает имя клиента после создания диалога (для сценария создания из BookingDialog)
- /// </summary>
- public void SetClientName(string name)
- {
- Client.FullName = name;
- FullNameTextBox.Text = name;
- _originalFullName = name;
- }
-
- private void InitializeForm()
- {
- FullNameTextBox.Text = Client.FullName;
- PassportTextBox.Text = Client.Passport;
- PhoneTextBox.Text = Client.Phone;
- EmailTextBox.Text = Client.Email;
+    public ClientDialog(Client? client = null)
+    {
+        InitializeComponent();
+        _isEdit = client != null;
+        Client = client ?? new Client();
         
- _originalFullName = Client.FullName ?? "";
- _originalPassport = Client.Passport ?? "";
- _originalPhone = Client.Phone ?? "";
- _originalEmail = Client.Email ?? "";
- }
+        if (_isEdit)
+        {
+            InitializeForm();
+        }
+        else
+        {
+            InitializeForm();
+        }
+    }
 
- private void Save_Click(object sender, RoutedEventArgs e)
- {
- if (string.IsNullOrWhiteSpace(FullNameTextBox.Text))
- {
- MessageBox.Show("Введите ФИО", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
- return;
- }
+    /// <summary>
+    /// Устанавливает имя клиента после создания диалога (для сценария создания из BookingDialog)
+    /// </summary>
+    public void SetClientName(string name)
+    {
+        Client.FullName = name;
+        FullNameTextBox.Text = name;
+        _originalFullName = name;
+    }
 
- Client.FullName = FullNameTextBox.Text;
- Client.Passport = PassportTextBox.Text;
- Client.Phone = PhoneTextBox.Text;
- Client.Email = EmailTextBox.Text;
+    protected override bool HasChanges => 
+        FullNameTextBox.Text?.Trim() != _originalFullName ||
+        PassportTextBox.Text?.Trim() != _originalPassport ||
+        PhoneTextBox.Text?.Trim() != _originalPhone ||
+        EmailTextBox.Text?.Trim() != _originalEmail;
+    
+    protected override void Save()
+    {
+        if (string.IsNullOrWhiteSpace(FullNameTextBox.Text))
+        {
+            MessageBoxHelper.ShowError("Введите ФИО");
+            return;
+        }
 
- _isSaved = true;
- DialogResult = true;
- Close();
- }
-
- private void Cancel_Click(object sender, RoutedEventArgs e)
- {
- Close();
- }
-
- private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
- {
- if (_isSaved) return;
+        Client.FullName = FullNameTextBox.Text;
+        Client.Passport = PassportTextBox.Text;
+        Client.Phone = PhoneTextBox.Text;
+        Client.Email = EmailTextBox.Text;
         
- var currentFullName = FullNameTextBox.Text ?? "";
- var currentPassport = PassportTextBox.Text ?? "";
- var currentPhone = PhoneTextBox.Text ?? "";
- var currentEmail = EmailTextBox.Text ?? "";
+        MarkAsSaved();
+        DialogResult = true;
+        CloseWithoutPrompt();
+    }
+
+    protected override void Cancel()
+    {
+        base.Cancel();
+        CloseWithoutPrompt();
+    }
+
+    private void InitializeForm()
+    {
+        FullNameTextBox.Text = Client.FullName;
+        PassportTextBox.Text = Client.Passport;
+        PhoneTextBox.Text = Client.Phone;
+        EmailTextBox.Text = Client.Email;
         
- bool hasChanges = _isEdit 
- ? currentFullName != _originalFullName || currentPassport != _originalPassport || 
- currentPhone != _originalPhone || currentEmail != _originalEmail
- : !string.IsNullOrEmpty(currentFullName) || !string.IsNullOrEmpty(currentPassport) || 
- !string.IsNullOrEmpty(currentPhone) || !string.IsNullOrEmpty(currentEmail);
-        
- if (hasChanges)
- {
- var result = MessageBox.Show("Есть несохранённые изменения. Закрыть?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
- if (result == MessageBoxResult.No)
- {
- e.Cancel = true;
- }
- }
- }
+        _originalFullName = Client.FullName ?? "";
+        _originalPassport = Client.Passport ?? "";
+        _originalPhone = Client.Phone ?? "";
+        _originalEmail = Client.Email ?? "";
+    }
+
+    private void Save_Click(object sender, RoutedEventArgs e)
+    {
+        Save();
+    }
+
+    private void Cancel_Click(object sender, RoutedEventArgs e)
+    {
+        Cancel();
+    }
+
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+        // Логика перенесена в базовый класс DialogBase
+    }
 }
