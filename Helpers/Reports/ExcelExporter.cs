@@ -133,26 +133,9 @@ public class ExcelExporter
         int row = 4;
         bool alternate = false;
         
-        // Оплаты бронирований
-        foreach (var booking in bookings.Where(b => b.PaidAmount > 0))
-        {
-            var client = clients.FirstOrDefault(c => c.Id == booking.ClientId);
-            var room = rooms.FirstOrDefault(r => r.Id == booking.RoomId);
-            
-            ExcelStyles.AddDataRow(sheet, row, alternate,
-                booking.CreatedAt.ToString("dd.MM.yyyy HH:mm"),
-                "Доход", "Оплата бронирования",
-                room?.Name ?? $"№{booking.RoomId}",
-                client?.FullName ?? "Клиент",
-                $"Бронирование #{booking.Id}",
-                (double)booking.PaidAmount, true);
-            
-            row++;
-            alternate = !alternate;
-        }
         
-        // Транзакции (без Booking - они уже учтены)
-        foreach (var tx in transactions.Where(t => t.Category != TransactionCategory.Booking).OrderBy(t => t.TransactionDate))
+        // Транзакции
+        foreach (var tx in transactions.OrderBy(t => t.TransactionDate))
         {
             var room = tx.RoomId.HasValue ? rooms.FirstOrDefault(r => r.Id == tx.RoomId) : null;
             var service = tx.ServiceId.HasValue ? services.FirstOrDefault(s => s.Id == tx.ServiceId) : null;
@@ -191,23 +174,6 @@ public class ExcelExporter
         
         int row = 4;
         decimal total = 0;
-        
-        foreach (var booking in bookings.Where(b => b.PaidAmount > 0))
-        {
-            var client = clients.FirstOrDefault(c => c.Id == booking.ClientId);
-            var room = rooms.FirstOrDefault(r => r.Id == booking.RoomId);
-            
-            ExcelStyles.AddDataRowSimple(sheet, row, row % 2 == 0,
-                booking.CreatedAt.ToString("dd.MM.yyyy HH:mm"),
-                "Booking",
-                room?.Name ?? $"№{booking.RoomId}",
-                client?.FullName ?? "Клиент",
-                $"Бронирование #{booking.Id}",
-                (double)booking.PaidAmount);
-            
-            total += booking.PaidAmount;
-            row++;
-        }
         
         foreach (var tx in transactions.Where(t => t.Type == TransactionType.Income).OrderBy(t => t.TransactionDate))
         {

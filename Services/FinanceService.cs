@@ -159,14 +159,15 @@ public class FinanceService : IFinanceService
 
  public async Task<IEnumerable<Transaction>> GetTransactionsAsync(DateTime? startDate = null, DateTime? endDate = null)
  {
- if (startDate.HasValue && endDate.HasValue)
- {
- return await _transactionRepository.GetTransactionsByDateRangeAsync(startDate.Value, endDate.Value);
- }
- return await _transactionRepository.GetAllWithDetailsAsync();
+     if (startDate.HasValue && endDate.HasValue)
+     {
+         return await _transactionRepository.GetTransactionsByDateRangeAsync(startDate.Value, endDate.Value);
+     }
+
+     return await _transactionRepository.GetAllWithDetailsAsync();
  }
 
-    public async Task RecordBookingPaymentAsync(int bookingId, decimal amount)
+ public async Task RecordBookingPaymentAsync(int bookingId, decimal amount)
     {
         // Обновляем статус бронирования и TotalSpent клиента
         var booking = await _bookingRepository.GetByIdAsync(bookingId);

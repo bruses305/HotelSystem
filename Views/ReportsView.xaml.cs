@@ -29,6 +29,7 @@ public partial class ReportsView : Page
     private string _lastExportPath = "";
     private bool _showIncomeByDay;
     private bool _showExpenses;
+    private bool _showOccupancyByDay;
     private readonly string _configPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "HotelSystem",
@@ -158,22 +159,24 @@ public partial class ReportsView : Page
             
             // Загрузка отеля
             var totalRooms = (await _roomService.GetAllRoomsAsync()).Count();
-            var bookedDays = bookingsList
+            var totalDays = (_endDate - _startDate).Days * totalRooms;
+            
+            // Считаем все занятые дни (включая завершённые бронирования)
+            var allBookings = bookingsList.Where(b =>
+                b.Status != BookingStatus.Cancelled).ToList();
+            
+            // Считаем занятые ночи (каждое бронирование занимает CheckOut - CheckIn ночей)
+            var bookedDays = allBookings
                 .SelectMany(b => Enumerable.Range(0, (b.CheckOutDate - b.CheckInDate).Days)
                 .Select(d => b.CheckInDate.AddDays(d)))
                 .Distinct()
                 .Count();
-            var totalDays = (_endDate - _startDate).Days * totalRooms;
+            
             var occupancy = totalDays > 0 ? (double)bookedDays / totalDays * 100 : 0;
             OccupancyText.Text = $"{occupancy:F1}%";
 
             // График загрузки
-            var occupancyModel = new PlotModel { Title = $"Загрузка: {occupancy:F1}%" };
-            var occupancySeries = new PieSeries { StrokeThickness = 2 };
-            occupancySeries.Slices.Add(new PieSlice("Занято", bookedDays) { Fill = OxyColor.FromRgb(52, 152, 219) });
-            occupancySeries.Slices.Add(new PieSlice("Свободно", Math.Max(0, totalDays - bookedDays)) { Fill = OxyColor.FromRgb(149, 165, 166) });
-            occupancyModel.Series.Add(occupancySeries);
-            OccupancyChart.Model = occupancyModel;
+            await UpdateOccupancyChartAsync(allBookings, totalRooms);
 
             // График доходов
             UpdateIncomeChart();
@@ -280,6 +283,132 @@ public partial class ReportsView : Page
             (_showIncomeByDay ? "Доходы по месяцам" : "Доходы по дням");
         
         UpdateIncomeChart();
+    }
+
+    private void SwitchOccupancyChart_Click(object sender, RoutedEventArgs e)
+    {
+        _showOccupancyByDay = !_showOccupancyByDay;
+        SwitchOccupancyChartBtn.Content = _showOccupancyByDay ? "По пирогу" : "По дням";
+        
+        UpdateOccupancyChartAsync(null, 0).Wait();
+    }
+
+    private async Task UpdateOccupancyChartAsync(IEnumerable<Booking>? bookings, int totalRooms)
+    {
+        try
+        {
+            var occupancyModel = new PlotModel { Title = _showOccupancyByDay ? "Загрузка по дням" : "Загрузка отеля" };
+            
+            if (_showOccupancyByDay)
+            {
+                // Линейный график по дням
+                var occupancyByDay = await OccupancyHelper.CalculateOccupancyByDayAsync(
+                    _roomService, _bookingService, _startDate.Date, _endDate.Date);
+                
+                var lineSeries = new LineSeries
+                {
+                    Title = "Загрузка",
+                    Color = OxyColor.FromRgb(52, 152, 219),
+                    StrokeThickness = 2,
+                    MarkerType = MarkerType.Circle,
+                    MarkerSize = 4
+                };
+
+                var uniqueDates = new List<DateTime>();
+                foreach (var day in occupancyByDay.OrderBy(k => k.Key))
+                {
+                    if (!uniqueDates.Contains(day.Key))
+                    {
+                        uniqueDates.Add(day.Key);
+                        lineSeries.Points.Add(new DataPoint(day.Key.ToOADate(), day.Value));
+                    }
+                }
+                
+                occupancyModel.Series.Add(lineSeries);
+                
+                // X axis - даты (DateTimeAxis с ручной настройкой)
+                var dateAxis = new OxyPlot.Axes.DateTimeAxis
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Bottom,
+                    StringFormat = "dd.MM"
+                };
+                
+                // Настраиваем интервал на основе количества дней
+                var totalDays = uniqueDates.Count;
+                if (totalDays <= 7)
+                {
+                    // Для малых периодов показываем все даты
+                    dateAxis.Minimum = uniqueDates.First().ToOADate();
+                    dateAxis.Maximum = uniqueDates.Last().ToOADate();
+                }
+                else if (totalDays <= 31)
+                {
+                    dateAxis.IntervalType = OxyPlot.Axes.DateTimeIntervalType.Days;
+                }
+                else
+                {
+                    dateAxis.IntervalType = OxyPlot.Axes.DateTimeIntervalType.Weeks;
+                }
+                
+                occupancyModel.Axes.Add(dateAxis);
+                
+                // Y axis - проценты
+                var percentageAxis = new OxyPlot.Axes.LinearAxis
+                {
+                    Position = OxyPlot.Axes.AxisPosition.Left,
+                    Title = "%",
+                    Minimum = 0,
+                    Maximum = 100,
+                    StringFormat = "0"
+                };
+                occupancyModel.Axes.Add(percentageAxis);
+            }
+            else
+            {
+                // Пирог
+                IEnumerable<Booking> bookingsList;
+                if (bookings == null)
+                {
+                    // Если бронирования не переданы, загружаем и фильтруем
+                    bookingsList = (await _bookingService.GetBookingsByDateRangeAsync(_startDate, _endDate))
+                        .Where(b => b.Status != BookingStatus.Cancelled)
+                        .ToList();
+                    totalRooms = (await _roomService.GetAllRoomsAsync()).Count();
+                }
+                else
+                {
+                    bookingsList = bookings;
+                }
+                
+                if (totalRooms == 0)
+                {
+                    occupancyModel.Title = "Нет данных";
+                }
+                else
+                {
+                    var bookedDays = bookingsList
+                        .SelectMany(b => Enumerable.Range(0, (b.CheckOutDate - b.CheckInDate).Days)
+                        .Select(d => b.CheckInDate.AddDays(d)))
+                        .Distinct()
+                        .Count();
+                    var totalDays = (_endDate - _startDate).Days * totalRooms;
+                    var occupancy = totalDays > 0 ? (double)bookedDays / totalDays * 100 : 0;
+                    
+                    occupancyModel.Title = $"Загрузка: {occupancy:F1}%";
+                    
+                    var pieSeries = new PieSeries { StrokeThickness = 2 };
+                    pieSeries.Slices.Add(new PieSlice("Занято", bookedDays) { Fill = OxyColor.FromRgb(52, 152, 219) });
+                    pieSeries.Slices.Add(new PieSlice("Свободно", Math.Max(0, totalDays - bookedDays)) { Fill = OxyColor.FromRgb(149, 165, 166) });
+                    occupancyModel.Series.Add(pieSeries);
+                }
+            }
+                
+            OccupancyChart.Model = occupancyModel;
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     private async void UpdateIncomeChart()

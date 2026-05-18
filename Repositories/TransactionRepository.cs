@@ -17,7 +17,6 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
         if (endDate.HasValue)
             query = query.Where(t => t.TransactionDate <= endDate.Value);
 
-        // SQLite Р В Р вЂ¦Р В Р’Вµ Р В РЎвЂ”Р В РЎвЂўР В РўвЂР В РўвЂР В Р’ВµР РЋР вЂљР В Р’В¶Р В РЎвЂР В Р вЂ Р В Р’В°Р В Р’ВµР РЋРІР‚С™ SumAsync Р В РўвЂР В Р’В»Р РЋР РЏ decimal, Р В Р’В·Р В Р’В°Р В РЎвЂ“Р РЋР вЂљР РЋРЎвЂњР В Р’В¶Р В Р’В°Р В Р’ВµР В РЎВ Р В Р вЂ¦Р В Р’В° Р В РЎвЂќР В Р’В»Р В РЎвЂР В Р’ВµР В Р вЂ¦Р РЋРІР‚С™
         var transactions = await query.ToListAsync();
         return transactions.Sum(t => t.Amount);
     }
@@ -31,7 +30,6 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
         if (endDate.HasValue)
             query = query.Where(t => t.TransactionDate <= endDate.Value);
 
-        // SQLite Р В Р вЂ¦Р В Р’Вµ Р В РЎвЂ”Р В РЎвЂўР В РўвЂР В РўвЂР В Р’ВµР РЋР вЂљР В Р’В¶Р В РЎвЂР В Р вЂ Р В Р’В°Р В Р’ВµР РЋРІР‚С™ SumAsync Р В РўвЂР В Р’В»Р РЋР РЏ decimal, Р В Р’В·Р В Р’В°Р В РЎвЂ“Р РЋР вЂљР РЋРЎвЂњР В Р’В¶Р В Р’В°Р В Р’ВµР В РЎВ Р В Р вЂ¦Р В Р’В° Р В РЎвЂќР В Р’В»Р В РЎвЂР В Р’ВµР В Р вЂ¦Р РЋРІР‚С™
         var transactions = await query.ToListAsync();
         return transactions.Sum(t => t.Amount);
     }

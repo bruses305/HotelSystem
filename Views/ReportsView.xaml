@@ -113,7 +113,23 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Загрузка отеля" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Загрузка отеля" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" VerticalAlignment="Center"/>
+                        <Button x:Name="SwitchOccupancyChartBtn" Grid.Column="1" Content="По дням" Click="SwitchOccupancyChart_Click" 
+                                Background="#3498DB" Foreground="White" Padding="10,5" BorderThickness="0" Margin="0,0,0,10">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
                     <oxy:PlotView x:Name="OccupancyChart" Grid.Row="1"/>
                 </Grid>
             </Border>
