@@ -83,8 +83,8 @@ public partial class BookingDialog : DialogBase
             var overlaps = allBookings.Where(b =>
                 b.RoomId == roomId &&
                 b.Id != excludeId &&
-                b.Status != BookingStatus.Cancelled &&
-                b.Status != BookingStatus.Completed &&
+                b.Status != BookingStatus.Отменено &&
+                b.Status != BookingStatus.Завершено &&
                 ((b.CheckInDate <= checkIn && b.CheckOutDate > checkIn) ||
                  (b.CheckInDate < checkOut && b.CheckOutDate >= checkOut) ||
                  (b.CheckInDate >= checkIn && b.CheckOutDate <= checkOut)))

@@ -31,7 +31,7 @@ public async Task<Employee?> GetEmployeeByIdAsync(int id)
     {
         employee.PasswordHash = HashPassword(employee.PasswordHash);
         var created = await _employeeRepository.AddAsync(employee);
-        await _logService.LogAsync(LogLevel.Medium, 
+        await _logService.LogAsync(LogLevel.Средние, 
             $"Сотрудник добавлен: {employee.FullName} пользователем: {AuthService.CurrentEmployee.FullName}", "EmployeeService");
         return created;
     }
@@ -46,7 +46,7 @@ public async Task<Employee?> GetEmployeeByIdAsync(int id)
         
         employee.UpdatedAt = DateTime.Now;
         await _employeeRepository.UpdateAsync(employee);
-        await _logService.LogAsync(LogLevel.Low, 
+        await _logService.LogAsync(LogLevel.Обычные, 
             $"Сотрудник обновлён: {employee.FullName} пользователем: {AuthService.CurrentEmployee.FullName}", "EmployeeService");
     }
 
@@ -56,7 +56,7 @@ public async Task<Employee?> GetEmployeeByIdAsync(int id)
         if (employee != null)
         {
             await _employeeRepository.DeleteAsync(id);
-            await _logService.LogAsync(LogLevel.Critical, 
+            await _logService.LogAsync(LogLevel.Важные, 
                 $"Сотрудник удалён: {employee.FullName} пользователем: {AuthService.CurrentEmployee.FullName}", "EmployeeService");
         }
     }
@@ -73,7 +73,7 @@ public async Task<Employee?> GetEmployeeByIdAsync(int id)
         employee.UpdatedAt = DateTime.Now;
         await _employeeRepository.UpdateAsync(employee);
         
-        await _logService.LogAsync(LogLevel.Critical, 
+        await _logService.LogAsync(LogLevel.Важные, 
             $"Изменение пароля у сотрудника {employee.FullName} пользователем: {AuthService.CurrentEmployee.FullName}", "EmployeeService");
         
         return true;

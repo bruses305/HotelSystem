@@ -54,8 +54,8 @@
                                     <Border.Style>
                                         <Style TargetType="Border">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Type}" Value="Income"><Setter Property="Background" Value="#27AE60"/></DataTrigger>
-                                                <DataTrigger Binding="{Binding Type}" Value="Expense"><Setter Property="Background" Value="#E74C3C"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Доход"><Setter Property="Background" Value="#27AE60"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Расход"><Setter Property="Background" Value="#E74C3C"/></DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>

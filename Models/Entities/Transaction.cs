@@ -2,18 +2,18 @@ namespace HotelSystem.Models.Entities;
 
 public enum TransactionType
 {
-    Income,    // Доход
-    Expense    // Расход
+    Доход, //Income,    // Доход
+    Расход //Expense    // Расход
 }
 
 public enum TransactionCategory
 {
-    Booking,           // Бронирование
-    AdditionalService, // Дополнительная услуга
-    Salary,            // Зарплата
-    Utilities,         // Коммунальные услуги
-    Purchase,          // Закупки
-    Maintenance    // Обслуживание
+    Бронирование, //Booking,           // Бронирование
+    Дополнительная_услуга, //AdditionalService, // Дополнительная услуга
+    Зарплата, //Salary,            // Зарплата
+    Коммунальные_услуги, //Utilities,         // Коммунальные услуги
+    Закупки, //Purchase,          // Закупки
+    Обслуживание //Maintenance    // Обслуживание
 }
 
 public class Transaction : BaseEntity

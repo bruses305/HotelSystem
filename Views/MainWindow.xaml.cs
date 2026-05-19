@@ -101,6 +101,12 @@ public partial class MainWindow : Window
 
     private void NavigateToFinance(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanView(PermissionCategory.Finance))
+        {
+            MessageBox.Show("Недостаточно прав для просмотра финансов!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         MainFrame.Navigate(new FinanceView());
         PageTitle.Text = "Финансы";
     }

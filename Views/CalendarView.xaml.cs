@@ -46,7 +46,7 @@ public partial class CalendarView : Page
             var allBookings = (await _bookingService.GetBookingsByDateRangeAsync(startDate, endDate)).ToList();
             
             // Фильтруем отменённые бронирования
-            _allBookings = allBookings.Where(b => b.Status != BookingStatus.Cancelled).ToList();
+            _allBookings = allBookings.Where(b => b.Status != BookingStatus.Отменено).ToList();
             
             RenderCalendar();
         }

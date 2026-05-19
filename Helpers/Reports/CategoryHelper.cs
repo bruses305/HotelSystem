@@ -16,13 +16,13 @@ public static class CategoryHelper
         string desc = tx.Description?.ToLower() ?? "";
         
         // Конкретизация доходов
-        if (tx.Category == TransactionCategory.AdditionalService && service != null)
+        if (tx.Category == TransactionCategory.Дополнительная_услуга && service != null)
         {
             return $"Услуга: {service.Name}";
         }
         
         // Конкретизация расходов - Коммунальные услуги
-        if (tx.Category == TransactionCategory.Utilities)
+        if (tx.Category == TransactionCategory.Коммунальные_услуги)
         {
             if (desc.Contains("вода")) return "Расход: Вода";
             if (desc.Contains("электричеств")) return "Расход: Электричество";
@@ -31,7 +31,7 @@ public static class CategoryHelper
         }
         
         // Конкретизация расходов - Обслуживание
-        if (tx.Category == TransactionCategory.Maintenance)
+        if (tx.Category == TransactionCategory.Обслуживание)
         {
             if (desc.Contains("уборка")) return "Расход: Уборка";
             if (desc.Contains("ремонт")) return "Расход: Ремонт";
@@ -39,13 +39,13 @@ public static class CategoryHelper
         }
         
         // Конкретизация расходов - Зарплата
-        if (tx.Category == TransactionCategory.Salary)
+        if (tx.Category == TransactionCategory.Зарплата)
         {
             return "Расход: Зарплата";
         }
         
         // Конкретизация расходов - Закупки
-        if (tx.Category == TransactionCategory.Purchase)
+        if (tx.Category == TransactionCategory.Закупки)
         {
             return "Расход: Закупки";
         }
@@ -60,7 +60,7 @@ public static class CategoryHelper
     {
         string desc = tx.Description?.ToLower() ?? "";
         
-        if (tx.Category == TransactionCategory.Utilities)
+        if (tx.Category == TransactionCategory.Коммунальные_услуги)
         {
             if (desc.Contains("вода")) return "Расход: Вода";
             if (desc.Contains("электричеств")) return "Расход: Электричество";
@@ -68,17 +68,17 @@ public static class CategoryHelper
             return "Расход: Коммунальные услуги";
         }
         
-        if (tx.Category == TransactionCategory.Maintenance)
+        if (tx.Category == TransactionCategory.Обслуживание)
         {
             if (desc.Contains("уборка")) return "Расход: Уборка";
             if (desc.Contains("ремонт")) return "Расход: Ремонт";
             return "Расход: Обслуживание";
         }
         
-        if (tx.Category == TransactionCategory.Salary)
+        if (tx.Category == TransactionCategory.Зарплата)
             return "Расход: Зарплата";
         
-        if (tx.Category == TransactionCategory.Purchase)
+        if (tx.Category == TransactionCategory.Закупки)
             return "Расход: Закупки";
         
         return tx.Category.ToString();

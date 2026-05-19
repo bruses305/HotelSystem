@@ -11,7 +11,7 @@ public class RoomRepository : Repository<Room>, IRoomRepository
     public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime checkIn, DateTime checkOut)
     {
         var bookedRoomIds = await _context.Bookings
-            .Where(b => b.Status != BookingStatus.Cancelled &&
+            .Where(b => b.Status != BookingStatus.Отменено &&
                         ((b.CheckInDate <= checkIn && b.CheckOutDate > checkIn) ||
                          (b.CheckInDate < checkOut && b.CheckOutDate >= checkOut) ||
                          (b.CheckInDate >= checkIn && b.CheckOutDate <= checkOut)))
@@ -19,14 +19,14 @@ public class RoomRepository : Repository<Room>, IRoomRepository
             .ToListAsync();
 
         return await _dbSet
-            .Where(r => !bookedRoomIds.Contains(r.Id) && r.Status != RoomStatus.Repair)
+            .Where(r => !bookedRoomIds.Contains(r.Id) && r.Status != RoomStatus.Ремонт)
             .ToListAsync();
     }
 
     public async Task<Room?> GetRoomWithBookingsAsync(int id)
     {
         return await _dbSet
-            .Include(r => r.Bookings.Where(b => b.Status != BookingStatus.Cancelled))
+            .Include(r => r.Bookings.Where(b => b.Status != BookingStatus.Отменено))
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 

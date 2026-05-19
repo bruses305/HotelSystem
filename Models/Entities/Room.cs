@@ -2,17 +2,17 @@ namespace HotelSystem.Models.Entities;
 
 public enum RoomType
 {
-    Standard,    // Стандарт
-    Lux,         // Люкс
-    Apartments   // Апартаменты
+    Стандартный,    // Стандарт
+    Люкс,         // Люкс
+    Апартаменты   // Апартаменты
 }
 
 public enum RoomStatus
 {
-    Free,        // Свободен
-    Occupied,    // Занят
-    Cleaning,    // На уборке
-    Repair       // В ремонте
+    Свободен,        // Свободен
+    Занят,    // Занят
+    Уборка,    // На уборке
+    Ремонт       // В ремонте
 }
 
 public class Room : BaseEntity

@@ -44,10 +44,10 @@ public static class OccupancyHelper
             // (гость заселяется в CheckInDate и выселяется в CheckOutDate)
             var bookedRooms = bookingsList.Count(b =>
                 // Учитываем активные и завершённые бронирования
-                (b.Status == BookingStatus.Confirmed || 
-                 b.Status == BookingStatus.Pending ||
-                 b.Status == BookingStatus.CheckedIn ||
-                 b.Status == BookingStatus.Completed) &&
+                (b.Status == BookingStatus.Подтверждено || 
+                 b.Status == BookingStatus.Подтверждено ||
+                 b.Status == BookingStatus.Заселён ||
+                 b.Status == BookingStatus.Завершено) &&
                 // Проверяем, пересекается ли бронирование с текущим днём
                 b.CheckInDate.Date <= currentDate &&
                 b.CheckOutDate.Date > currentDate);
@@ -77,7 +77,7 @@ public static class OccupancyHelper
         var totalDays = (endDate - startDate).Days * totalRooms;
         
         var bookedDays = bookingsList
-            .Where(b => b.Status != BookingStatus.Cancelled)
+            .Where(b => b.Status != BookingStatus.Отменено)
             .SelectMany(b => Enumerable.Range(0, (b.CheckOutDate - b.CheckInDate).Days)
                 .Select(d => b.CheckInDate.AddDays(d)))
             .Distinct()

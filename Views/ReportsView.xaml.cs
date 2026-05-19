@@ -32,6 +32,15 @@ public partial class ReportsView : Page
     private bool _showOccupancyByDay;
     private readonly string _configPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "HotelSystem", "settings.json");
+    
+    // Переменные для хранения расчётных данных загруженности
+    private int _bookedDays;
+    private int _totalDays;
+    private double _occupancyPercent;
+    private IEnumerable<Booking> _currentBookings = Enumerable.Empty<Booking>();
+    private readonly string _lastExportConfigPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "HotelSystem",
         "last_export.txt");
 
@@ -159,24 +168,24 @@ public partial class ReportsView : Page
             
             // Загрузка отеля
             var totalRooms = (await _roomService.GetAllRoomsAsync()).Count();
-            var totalDays = (_endDate - _startDate).Days * totalRooms;
+            _totalDays = (_endDate - _startDate).Days * totalRooms;
             
             // Считаем все занятые дни (включая завершённые бронирования)
-            var allBookings = bookingsList.Where(b =>
-                b.Status != BookingStatus.Cancelled).ToList();
+            _currentBookings = bookingsList.Where(b =>
+                b.Status != BookingStatus.Отменено).ToList();
             
             // Считаем занятые ночи (каждое бронирование занимает CheckOut - CheckIn ночей)
-            var bookedDays = allBookings
+            _bookedDays = _currentBookings
                 .SelectMany(b => Enumerable.Range(0, (b.CheckOutDate - b.CheckInDate).Days)
                 .Select(d => b.CheckInDate.AddDays(d)))
                 .Distinct()
                 .Count();
             
-            var occupancy = totalDays > 0 ? (double)bookedDays / totalDays * 100 : 0;
-            OccupancyText.Text = $"{occupancy:F1}%";
+            _occupancyPercent = _totalDays > 0 ? (double)_bookedDays / _totalDays * 100 : 0;
+            OccupancyText.Text = $"{_occupancyPercent:F1}%";
 
             // График загрузки
-            await UpdateOccupancyChartAsync(allBookings, totalRooms);
+            await UpdateOccupancyChartAsync(_currentBookings, totalRooms, (double)_bookedDays, _totalDays);
 
             // График доходов
             UpdateIncomeChart();
@@ -187,8 +196,8 @@ public partial class ReportsView : Page
                 Name = room.Name,
                 Type = room.Type.ToString(),
                 Income = (double)bookingsList.Where(b => b.RoomId == room.Id).Sum(b => b.PaidAmount) +
-                         (double)transactionsList.Where(t => t.RoomId == room.Id && t.Type == TransactionType.Income).Sum(t => t.Amount),
-                Expenses = (double)transactionsList.Where(t => t.RoomId == room.Id && t.Type == TransactionType.Expense).Sum(t => t.Amount),
+                         (double)transactionsList.Where(t => t.RoomId == room.Id && t.Type == TransactionType.Доход).Sum(t => t.Amount),
+                Expenses = (double)transactionsList.Where(t => t.RoomId == room.Id && t.Type == TransactionType.Расход).Sum(t => t.Amount),
                 Profit = 0.0
             }).Select(r => new {
                 r.Name, r.Type,
@@ -290,10 +299,11 @@ public partial class ReportsView : Page
         _showOccupancyByDay = !_showOccupancyByDay;
         SwitchOccupancyChartBtn.Content = _showOccupancyByDay ? "По пирогу" : "По дням";
         
-        UpdateOccupancyChartAsync(null, 0).Wait();
+        // Используем сохранённые значения из класса
+        UpdateOccupancyChartAsync(_currentBookings, _currentBookings.Count() > 0 ? (_totalDays / (_endDate - _startDate).Days) : 0, _bookedDays, _totalDays).Wait();
     }
 
-    private async Task UpdateOccupancyChartAsync(IEnumerable<Booking>? bookings, int totalRooms)
+    private async Task UpdateOccupancyChartAsync(IEnumerable<Booking>? bookings, int totalRooms, double bookedDays, int totalDays)
     {
         try
         {
@@ -334,14 +344,14 @@ public partial class ReportsView : Page
                 };
                 
                 // Настраиваем интервал на основе количества дней
-                var totalDays = uniqueDates.Count;
-                if (totalDays <= 7)
+                var chartTotalDays = uniqueDates.Count;
+                if (chartTotalDays <= 7)
                 {
                     // Для малых периодов показываем все даты
                     dateAxis.Minimum = uniqueDates.First().ToOADate();
                     dateAxis.Maximum = uniqueDates.Last().ToOADate();
                 }
-                else if (totalDays <= 31)
+                else if (chartTotalDays <= 31)
                 {
                     dateAxis.IntervalType = OxyPlot.Axes.DateTimeIntervalType.Days;
                 }
@@ -366,33 +376,13 @@ public partial class ReportsView : Page
             else
             {
                 // Пирог
-                IEnumerable<Booking> bookingsList;
-                if (bookings == null)
-                {
-                    // Если бронирования не переданы, загружаем и фильтруем
-                    bookingsList = (await _bookingService.GetBookingsByDateRangeAsync(_startDate, _endDate))
-                        .Where(b => b.Status != BookingStatus.Cancelled)
-                        .ToList();
-                    totalRooms = (await _roomService.GetAllRoomsAsync()).Count();
-                }
-                else
-                {
-                    bookingsList = bookings;
-                }
-                
-                if (totalRooms == 0)
+                if (totalDays == 0)
                 {
                     occupancyModel.Title = "Нет данных";
                 }
                 else
                 {
-                    var bookedDays = bookingsList
-                        .SelectMany(b => Enumerable.Range(0, (b.CheckOutDate - b.CheckInDate).Days)
-                        .Select(d => b.CheckInDate.AddDays(d)))
-                        .Distinct()
-                        .Count();
-                    var totalDays = (_endDate - _startDate).Days * totalRooms;
-                    var occupancy = totalDays > 0 ? (double)bookedDays / totalDays * 100 : 0;
+                    var occupancy = totalDays > 0 ? bookedDays / totalDays * 100 : 0;
                     
                     occupancyModel.Title = $"Загрузка: {occupancy:F1}%";
                     
@@ -543,7 +533,7 @@ public partial class ReportsView : Page
                 
                     SaveLastExportPath(dialog.FileName);
                 
-                    await _logService.LogAsync(LogLevel.Medium, 
+                    await _logService.LogAsync(LogLevel.Средние, 
                         $"Создан финансовый отчёт Excel: {dialog.FileName}", "ReportsView");
                 
                     MessageBox.Show($"Отчёт сохранён: {dialog.FileName}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -609,7 +599,7 @@ public partial class ReportsView : Page
                 if (savedPaths.Count > 0)
                     SaveLastExportPath(savedPaths[0]);
                 
-                await _logService.LogAsync(LogLevel.Medium, 
+                await _logService.LogAsync(LogLevel.Средние, 
                     $"Сохранены графики: {string.Join(", ", savedPaths)}", "ReportsView");
                 
                 MessageBox.Show("Графики сохранены!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);

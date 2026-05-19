@@ -35,9 +35,9 @@ public partial class LogsView : Page
             LogsGrid.ItemsSource = logs;
             
             if (TotalLogsText != null) TotalLogsText.Text = logs.Count.ToString();
-            if (LowLogsText != null) LowLogsText.Text = logs.Count(l => l.Level == LogLevel.Low).ToString();
-            if (MediumLogsText != null) MediumLogsText.Text = logs.Count(l => l.Level == LogLevel.Medium).ToString();
-            if (CriticalLogsText != null) CriticalLogsText.Text = logs.Count(l => l.Level == LogLevel.Critical).ToString();
+            if (LowLogsText != null) LowLogsText.Text = logs.Count(l => l.Level == LogLevel.Обычные).ToString();
+            if (MediumLogsText != null) MediumLogsText.Text = logs.Count(l => l.Level == LogLevel.Средние).ToString();
+            if (CriticalLogsText != null) CriticalLogsText.Text = logs.Count(l => l.Level == LogLevel.Важные).ToString();
         }
         catch (Exception ex)
         {

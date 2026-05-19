@@ -57,9 +57,9 @@ public partial class BookingsView : Page
         {
             _allBookings = (await _bookingService.GetAllBookingsWithDetailsAsync()).ToList();
             
-            foreach (var booking in _allBookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckOutDate < DateTime.Today))
+            foreach (var booking in _allBookings.Where(b => b.Status == BookingStatus.Подтверждено && b.CheckOutDate < DateTime.Today))
             {
-                booking.Status = BookingStatus.Completed;
+                booking.Status = BookingStatus.Завершено;
                 await _bookingService.UpdateBookingAsync(booking);
             }
             
@@ -104,7 +104,7 @@ public partial class BookingsView : Page
         {
             // Для статуса Ожидание показываем и Pending и CheckedIn
             if (status == "Pending")
-                filtered = filtered.Where(b => b.Status == BookingStatus.Pending || b.Status == BookingStatus.CheckedIn);
+                filtered = filtered.Where(b => b.Status == BookingStatus.Оплачено || b.Status == BookingStatus.Заселён);
             else
                 filtered = filtered.Where(b => b.Status.ToString() == status);
         }
@@ -217,6 +217,12 @@ public partial class BookingsView : Page
 
     private async void CheckIn_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanEdit(PermissionCategory.Bookings))
+        {
+            MessageBox.Show("Недостаточно прав для заселения гостя!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         if (sender is Button btn && btn.Tag is Booking booking)
         {
             await _bookingService.CheckInAsync(booking.Id);
@@ -227,14 +233,20 @@ public partial class BookingsView : Page
 
     private async void CheckOut_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanEdit(PermissionCategory.Bookings))
+        {
+            MessageBox.Show("Недостаточно прав для выселения гостя!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         if (sender is Button btn && btn.Tag is Booking booking)
         {
             var result = MessageBox.Show("Выселить гостя?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                booking.Status = BookingStatus.Completed;
+                booking.Status = BookingStatus.Завершено;
                 await _bookingService.CompleteBookingAsync(booking.Id);
-                LoadBookingsAsync(); 
+                LoadBookingsAsync();
                 MessageBox.Show("Гость выселен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -242,12 +254,18 @@ public partial class BookingsView : Page
 
     private async void CancelBooking_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanEdit(PermissionCategory.Bookings))
+        {
+            MessageBox.Show("Недостаточно прав для отмены бронирования!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         if (sender is Button btn && btn.Tag is Booking booking)
         {
             var result = MessageBox.Show("Отменить бронирование?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
-                booking.Status = BookingStatus.Cancelled;
+                booking.Status = BookingStatus.Отменено;
                 await _bookingService.UpdateBookingAsync(booking);
                 LoadBookingsAsync();
             }
@@ -256,6 +274,12 @@ public partial class BookingsView : Page
 
     private async void PayBooking_Click(object sender, RoutedEventArgs e)
     {
+        if (!PermissionChecker.CanCreate(PermissionCategory.Finance))
+        {
+            MessageBox.Show("Недостаточно прав для оплаты бронирования!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         if (sender is Button btn && btn.Tag is Booking booking)
         {
             var amount = booking.TotalPrice - booking.PaidAmount;

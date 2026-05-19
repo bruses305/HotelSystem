@@ -33,7 +33,7 @@ public class ClientService : IClientService
     public async Task<Client> CreateClientAsync(Client client)
     {
         var created = await _clientRepository.AddAsync(client);
-        await _logService.LogAsync(LogLevel.Medium, 
+        await _logService.LogAsync(LogLevel.Средние, 
             $"Создание клиента: {client.FullName} пользователем: {AuthService.CurrentEmployee.FullName}", "ClientService");
         return created;
     }
@@ -42,7 +42,7 @@ public class ClientService : IClientService
     {
         client.UpdatedAt = DateTime.Now;
         await _clientRepository.UpdateAsync(client);
-        await _logService.LogAsync(LogLevel.Low, 
+        await _logService.LogAsync(LogLevel.Обычные, 
             $"Клиент обнавлён: {client.FullName} пользователем: {AuthService.CurrentEmployee.FullName}", "ClientService");
     }
 
@@ -52,7 +52,7 @@ public class ClientService : IClientService
         if (client != null)
         {
             await _clientRepository.DeleteAsync(id);
-            await _logService.LogAsync(LogLevel.Critical, 
+            await _logService.LogAsync(LogLevel.Важные, 
                 $"Клиент удалён: {client.FullName} пользователем: {AuthService.CurrentEmployee.FullName}", "ClientService");
         }
     }

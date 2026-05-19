@@ -39,7 +39,7 @@ public partial class ServicesPaymentView : Page
         {
             var transactions = await _financeService.GetTransactionsAsync();
             var serviceTransactions = transactions
-                .Where(t => t.Category == TransactionCategory.AdditionalService)
+                .Where(t => t.Category == TransactionCategory.Дополнительная_услуга)
                 .OrderByDescending(t => t.TransactionDate)
                 .ToList();
 

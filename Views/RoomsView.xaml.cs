@@ -31,8 +31,14 @@ public partial class RoomsView : Page
 
     private async void LoadRoomsAsync()
     {
-        try { RoomsGrid.ItemsSource = await _roomService.GetAllRoomsAsync(); }
-        catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
+        try
+        {
+            RoomsGrid.ItemsSource = (await _roomService.GetAllRoomsAsync());
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private async void AddRoom_Click(object sender, RoutedEventArgs e)

@@ -29,7 +29,7 @@ public class FinanceCalculator : IFinanceCalculator
         
         // 1. Доходы от транзакций (услуги и другие доходы)
         var transactions = await _transactionRepository.GetTransactionsByDateRangeAsync(startDate, endDate);
-        var incomeTransactions = transactions.Where(t => t.Type == TransactionType.Income && t.ServiceId.HasValue);
+        var incomeTransactions = transactions.Where(t => t.Type == TransactionType.Доход && t.ServiceId.HasValue);
         
         foreach (var tx in incomeTransactions)
         {
@@ -45,7 +45,7 @@ public class FinanceCalculator : IFinanceCalculator
         }
         
         // 2. Доходы от транзакций "Прочий доход"
-        var otherIncomeTransactions = transactions.Where(t => t.Type == TransactionType.Income && !t.ServiceId.HasValue && !t.BookingId.HasValue);
+        var otherIncomeTransactions = transactions.Where(t => t.Type == TransactionType.Доход && !t.ServiceId.HasValue && !t.BookingId.HasValue);
         foreach (var tx in otherIncomeTransactions)
         {
             incomes.Add(new IncomeEntry
@@ -60,7 +60,7 @@ public class FinanceCalculator : IFinanceCalculator
         
         // 3. ОПЛАТА БРОНИРОВАНИЙ - только через транзакции, не через Booking.PaidAmount
         // Ищем транзакции связанные с бронированиями (это создаются в RecordBookingPaymentAsync)
-        var bookingPaymentTransactions = transactions.Where(t => t.Type == TransactionType.Income && t.BookingId.HasValue && t.RoomId.HasValue);
+        var bookingPaymentTransactions = transactions.Where(t => t.Type == TransactionType.Доход && t.BookingId.HasValue && t.RoomId.HasValue);
         foreach (var tx in bookingPaymentTransactions)
         {
             incomes.Add(new IncomeEntry
@@ -85,7 +85,7 @@ public class FinanceCalculator : IFinanceCalculator
         var expenses = new List<ExpenseEntry>();
         
         var transactions = await _transactionRepository.GetTransactionsByDateRangeAsync(startDate, endDate);
-        var expenseTransactions = transactions.Where(t => t.Type == TransactionType.Expense);
+        var expenseTransactions = transactions.Where(t => t.Type == TransactionType.Расход);
         
         foreach (var tx in expenseTransactions)
         {

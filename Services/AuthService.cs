@@ -26,7 +26,7 @@ public class AuthService : IAuthService
         var isValid = await _employeeRepository.ValidatePasswordAsync(login, password);
         if (!isValid)
         {
-            await _logService.LogAsync(LogLevel.Critical, 
+            await _logService.LogAsync(LogLevel.Важные, 
                 $"Попытка входа в аккаунт: {login}", "AuthService");
             return null;
         }
@@ -36,7 +36,7 @@ public class AuthService : IAuthService
         // Инициализируем PermissionChecker после входа
         PermissionChecker.Initialize();
         
-        await _logService.LogAsync(LogLevel.Medium, 
+        await _logService.LogAsync(LogLevel.Средние, 
             $"Пользователь {_currentEmployee?.FullName} вошол в аккаунт", "AuthService");
         
         AuthChanged?.Invoke(this, _currentEmployee);
@@ -48,7 +48,7 @@ public class AuthService : IAuthService
     {
         if (_currentEmployee != null)
         {
-            await _logService.LogAsync(LogLevel.Low, 
+            await _logService.LogAsync(LogLevel.Обычные, 
                 $"Пользователь {_currentEmployee.FullName} вышел из аккаунта", "AuthService");
         }
         

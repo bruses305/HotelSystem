@@ -41,10 +41,10 @@
                                     <Border.Style>
                                         <Style TargetType="Border">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Status}" Value="Free"><Setter Property="Background" Value="#27AE60"/></DataTrigger>
-                                                <DataTrigger Binding="{Binding Status}" Value="Occupied"><Setter Property="Background" Value="#E74C3C"/></DataTrigger>
-                                                <DataTrigger Binding="{Binding Status}" Value="Cleaning"><Setter Property="Background" Value="#F39C12"/></DataTrigger>
-                                                <DataTrigger Binding="{Binding Status}" Value="Repair"><Setter Property="Background" Value="#95A5A6"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Свободен"><Setter Property="Background" Value="#27AE60"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Занят"><Setter Property="Background" Value="#E74C3C"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Уборка"><Setter Property="Background" Value="#F39C12"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Ремонт"><Setter Property="Background" Value="#95A5A6"/></DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>

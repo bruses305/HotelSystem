@@ -2,12 +2,12 @@ namespace HotelSystem.Models.Entities;
 
 public enum BookingStatus
 {
- Pending, // Ожидание
- Confirmed, // Подтверждено
- Paid, // Оплачено
- CheckedIn, // Заселён
- Cancelled, // Отменено
- Completed // Завершено
+    Ожидание,//Pending, // Ожидание
+    Подтверждено,//Confirmed, // Подтверждено
+    Оплачено, //Paid, // Оплачено
+    Заселён, //CheckedIn, // Заселён
+    Отменено, //Cancelled, // Отменено
+    Завершено //Completed // Завершено
 }
 
 public class Booking : BaseEntity

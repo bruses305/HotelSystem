@@ -27,14 +27,14 @@ public class RoomService : IRoomService
     public async Task<Room> CreateRoomAsync(Room room)
     {
         var created = await _roomRepository.AddAsync(room);
-        await _logService.LogAsync(LogLevel.Medium, $"Создание номера: {room.Name} пользователем: {AuthService.CurrentEmployee.FullName}", "RoomService");
+        await _logService.LogAsync(LogLevel.Средние, $"Создание номера: {room.Name} пользователем: {AuthService.CurrentEmployee.FullName}", "RoomService");
         return created;
     }
 
     public async Task UpdateRoomAsync(Room room)
     {
         await _roomRepository.UpdateAsync(room);
-        await _logService.LogAsync(LogLevel.Low, $"Обновление номера: {room.Name} пользователем: {AuthService.CurrentEmployee.FullName}", "RoomService");
+        await _logService.LogAsync(LogLevel.Обычные, $"Обновление номера: {room.Name} пользователем: {AuthService.CurrentEmployee.FullName}", "RoomService");
     }
 
     public async Task DeleteRoomAsync(int id)
@@ -43,7 +43,7 @@ public class RoomService : IRoomService
         if (room != null)
         {
             await _roomRepository.DeleteAsync(id);
-            await _logService.LogAsync(LogLevel.Critical, $"удаление номера: {room.Name} пользователем: {AuthService.CurrentEmployee.FullName}", "RoomService");
+            await _logService.LogAsync(LogLevel.Важные, $"удаление номера: {room.Name} пользователем: {AuthService.CurrentEmployee.FullName}", "RoomService");
         }
     }
 
@@ -70,7 +70,7 @@ public class RoomService : IRoomService
             room.Status = status;
             room.UpdatedAt = DateTime.Now;
             await _roomRepository.UpdateAsync(room);
-            await _logService.LogAsync(LogLevel.Low, $"обновление статуса номера° {room.Name} на ° {status} пользователем: {AuthService.CurrentEmployee.FullName}", "RoomService");
+            await _logService.LogAsync(LogLevel.Обычные, $"обновление статуса номера° {room.Name} на ° {status} пользователем: {AuthService.CurrentEmployee.FullName}", "RoomService");
         }
     }
 

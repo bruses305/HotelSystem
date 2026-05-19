@@ -83,12 +83,12 @@
 <Border.Style>
 <Style TargetType="Border">
 <Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Pending"><Setter Property="Background" Value="#F39C12"/></DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Confirmed"><Setter Property="Background" Value="#3498DB"/></DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Paid"><Setter Property="Background" Value="#27AE60"/></DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="CheckedIn"><Setter Property="Background" Value="#9B59B6"/></DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Cancelled"><Setter Property="Background" Value="#E74C3C"/></DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Completed"><Setter Property="Background" Value="#95A5A6"/></DataTrigger>
+<DataTrigger Binding="{Binding Status}" Value="Ожидание"><Setter Property="Background" Value="#F39C12"/></DataTrigger>
+<DataTrigger Binding="{Binding Status}" Value="Ожидание"><Setter Property="Background" Value="#3498DB"/></DataTrigger>
+<DataTrigger Binding="{Binding Status}" Value="Оплачено"><Setter Property="Background" Value="#27AE60"/></DataTrigger>
+<DataTrigger Binding="{Binding Status}" Value="Заселён"><Setter Property="Background" Value="#9B59B6"/></DataTrigger>
+<DataTrigger Binding="{Binding Status}" Value="Отменено"><Setter Property="Background" Value="#E74C3C"/></DataTrigger>
+<DataTrigger Binding="{Binding Status}" Value="Завершено"><Setter Property="Background" Value="#95A5A6"/></DataTrigger>
 </Style.Triggers>
 </Style>
 </Border.Style>
@@ -107,10 +107,10 @@
 <Style TargetType="Button">
 <Setter Property="Visibility" Value="Visible"/>
 <Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Cancelled">
+<DataTrigger Binding="{Binding Status}" Value="Отменено">
 <Setter Property="Visibility" Value="Collapsed"/>
 </DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Completed">
+<DataTrigger Binding="{Binding Status}" Value="Завершено">
 <Setter Property="Visibility" Value="Collapsed"/>
 </DataTrigger>
 <DataTrigger Binding="{Binding IsFullyPaid}" Value="True">
@@ -126,10 +126,10 @@
 <Style TargetType="Button">
 <Setter Property="Visibility" Value="Visible"/>
 <Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Cancelled">
+<DataTrigger Binding="{Binding Status}" Value="Отменено">
 <Setter Property="Visibility" Value="Collapsed"/>
 </DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Completed">
+<DataTrigger Binding="{Binding Status}" Value="Завершено">
 <Setter Property="Visibility" Value="Collapsed"/>
 </DataTrigger>
 </Style.Triggers>
@@ -142,10 +142,10 @@
 <Style TargetType="Button">
 <Setter Property="Visibility" Value="Collapsed"/>
 <Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Confirmed">
+<DataTrigger Binding="{Binding Status}" Value="Ожидание">
 <Setter Property="Visibility" Value="Visible"/>
 </DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Paid">
+<DataTrigger Binding="{Binding Status}" Value="Оплачено">
 <Setter Property="Visibility" Value="Visible"/>
 </DataTrigger>
 </Style.Triggers>
@@ -158,7 +158,7 @@
 <Style TargetType="Button">
 <Setter Property="Visibility" Value="Collapsed"/>
 <Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="CheckedIn">
+<DataTrigger Binding="{Binding Status}" Value="Ожидание">
 <Setter Property="Visibility" Value="Visible"/>
 </DataTrigger>
 </Style.Triggers>
@@ -171,13 +171,13 @@
 <Style TargetType="Button">
 <Setter Property="Visibility" Value="Visible"/>
 <Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Cancelled">
+<DataTrigger Binding="{Binding Status}" Value="Отменено">
 <Setter Property="Visibility" Value="Collapsed"/>
 </DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Completed">
+<DataTrigger Binding="{Binding Status}" Value="Завершено">
 <Setter Property="Visibility" Value="Collapsed"/>
 </DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="CheckedIn">
+<DataTrigger Binding="{Binding Status}" Value="Ожидание">
 <Setter Property="Visibility" Value="Collapsed"/>
 </DataTrigger>
 </Style.Triggers>

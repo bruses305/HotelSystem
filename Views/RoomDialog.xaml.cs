@@ -50,7 +50,7 @@ public partial class RoomDialog : DialogBase
         Room.Price = price;
         Room.Capacity = int.TryParse(CapacityTextBox.Text, out var cap) ? cap : 1;
         Room.Description = DescriptionTextBox.Text;
-        Room.Type = Enum.Parse<RoomType>((TypeComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Standard");
+        Room.Type = Enum.Parse<RoomType>((TypeComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Стандартный");
         Room.WaterExpense = decimal.TryParse(WaterTextBox.Text, out var w) ? w : 0;
         Room.ElectricityExpense = decimal.TryParse(ElectricityTextBox.Text, out var el) ? el : 0;
         Room.InternetExpense = decimal.TryParse(InternetTextBox.Text, out var inter) ? inter : 0;

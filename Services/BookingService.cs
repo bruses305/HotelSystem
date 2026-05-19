@@ -58,12 +58,12 @@ public class BookingService : IBookingService
 
         booking.TotalPrice =
             await CalculateBookingPriceAsync(booking.RoomId, booking.CheckInDate, booking.CheckOutDate);
-        booking.Status = BookingStatus.Pending;
+        booking.Status = BookingStatus.Ожидание;
 
         var created = await _bookingRepository.AddAsync(booking);
 
         await _logService.LogAsync(
-            LogLevel.Medium,
+            LogLevel.Средние,
             $"Создано бронирование #{created.Id} для клиента {booking.ClientId}  пользователем: {AuthService.CurrentEmployee.FullName}",
             "BookingService");
 
@@ -82,7 +82,7 @@ public class BookingService : IBookingService
     {
         booking.UpdatedAt = DateTime.Now;
         await _bookingRepository.UpdateAsync(booking);
-        await _logService.LogAsync(LogLevel.Low, $"Обновлено бронирование #{booking.Id} пользователем: {AuthService.CurrentEmployee.FullName}", "BookingService");
+        await _logService.LogAsync(LogLevel.Обычные, $"Обновлено бронирование #{booking.Id} пользователем: {AuthService.CurrentEmployee.FullName}", "BookingService");
     }
 
     public async Task DeleteBookingAsync(int id)
@@ -91,7 +91,7 @@ public class BookingService : IBookingService
         if (booking != null)
         {
             await _bookingRepository.DeleteAsync(id);
-            await _logService.LogAsync(LogLevel.Critical, $"Удалено бронирование #{id} пользователем: {AuthService.CurrentEmployee.FullName}", "BookingService");
+            await _logService.LogAsync(LogLevel.Важные, $"Удалено бронирование #{id} пользователем: {AuthService.CurrentEmployee.FullName}", "BookingService");
         }
     }
 
@@ -121,7 +121,7 @@ public class BookingService : IBookingService
             await _bookingRepository.UpdateAsync(booking);
 
             await _logService.LogAsync(
-                LogLevel.Low,
+                LogLevel.Обычные,
                 $"Статус бронирования #{id} изменён на {status} пользователем: {AuthService.CurrentEmployee.FullName}",
                 "BookingService");
         }
@@ -132,13 +132,13 @@ public class BookingService : IBookingService
         var booking = await _bookingRepository.GetBookingWithDetailsAsync(id);
         if (booking == null) return;
 
-        booking.Status = BookingStatus.CheckedIn;
+        booking.Status = BookingStatus.Заселён;
         booking.UpdatedAt = DateTime.Now;
 
         var room = await _roomRepository.GetByIdAsync(booking.RoomId);
         if (room != null)
         {
-            room.Status = RoomStatus.Occupied;
+            room.Status = RoomStatus.Занят;
             await _roomRepository.UpdateAsync(room);
         }
 
@@ -152,8 +152,8 @@ public class BookingService : IBookingService
             {
                 await _transactionRepository.AddAsync(new Transaction
                 {
-                    Type = TransactionType.Expense,
-                    Category = TransactionCategory.Utilities,
+                    Type = TransactionType.Расход,
+                    Category = TransactionCategory.Коммунальные_услуги,
                     Amount = room.WaterExpense * days,
                     RoomId = booking.RoomId,
                     BookingId = booking.Id,
@@ -166,8 +166,8 @@ public class BookingService : IBookingService
             {
                 await _transactionRepository.AddAsync(new Transaction
                 {
-                    Type = TransactionType.Expense,
-                    Category = TransactionCategory.Utilities,
+                    Type = TransactionType.Расход,
+                    Category = TransactionCategory.Коммунальные_услуги,
                     Amount = room.ElectricityExpense * days,
                     RoomId = booking.RoomId,
                     BookingId = booking.Id,
@@ -180,8 +180,8 @@ public class BookingService : IBookingService
             {
                 await _transactionRepository.AddAsync(new Transaction
                 {
-                    Type = TransactionType.Expense,
-                    Category = TransactionCategory.Utilities,
+                    Type = TransactionType.Расход,
+                    Category = TransactionCategory.Коммунальные_услуги,
                     Amount = room.InternetExpense * days,
                     RoomId = booking.RoomId,
                     BookingId = booking.Id,
@@ -192,7 +192,7 @@ public class BookingService : IBookingService
         }
 
         await _logService.LogAsync(
-            LogLevel.Medium,
+            LogLevel.Средние,
             $"Гость заселён в номер {room?.Name}. Бронирование #{id}",
             "BookingService");
 
@@ -208,13 +208,13 @@ public class BookingService : IBookingService
         var booking = await _bookingRepository.GetBookingWithDetailsAsync(id);
         if (booking == null) return;
 
-        booking.Status = BookingStatus.Completed;
+        booking.Status = BookingStatus.Завершено;
         booking.UpdatedAt = DateTime.Now;
 
         var room = await _roomRepository.GetByIdAsync(booking.RoomId);
         if (room != null)
         {
-            room.Status = RoomStatus.Free;
+            room.Status = RoomStatus.Свободен;
             await _roomRepository.UpdateAsync(room);
         }
 
@@ -229,8 +229,8 @@ public class BookingService : IBookingService
 
         var cleaningExpense = new Transaction
         {
-            Type = TransactionType.Expense,
-            Category = TransactionCategory.Maintenance,
+            Type = TransactionType.Расход,
+            Category = TransactionCategory.Обслуживание,
             Amount = room?.CleaningExpense ?? 500,
             RoomId = booking.RoomId,
             BookingId = booking.Id,
@@ -240,7 +240,7 @@ public class BookingService : IBookingService
         await _transactionRepository.AddAsync(cleaningExpense);
 
         await _logService.LogAsync(
-            LogLevel.Medium,
+            LogLevel.Средние,
             $"Завершено бронирование #{id}. Добавлен расход на уборку: {cleaningExpense.Amount:N0} ₽",
             "BookingService");
 
@@ -256,21 +256,21 @@ public class BookingService : IBookingService
         var booking = await _bookingRepository.GetBookingWithDetailsAsync(id);
         if (booking == null) return;
 
-        booking.Status = BookingStatus.Cancelled;
+        booking.Status = BookingStatus.Отменено;
         booking.Notes += $"\nОтмена: {reason}";
         booking.UpdatedAt = DateTime.Now;
 
         var room = await _roomRepository.GetByIdAsync(booking.RoomId);
         if (room != null)
         {
-            room.Status = RoomStatus.Free;
+            room.Status = RoomStatus.Свободен;
             await _roomRepository.UpdateAsync(room);
         }
 
         await _bookingRepository.UpdateAsync(booking);
 
         await _logService.LogAsync(
-            LogLevel.Critical,
+            LogLevel.Важные,
             $"Отменено бронирование #{id}. Причина: {reason} пользователем: {AuthService.CurrentEmployee.FullName}",
             "BookingService");
 
@@ -313,7 +313,7 @@ public class BookingService : IBookingService
         await _bookingRepository.UpdateAsync(booking);
 
         await _logService.LogAsync(
-            LogLevel.Low,
+            LogLevel.Обычные,
             $"Добавлена услуга {service.Name} в бронирование #{bookingId} ({quantity} шт.) пользователем: {AuthService.CurrentEmployee.FullName}",
             "BookingService");
     }
@@ -331,7 +331,7 @@ public class BookingService : IBookingService
         await _bookingRepository.UpdateAsync(booking);
 
         await _logService.LogAsync(
-            LogLevel.Low,
+            LogLevel.Обычные,
             $"Удалена услуга из бронирования #{bookingId} пользователем: {AuthService.CurrentEmployee.FullName}",
             "BookingService");
     }

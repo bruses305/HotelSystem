@@ -89,7 +89,7 @@ public class NotificationService
         if (notif != null && !notif.IsRead)
         {
             notif.IsRead = true;
-            await ILogService.LogAsync(LogLevel.Low, $"Пользователь: {AuthService.CurrentEmployee.FullName} прочитал уведомление: {notif.Title}", typeof(NotificationService).Name);
+            await ILogService.LogAsync(LogLevel.Обычные, $"Пользователь: {AuthService.CurrentEmployee.FullName} прочитал уведомление: {notif.Title}", typeof(NotificationService).Name);
             SaveToFile();
             NotificationsChanged?.Invoke();
         }
@@ -98,7 +98,7 @@ public class NotificationService
     public async Task MarkAllAsRead()
     {
         bool changed = false;
-        await ILogService.LogAsync(LogLevel.Low, $"Пользователь: {AuthService.CurrentEmployee.FullName} прочитал все уведомление", typeof(NotificationService).Name);
+        await ILogService.LogAsync(LogLevel.Обычные, $"Пользователь: {AuthService.CurrentEmployee.FullName} прочитал все уведомление", typeof(NotificationService).Name);
         foreach (var n in Notifications.Where(n => !n.IsRead))
         {
             n.IsRead = true;
@@ -116,7 +116,7 @@ public class NotificationService
     {
         var notif = Notifications.FirstOrDefault(n => n.Id == id);
         
-        await ILogService.LogAsync(LogLevel.Low, $"Пользователь: {AuthService.CurrentEmployee.FullName} Удалил уведомление: {notif.Title}", typeof(NotificationService).Name);
+        await ILogService.LogAsync(LogLevel.Обычные, $"Пользователь: {AuthService.CurrentEmployee.FullName} Удалил уведомление: {notif.Title}", typeof(NotificationService).Name);
         
         if (notif != null)
         {
@@ -128,7 +128,7 @@ public class NotificationService
     
     public async Task ClearAll()
     {
-        await ILogService.LogAsync(LogLevel.Medium, $"Пользователь: {AuthService.CurrentEmployee.FullName} Удалил все уведомления", typeof(NotificationService).Name);
+        await ILogService.LogAsync(LogLevel.Средние, $"Пользователь: {AuthService.CurrentEmployee.FullName} Удалил все уведомления", typeof(NotificationService).Name);
 
         if (Notifications.Count > 0)
         {
@@ -155,22 +155,22 @@ public class NotificationService
             
             // Заезд сегодня
             AddNotificationsForBookings(
-                bookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckInDate.Date == today),
+                bookings.Where(b => b.Status == BookingStatus.Подтверждено && b.CheckInDate.Date == today),
                 id, NotificationType.CheckIn, "Заезд сегодня", b => b.CheckInDate);
             
             // Выезд сегодня
             AddNotificationsForBookings(
-                bookings.Where(b => (b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid) && b.CheckOutDate.Date == today),
+                bookings.Where(b => (b.Status == BookingStatus.Подтверждено || b.Status == BookingStatus.Оплачено) && b.CheckOutDate.Date == today),
                 id, NotificationType.CheckOut, "Выезд сегодня", b => b.CheckOutDate);
             
             // Заезд на этой неделе
             AddNotificationsForBookings(
-                bookings.Where(b => b.Status == BookingStatus.Confirmed && b.CheckInDate.Date > today && b.CheckInDate.Date <= today.AddDays(7)),
+                bookings.Where(b => b.Status == BookingStatus.Подтверждено && b.CheckInDate.Date > today && b.CheckInDate.Date <= today.AddDays(7)),
                 id, NotificationType.CheckIn, b => $"Заезд {b.CheckInDate:dd.MM}", b => b.CheckInDate);
             
             // Выезд на этой неделе
             AddNotificationsForBookings(
-                bookings.Where(b => (b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid) && b.CheckOutDate.Date > today && b.CheckOutDate.Date <= today.AddDays(7)),
+                bookings.Where(b => (b.Status == BookingStatus.Подтверждено || b.Status == BookingStatus.Оплачено) && b.CheckOutDate.Date > today && b.CheckOutDate.Date <= today.AddDays(7)),
                 id, NotificationType.CheckOut, b => $"Выезд {b.CheckOutDate:dd.MM}", b => b.CheckOutDate);
             
             SaveToFile();

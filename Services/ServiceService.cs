@@ -27,7 +27,7 @@ public class ServiceService : IServiceService
     public async Task<Service> CreateServiceAsync(Service service)
     {
         var created = await _serviceRepository.AddAsync(service);
-        await _logService.LogAsync(LogLevel.Medium, 
+        await _logService.LogAsync(LogLevel.Средние, 
             $"Добавление услуги°: {service.Name} пользователем: {AuthService.CurrentEmployee.FullName}", "ServiceService");
         return created;
     }
@@ -35,7 +35,7 @@ public class ServiceService : IServiceService
     public async Task UpdateServiceAsync(Service service)
     {
         await _serviceRepository.UpdateAsync(service);
-        await _logService.LogAsync(LogLevel.Low, 
+        await _logService.LogAsync(LogLevel.Обычные, 
             $"Обновление услуги: {service.Name} пользователем: {AuthService.CurrentEmployee.FullName}", "ServiceService");
     }
 
@@ -45,7 +45,7 @@ public class ServiceService : IServiceService
         if (service != null)
         {
             await _serviceRepository.DeleteAsync(id);
-            await _logService.LogAsync(LogLevel.Critical, 
+            await _logService.LogAsync(LogLevel.Важные, 
                 $"Удаление услуги: {service.Name}  пользователем: {AuthService.CurrentEmployee.FullName}", "ServiceService");
         }
     }

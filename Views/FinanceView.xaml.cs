@@ -33,6 +33,11 @@ public partial class FinanceView : Page
         }
     }
 
+    public bool CanView()
+    {
+        return PermissionChecker.CanView(PermissionCategory.Finance);
+    }
+
     private void FinanceView_Loaded(object sender, RoutedEventArgs e)
     {
         StartDatePicker.SelectedDate = DateTime.Today.AddMonths(-1);

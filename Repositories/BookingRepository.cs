@@ -60,7 +60,7 @@ public class BookingRepository : Repository<Booking>, IBookingRepository
     {
         var bookings = await _dbSet
             .Where(b => b.RoomId == roomId &&
-                        (b.Status == BookingStatus.Pending || b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid) &&
+                        (b.Status == BookingStatus.Ожидание || b.Status == BookingStatus.Подтверждено || b.Status == BookingStatus.Оплачено) &&
                         ((b.CheckInDate <= checkIn && b.CheckOutDate > checkIn) ||
                          (b.CheckInDate < checkOut && b.CheckOutDate >= checkOut) ||
                          (b.CheckInDate >= checkIn && b.CheckOutDate <= checkOut)))
@@ -77,7 +77,7 @@ public class BookingRepository : Repository<Booking>, IBookingRepository
     public async Task<IEnumerable<Booking>> GetActiveBookingsAsync()
     {
         return await _dbSet
-            .Where(b => b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid)
+            .Where(b => b.Status == BookingStatus.Подтверждено || b.Status == BookingStatus.Оплачено)
             .Include(b => b.Room)
             .Include(b => b.Client)
             .OrderBy(b => b.CheckInDate)
@@ -88,7 +88,7 @@ public class BookingRepository : Repository<Booking>, IBookingRepository
     {
         var today = DateTime.Today;
         return await _dbSet
-            .Where(b => b.Status == BookingStatus.Confirmed && b.CheckInDate.Date == today)
+            .Where(b => b.Status == BookingStatus.Подтверждено && b.CheckInDate.Date == today)
             .Include(b => b.Room)
             .Include(b => b.Client)
             .ToListAsync();
@@ -98,7 +98,7 @@ public class BookingRepository : Repository<Booking>, IBookingRepository
     {
         var today = DateTime.Today;
         return await _dbSet
-            .Where(b => (b.Status == BookingStatus.Confirmed || b.Status == BookingStatus.Paid) && 
+            .Where(b => (b.Status == BookingStatus.Подтверждено || b.Status == BookingStatus.Оплачено) && 
                         b.CheckOutDate.Date == today)
             .Include(b => b.Room)
             .Include(b => b.Client)

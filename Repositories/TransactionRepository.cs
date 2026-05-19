@@ -10,7 +10,7 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
 
     public async Task<decimal> GetTotalIncomeAsync(DateTime? startDate = null, DateTime? endDate = null)
     {
-        var query = _dbSet.Where(t => t.Type == TransactionType.Income);
+        var query = _dbSet.Where(t => t.Type == TransactionType.Доход);
 
         if (startDate.HasValue)
             query = query.Where(t => t.TransactionDate >= startDate.Value);
@@ -23,7 +23,7 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
 
     public async Task<decimal> GetTotalExpensesAsync(DateTime? startDate = null, DateTime? endDate = null)
     {
-        var query = _dbSet.Where(t => t.Type == TransactionType.Expense);
+        var query = _dbSet.Where(t => t.Type == TransactionType.Расход);
 
         if (startDate.HasValue)
             query = query.Where(t => t.TransactionDate >= startDate.Value);

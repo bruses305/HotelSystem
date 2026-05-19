@@ -48,10 +48,10 @@ public class ExcelExporter
         // Рассчитываем итоги
         var totalBookingPayments = allBookings.Sum(b => b.PaidAmount);
         var totalServiceIncome = transactionsList
-            .Where(t => t.Type == TransactionType.Income && t.Category == TransactionCategory.AdditionalService)
+            .Where(t => t.Type == TransactionType.Доход && t.Category == TransactionCategory.Дополнительная_услуга)
             .Sum(t => t.Amount);
         var totalIncome = totalBookingPayments + totalServiceIncome;
-        var totalExpenses = transactionsList.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);
+        var totalExpenses = transactionsList.Where(t => t.Type == TransactionType.Расход).Sum(t => t.Amount);
         var profit = totalIncome - totalExpenses;
         
         using var workbook = new XLWorkbook();
@@ -141,7 +141,7 @@ public class ExcelExporter
             var service = tx.ServiceId.HasValue ? services.FirstOrDefault(s => s.Id == tx.ServiceId) : null;
             string clientName = GetClientName(tx, bookings, clients);
             string category = CategoryHelper.GetDisplayCategory(tx, service);
-            bool isIncome = tx.Type == TransactionType.Income;
+            bool isIncome = tx.Type == TransactionType.Доход;
             
             ExcelStyles.AddDataRow(sheet, row, alternate,
                 tx.TransactionDate.ToString("dd.MM.yyyy HH:mm"),
@@ -175,7 +175,7 @@ public class ExcelExporter
         int row = 4;
         decimal total = 0;
         
-        foreach (var tx in transactions.Where(t => t.Type == TransactionType.Income).OrderBy(t => t.TransactionDate))
+        foreach (var tx in transactions.Where(t => t.Type == TransactionType.Доход).OrderBy(t => t.TransactionDate))
         {
             var room = tx.RoomId.HasValue ? rooms.FirstOrDefault(r => r.Id == tx.RoomId) : null;
             var service = tx.ServiceId.HasValue ? services.FirstOrDefault(s => s.Id == tx.ServiceId) : null;
@@ -213,7 +213,7 @@ public class ExcelExporter
         int row = 4;
         decimal total = 0;
         
-        foreach (var tx in transactions.Where(t => t.Type == TransactionType.Expense).OrderBy(t => t.TransactionDate))
+        foreach (var tx in transactions.Where(t => t.Type == TransactionType.Расход).OrderBy(t => t.TransactionDate))
         {
             var room = tx.RoomId.HasValue ? rooms.FirstOrDefault(r => r.Id == tx.RoomId) : null;
             
@@ -262,7 +262,7 @@ public class ExcelExporter
         
         // Доходы по услугам
         var incomeByService = transactions
-            .Where(t => t.Type == TransactionType.Income && t.ServiceId.HasValue)
+            .Where(t => t.Type == TransactionType.Доход && t.ServiceId.HasValue)
             .GroupBy(t => t.ServiceId)
             .Select(g => new {
                 ServiceId = g.Key,
@@ -300,7 +300,7 @@ public class ExcelExporter
         int row = 4;
         
         var expensesByDesc = transactions
-            .Where(t => t.Type == TransactionType.Expense)
+            .Where(t => t.Type == TransactionType.Расход)
             .GroupBy(t => CategoryHelper.GetExpenseCategoryKey(t))
             .Select(g => new { Category = g.Key, Count = g.Count(), Sum = g.Sum(t => t.Amount) });
         
@@ -339,7 +339,7 @@ public class ExcelExporter
             .ToDictionary(g => g.Key, g => g.Sum(b => b.PaidAmount));
         
         var txByDay = transactions
-            .Where(t => t.Type == TransactionType.Income)
+            .Where(t => t.Type == TransactionType.Доход)
             .GroupBy(t => t.TransactionDate.Date)
             .ToDictionary(g => g.Key, g => g.Sum(t => t.Amount));
         
@@ -383,7 +383,7 @@ public class ExcelExporter
             .ToDictionary(g => g.Key, g => g.Sum(b => b.PaidAmount));
         
         var txByMonth = transactions
-            .Where(t => t.Type == TransactionType.Income)
+            .Where(t => t.Type == TransactionType.Доход)
             .GroupBy(t => t.TransactionDate.ToString("yyyy-MM"))
             .ToDictionary(g => g.Key, g => g.Sum(t => t.Amount));
         
@@ -462,11 +462,11 @@ public class ExcelExporter
             var roomBookings = bookings.Where(b => b.RoomId == room.Id);
             var incomeBookings = roomBookings.Sum(b => b.PaidAmount);
             
-            var roomTx = transactions.Where(t => t.RoomId == room.Id && t.Type == TransactionType.Income);
+            var roomTx = transactions.Where(t => t.RoomId == room.Id && t.Type == TransactionType.Доход);
             var incomeServices = roomTx.Sum(t => t.Amount);
             
             var expenses = transactions
-                .Where(t => t.RoomId == room.Id && t.Type == TransactionType.Expense)
+                .Where(t => t.RoomId == room.Id && t.Type == TransactionType.Расход)
                 .Sum(t => t.Amount);
             
             var profit = incomeBookings + incomeServices - expenses;
@@ -538,7 +538,7 @@ public class ExcelExporter
         decimal total = 0;
         
         var stats = transactions
-            .Where(t => t.ServiceId.HasValue && t.Type == TransactionType.Income)
+            .Where(t => t.ServiceId.HasValue && t.Type == TransactionType.Доход)
             .GroupBy(t => t.ServiceId)
             .Select(g => new {
                 ServiceId = g.Key,

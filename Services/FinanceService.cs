@@ -57,31 +57,31 @@ public class FinanceService : IFinanceService
         report.Transactions = transactions;
         
         // Основные показатели из транзакций
-        report.TotalIncome = (double)transactions.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
-        report.TotalExpenses = (double)transactions.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);
+        report.TotalIncome = (double)transactions.Where(t => t.Type == TransactionType.Доход).Sum(t => t.Amount);
+        report.TotalExpenses = (double)transactions.Where(t => t.Type == TransactionType.Расход).Sum(t => t.Amount);
         report.Profit = report.TotalIncome - report.TotalExpenses;
 
         // Группировка по категориям доходов
         report.IncomeByCategory = transactions
-            .Where(t => t.Type == TransactionType.Income)
+            .Where(t => t.Type == TransactionType.Доход)
             .GroupBy(t => t.Category)
             .ToDictionary(g => g.Key, g => (double)g.Sum(t => t.Amount));
 
         // Группировка по категориям расходов
         report.ExpensesByCategory = transactions
-            .Where(t => t.Type == TransactionType.Expense)
+            .Where(t => t.Type == TransactionType.Расход)
             .GroupBy(t => t.Category)
             .ToDictionary(g => g.Key, g => (double)g.Sum(t => t.Amount));
 
         // Доходы по номерам
         report.IncomeByRoom = transactions
-            .Where(t => t.Type == TransactionType.Income && t.RoomId.HasValue)
+            .Where(t => t.Type == TransactionType.Доход && t.RoomId.HasValue)
             .GroupBy(t => t.RoomId!.Value)
             .ToDictionary(g => g.Key, g => (double)g.Sum(t => t.Amount));
 
         // Доходы по месяцам
         report.IncomeByMonth = transactions
-            .Where(t => t.Type == TransactionType.Income)
+            .Where(t => t.Type == TransactionType.Доход)
             .GroupBy(t => t.TransactionDate.ToString("yyyy-MM"))
             .ToDictionary(g => g.Key, g => (double)g.Sum(t => t.Amount));
 
@@ -109,7 +109,7 @@ public class FinanceService : IFinanceService
             }
             
             // Добавляем информацию о расходах (коммунальные, уборка)
-            var bookingTransactions = transactions.Where(t => t.BookingId == booking.Id && t.Type == TransactionType.Expense);
+            var bookingTransactions = transactions.Where(t => t.BookingId == booking.Id && t.Type == TransactionType.Расход);
             foreach (var tx in bookingTransactions)
             {
                 report.BookingDetails.Add(new BookingTransactionDetail
@@ -129,7 +129,7 @@ public class FinanceService : IFinanceService
 
         // Детализация услуг
         var services = await _serviceRepository.GetAllAsync();
-        var serviceTxs = transactions.Where(t => t.ServiceId.HasValue && t.Type == TransactionType.Income);
+        var serviceTxs = transactions.Where(t => t.ServiceId.HasValue && t.Type == TransactionType.Доход);
         foreach (var tx in serviceTxs)
         {
             var service = services.FirstOrDefault(s => s.Id == tx.ServiceId);
@@ -152,7 +152,7 @@ public class FinanceService : IFinanceService
  public async Task<Transaction> AddTransactionAsync(Transaction transaction)
  {
  var created = await _transactionRepository.AddAsync(transaction);
- await _logService.LogAsync(LogLevel.Medium, 
+ await _logService.LogAsync(LogLevel.Средние, 
  $"Добавлена транзакция: {transaction.Type} {transaction.Amount} пользователем: {AuthService.CurrentEmployee.FullName}", "FinanceService");
  return created;
  }
@@ -179,7 +179,7 @@ public class FinanceService : IFinanceService
             booking.PaidAmount += amount;
             if (booking.PaidAmount >= booking.TotalPrice)
             {
-                booking.Status = BookingStatus.Paid;
+                booking.Status = BookingStatus.Оплачено;
             }
             await _bookingRepository.UpdateAsync(booking);
             
@@ -193,8 +193,8 @@ public class FinanceService : IFinanceService
             // Создаём транзакцию с подробным описанием (включая номер комнаты)
             var transaction = new Transaction
             {
-                Type = TransactionType.Income,
-                Category = TransactionCategory.Booking,
+                Type = TransactionType.Доход,
+                Category = TransactionCategory.Бронирование,
                 Amount = amount,
                 BookingId = bookingId,
                 RoomId = booking.RoomId,
@@ -214,8 +214,8 @@ public class FinanceService : IFinanceService
         // Создаём транзакцию с подробным описанием
         var transaction = new Transaction
         {
-            Type = TransactionType.Income,
-            Category = TransactionCategory.AdditionalService,
+            Type = TransactionType.Доход,
+            Category = TransactionCategory.Дополнительная_услуга,
             Amount = amount,
             BookingId = bookingId,
             RoomId = booking?.RoomId,
@@ -250,8 +250,8 @@ public class FinanceService : IFinanceService
  {
  var transaction = new Transaction
  {
- Type = TransactionType.Expense,
- Category = TransactionCategory.Salary,
+ Type = TransactionType.Расход,
+ Category = TransactionCategory.Зарплата,
  Amount = amount,
  EmployeeId = employeeId,
  TransactionDate = DateTime.Now,
@@ -265,8 +265,8 @@ public class FinanceService : IFinanceService
  {
  var transaction = new Transaction
  {
- Type = TransactionType.Expense,
- Category = TransactionCategory.Maintenance,
+ Type = TransactionType.Расход,
+ Category = TransactionCategory.Обслуживание,
  Amount = amount,
  RoomId = roomId,
  TransactionDate = DateTime.Now,

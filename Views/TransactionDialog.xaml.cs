@@ -18,12 +18,12 @@ public partial class TransactionDialog : Window
 
     private void InitializeCategories()
     {
-        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Бронирование", Tag = TransactionCategory.Booking });
-        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Дополнительные услуги", Tag = TransactionCategory.AdditionalService });
-        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Выплаты", Tag = TransactionCategory.Salary });
-        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Комунальные услуги", Tag = TransactionCategory.Utilities });
-        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Покупка", Tag = TransactionCategory.Purchase });
-        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Инной доход", Tag = TransactionCategory.Maintenance });
+        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Бронирование", Tag = TransactionCategory.Бронирование });
+        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Дополнительные услуги", Tag = TransactionCategory.Дополнительная_услуга });
+        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Выплаты", Tag = TransactionCategory.Зарплата });
+        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Комунальные услуги", Tag = TransactionCategory.Коммунальные_услуги });
+        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Покупка", Tag = TransactionCategory.Закупки });
+        CategoryComboBox.Items.Add(new ComboBoxItem { Content = "Инной доход", Tag = TransactionCategory.Обслуживание });
         TypeComboBox.SelectedIndex = 0;
         CategoryComboBox.SelectedIndex = 0;
     }
@@ -33,8 +33,8 @@ public partial class TransactionDialog : Window
         if (!decimal.TryParse(AmountTextBox.Text, out var amount) || amount <= 0) { MessageBox.Show("Ошибка сохранения: недостаток данных", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         var typeTag = (TypeComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString();
         var categoryTag = (CategoryComboBox.SelectedItem as ComboBoxItem)?.Tag;
-        Transaction.Type = typeTag == "Income" ? TransactionType.Income : TransactionType.Expense;
-        Transaction.Category = categoryTag is TransactionCategory cat ? cat : TransactionCategory.Booking;
+        Transaction.Type = typeTag == "Income" ? TransactionType.Доход : TransactionType.Расход;
+        Transaction.Category = categoryTag is TransactionCategory cat ? cat : TransactionCategory.Бронирование;
         Transaction.Amount = amount;
         Transaction.Description = DescriptionTextBox.Text;
         Transaction.TransactionDate = DateTime.Now;

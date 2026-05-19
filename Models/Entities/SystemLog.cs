@@ -2,9 +2,9 @@ namespace HotelSystem.Models.Entities;
 
 public enum LogLevel
 {
-    Low,       // Обычные
-    Medium,    // Средние
-    Critical   // Важные
+    Обычные,       // Обычные
+    Средние,    // Средние
+    Важные   // Важные
 }
 
 public class SystemLog : BaseEntity
