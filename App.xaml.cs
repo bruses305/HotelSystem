@@ -22,12 +22,18 @@ public partial class App : System.Windows.Application
         // Заполнение базы данных тестовыми данными
         try
         {
-            var connectionString = "Data Source=hotel.db";
-            using var context = new HotelDbContext(connectionString);
-            
-            // Убеждаемся, что база данных создана
-            context.Database.EnsureCreated();
-            
+            var dbPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "hotel.db");
+            var connectionString = $"Data Source={dbPath}";
+            try
+            {
+                using var context = new HotelDbContext(connectionString);
+                context.Database.EnsureCreated();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка EnsureCreated: {ex.Message}\n{ex.InnerException?.Message}");
+                throw;
+            }
             // Заполняем данными
             //await SeedData.SeedAsync(context);
         }

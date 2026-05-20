@@ -56,9 +56,9 @@ public partial class FinanceView : Page
             var income = await _financeService.GetTotalIncomeAsync(startDate, endDate);
             var expenses = await _financeService.GetTotalExpensesAsync(startDate, endDate);
             var profit = await _financeService.GetProfitAsync(startDate, endDate);
-            IncomeText.Text = $"{income:N0}";
-            ExpensesText.Text = $"{expenses:N0}";
-            ProfitText.Text = $"{profit:N0}";
+            IncomeText.Text = AppConstants.FormatPrice(income);
+            ExpensesText.Text = AppConstants.FormatPrice(expenses);
+            ProfitText.Text = AppConstants.FormatPrice(profit);
             TransactionsGrid.ItemsSource = await _financeService.GetTransactionsAsync(startDate, endDate);
         }
         catch (Exception ex) 

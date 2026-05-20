@@ -153,9 +153,9 @@ public partial class ReportsView : Page
             _currentReport = await _financeService.GetFinanceReportAsync(_startDate, _endDate);
             
             // Обновляем карточки
-            TotalIncomeText.Text = $"{_currentReport.TotalIncome:N0} Br";
-            TotalExpensesText.Text = $"{_currentReport.TotalExpenses:N0} Br";
-            ProfitText.Text = $"{_currentReport.Profit:N0} Br";
+            TotalIncomeText.Text = AppConstants.FormatPrice(_currentReport.TotalIncome);
+            TotalExpensesText.Text = AppConstants.FormatPrice(_currentReport.TotalExpenses);
+            ProfitText.Text = AppConstants.FormatPrice(_currentReport.Profit);
             
             // Бронирования
             var bookings = await _bookingService.GetBookingsByDateRangeAsync(_startDate, _endDate);

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows;
 using HotelSystem.Data;
 using HotelSystem.Models.Entities;
 

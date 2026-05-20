@@ -1,4 +1,8 @@
+using System;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
 using HotelSystem.Models.Entities;
 using HotelSystem.Services;
 
@@ -28,7 +32,6 @@ public partial class MainWindow : Window
 
             if (user.Role != UserRole.Admin)
             {
-                // Для не-админов скрываем пункты меню на основе прав
                 if (EmployeesMenuItem != null && !PermissionChecker.CanView(PermissionCategory.Employees))
                     EmployeesMenuItem.Visibility = Visibility.Collapsed;
                 if (LogsMenuItem != null && !PermissionChecker.CanView(PermissionCategory.Logs))
@@ -41,17 +44,17 @@ public partial class MainWindow : Window
                     RolesMenuItem.Visibility = Visibility.Collapsed;
             }
 
+            // Подписываемся на событие навигации для анимации
+            MainFrame.Navigated += MainFrame_Navigated;
+
             NavigateToBookings();
 
-            // Подписываемся на изменения уведомлений
             NotificationService.Instance.NotificationsChanged += () =>
                 Dispatcher.Invoke(() => UpdateNotificationBadge());
 
-            // Генерируем уведомления о бронированиях и обновляем кружок
             _ = NotificationService.Instance.GenerateBookingNotificationsAsync();
             UpdateNotificationBadge();
 
-            // Запускаем таймер для периодической проверки уведомлений
             var timer = new System.Windows.Threading.DispatcherTimer();
             timer.Interval = TimeSpan.FromMinutes(5);
             timer.Tick += async (_, _) =>
@@ -66,6 +69,19 @@ public partial class MainWindow : Window
             MessageBox.Show($"Ошибка инициализации главного окна: {ex.Message}\n\n{ex.StackTrace}", 
                 "Критическая ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             throw;
+        }
+    }
+
+    private void MainFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+    {
+        if (e.Content is FrameworkElement content)
+        {
+            var anim = TryFindResource("FrameEnterAnimation") as Storyboard;
+            if (anim != null)
+            {
+                content.Opacity = 0;
+                anim.Begin(content);
+            }
         }
     }
 
@@ -106,7 +122,6 @@ public partial class MainWindow : Window
             MessageBox.Show("Недостаточно прав для просмотра финансов!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-        
         MainFrame.Navigate(new FinanceView());
         PageTitle.Text = "Финансы";
     }
@@ -153,11 +168,8 @@ public partial class MainWindow : Window
         notificationsWindow.Owner = this;
         if (notificationsWindow.ShowDialog() == true && notificationsWindow.SelectedBookingId.HasValue)
         {
-            // Переходим на вкладку бронирований с выделением
             MainFrame.Navigate(new BookingsView(notificationsWindow.SelectedBookingId));
         }
-        
-        // Обновляем кружок после закрытия окна
         UpdateNotificationBadge();
     }
 
@@ -168,8 +180,7 @@ public partial class MainWindow : Window
 
     private void Logout_Click(object sender, RoutedEventArgs e)
     {
-        var result = MessageBox.Show("Выйти из системы?", "Подтверждение", MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
+        var result = MessageBox.Show("Выйти из системы?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (result == MessageBoxResult.Yes)
         {
             var loginWindow = new LoginWindow();
@@ -186,7 +197,6 @@ public partial class MainWindow : Window
             MessageBox.Show("Недостаточно прав для управления ролями!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-        
         var dialog = new RoleManagerWindow();
         dialog.Owner = this;
         dialog.ShowDialog();

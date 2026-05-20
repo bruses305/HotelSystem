@@ -36,7 +36,7 @@
                     <DataGridTextColumn Header="Потрачено" Binding="{Binding TotalSpent}" Width="130">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="{Binding TotalSpent, Converter={StaticResource SmartDecimalConverter}}"/>
+                                <Setter Property="Text" Value="{Binding TotalSpent, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>

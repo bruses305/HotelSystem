@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using HotelSystem.Helpers;
 
 namespace HotelSystem.Views;
 
@@ -15,38 +16,24 @@ public partial class PaymentDialog : Window
 
         _remainingAmount = totalPrice - paidAmount;
 
-        TotalText.Text = $"{totalPrice:N0}Br";
-        PaidText.Text = $"{paidAmount:N0}Br";
-        RemainingText.Text = $"{_remainingAmount:N0}Br";
+        TotalText.Text = AppConstants.FormatPrice(totalPrice);
+        PaidText.Text = AppConstants.FormatPrice(paidAmount);
+        RemainingText.Text = AppConstants.FormatPrice(_remainingAmount);
         AmountTextBox.Text = _remainingAmount.ToString("N0");
-    }
-
-    private void AmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
-    {
     }
 
     private void Pay_Click(object sender, RoutedEventArgs e)
     {
-        var raw = AmountTextBox.Text.Replace("Br", "").Replace(" ", "").Trim();
-
-        if (!decimal.TryParse(raw, NumberStyles.Number, CultureInfo.CurrentCulture, out var amount) &&
-            !decimal.TryParse(raw, NumberStyles.Number, CultureInfo.InvariantCulture, out amount))
+        if (!decimal.TryParse(AmountTextBox.Text, out var amount))
         {
-            MessageBox.Show("Введите корректную сумму.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (amount <= 0)
-        {
-            MessageBox.Show("Сумма оплаты должна быть больше нуля.", "Ошибка", MessageBoxButton.OK,
-                MessageBoxImage.Warning);
+            MessageBox.Show("Введите корректную сумму", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         if (amount > _remainingAmount)
         {
             var result = MessageBox.Show(
-                $"Сумма превышает остаток на {amount - _remainingAmount:N0} Br. Продолжить?",
+                $"Сумма превышает остаток на {AppConstants.FormatPrice(amount - _remainingAmount)}. Продолжить?",
                 "Подтверждение",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
@@ -66,5 +53,10 @@ public partial class PaymentDialog : Window
     {
         DialogResult = false;
         Close();
+    }
+
+    private void AmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        // Можно добавить валидацию при изменении суммы
     }
 }

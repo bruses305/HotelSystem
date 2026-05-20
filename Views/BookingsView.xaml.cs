@@ -298,7 +298,7 @@ public partial class BookingsView : Page
                     await _financeService.RecordBookingPaymentAsync(booking.Id, dialog.PaymentAmount);
                     
                     LoadBookingsAsync();
-                    MessageBox.Show($"Оплата {dialog.PaymentAmount:N0} Br принята!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show($"Оплата {AppConstants.FormatPrice(dialog.PaymentAmount)} принята!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {

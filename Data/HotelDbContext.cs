@@ -68,13 +68,31 @@ public class HotelDbContext : DbContext
         modelBuilder.Entity<Employee>(entity =>
         {
             entity.HasKey(e => e.Id);
+    
             entity.Property(e => e.FullName).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Login).IsRequired().HasMaxLength(50);
             entity.Property(e => e.PasswordHash).IsRequired();
             entity.Property(e => e.Phone).HasMaxLength(20);
             entity.Property(e => e.Position).HasMaxLength(100);
             entity.Property(e => e.Salary).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.IsActive);
+            entity.Property(e => e.CreatedAt);
+            entity.Property(e => e.UpdatedAt);
+    
+            // ВАЖНО: явно указываем колонки для Role и RoleId
+            entity.Property(e => e.Role)
+                .HasColumnName("Role")
+                .HasConversion<int>(); // enum -> int в SQLite
+            entity.Property(e => e.RoleId)
+                .HasColumnName("RoleId");
+    
             entity.HasIndex(e => e.Login).IsUnique();
+    
+            // Связь с RoleEntity
+            entity.HasOne(e => e.RoleEntity)
+                .WithMany(r => r.Employees)
+                .HasForeignKey(e => e.RoleId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         // Booking

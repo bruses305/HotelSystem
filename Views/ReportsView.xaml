@@ -80,15 +80,15 @@
                 
                 <StackPanel Grid.Column="0" HorizontalAlignment="Center">
                     <TextBlock Text="Доходы" FontSize="12" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="TotalIncomeText" Text="0 ₽" FontSize="20" FontWeight="Bold" Foreground="#27AE60" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="TotalIncomeText" Text="0" FontSize="20" FontWeight="Bold" Foreground="#27AE60" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" HorizontalAlignment="Center">
                     <TextBlock Text="Расходы" FontSize="12" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="TotalExpensesText" Text="0 ₽" FontSize="20" FontWeight="Bold" Foreground="#E74C3C" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="TotalExpensesText" Text="0" FontSize="20" FontWeight="Bold" Foreground="#E74C3C" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="2" HorizontalAlignment="Center">
                     <TextBlock Text="Прибыль" FontSize="12" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="ProfitText" Text="0 ₽" FontSize="20" FontWeight="Bold" Foreground="#3498DB" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="ProfitText" Text="0" FontSize="20" FontWeight="Bold" Foreground="#3498DB" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="3" HorizontalAlignment="Center">
                     <TextBlock Text="Бронирований" FontSize="12" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
@@ -188,21 +188,21 @@
                             <DataGridTextColumn Header="Доход" Binding="{Binding Income}" Width="90">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding Income, Converter={StaticResource SmartDecimalConverter}}"/>
+                                        <Setter Property="Text" Value="{Binding Income, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
                             <DataGridTextColumn Header="Расходы" Binding="{Binding Expenses}" Width="90">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding Expenses, Converter={StaticResource SmartDecimalConverter}}"/>
+                                        <Setter Property="Text" Value="{Binding Expenses, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
                             <DataGridTextColumn Header="Прибыль" Binding="{Binding Profit}" Width="90">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding Profit, Converter={StaticResource SmartDecimalConverter}}"/>
+                                        <Setter Property="Text" Value="{Binding Profit, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
@@ -226,7 +226,7 @@
                             <DataGridTextColumn Header="Потрачено" Binding="{Binding TotalSpent}" Width="100">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding TotalSpent, Converter={StaticResource SmartDecimalConverter}}"/>
+                                        <Setter Property="Text" Value="{Binding TotalSpent, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>

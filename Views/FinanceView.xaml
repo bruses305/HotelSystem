@@ -68,7 +68,7 @@
                     <DataGridTextColumn Header="Сумма" Binding="{Binding Amount}" Width="120">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="{Binding Amount, Converter={StaticResource SmartDecimalConverter}}"/>
+                                <Setter Property="Text" Value="{Binding Amount, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>

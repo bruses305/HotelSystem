@@ -82,21 +82,19 @@
                     <Border Background="#27AE60" CornerRadius="8" Padding="15">
                         <StackPanel>
                             <TextBlock Text="Доход" Foreground="White" FontSize="12"/>
-                            <TextBlock x:Name="ForecastIncomeText" Text="0 Br" Foreground="White" FontSize="24" FontWeight="Bold"/>
+                            <TextBlock x:Name="ForecastIncomeText" Text="0" Foreground="White" FontSize="24" FontWeight="Bold"/>
                         </StackPanel>
                     </Border>
-                    
                     <Border Grid.Column="1" Background="#E74C3C" CornerRadius="8" Padding="15" Margin="7,0">
                         <StackPanel>
-                            <TextBlock Text="Расход" Foreground="White" FontSize="12"/>
-                            <TextBlock x:Name="ForecastExpenseText" Text="0 Br" Foreground="White" FontSize="24" FontWeight="Bold"/>
+                            <TextBlock Text="Расходы" Foreground="White" FontSize="12"/>
+                            <TextBlock x:Name="ForecastExpenseText" Text="0" Foreground="White" FontSize="24" FontWeight="Bold"/>
                         </StackPanel>
                     </Border>
-                    
                     <Border Grid.Column="2" Background="#3498DB" CornerRadius="8" Padding="15" Margin="7,0,0,0">
                         <StackPanel>
                             <TextBlock Text="Прибыль" Foreground="White" FontSize="12"/>
-                            <TextBlock x:Name="ForecastProfitText" Text="0 Br" Foreground="White" FontSize="24" FontWeight="Bold"/>
+                            <TextBlock x:Name="ForecastProfitText" Text="0" Foreground="White" FontSize="24" FontWeight="Bold"/>
                         </StackPanel>
                     </Border>
                 </Grid>

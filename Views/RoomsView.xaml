@@ -29,7 +29,7 @@
                     <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="100">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="{Binding Price, Converter={StaticResource SmartDecimalConverter}}"/>
+                                <Setter Property="Text" Value="{Binding Price, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -53,7 +53,13 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Расходы" Binding="{Binding TotalExpenses, StringFormat={}{0:N0}}" Width="100"/>
+                    <DataGridTextColumn Header="Расходы" Binding="{Binding TotalExpenses}" Width="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="{Binding TotalExpenses, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="*"/>
                     <DataGridTemplateColumn Header="Действия" Width="100">
                         <DataGridTemplateColumn.CellTemplate>

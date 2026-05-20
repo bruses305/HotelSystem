@@ -1,0 +1,82 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+
+    <!-- Основная кнопка (зелёная) -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatMidBgButton}">
+        <Setter Property="Background" Value="#FF10B981"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="20,10"/>
+        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="8"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <!-- Вторичная кнопка (синяя) -->
+    <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatMidBgButton}">
+        <Setter Property="Background" Value="#FF6366F1"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="20,10"/>
+        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="8"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <!-- Кнопка опасности (красная) -->
+    <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatMidBgButton}">
+        <Setter Property="Background" Value="#FFEF4444"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="20,10"/>
+        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="8"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <!-- Кнопка-призрак (прозрачная с обводкой) -->
+    <Style x:Key="GhostButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Setter Property="Foreground" Value="{DynamicResource AppForegroundSecondary}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="8"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <!-- Кнопка иконки (для действий в таблице) -->
+    <Style x:Key="IconButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Padding" Value="4"/>
+        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="6"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource AppForegroundSecondary}"/>
+        <Setter Property="ToolTipService.InitialShowDelay" Value="300"/>
+    </Style>
+
+    <!-- Кнопка в сайдбаре -->
+    <Style x:Key="SidebarButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource SidebarForeground}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="Padding" Value="16,12"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="8"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Margin" Value="8,2"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#22FFFFFF"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Кнопка переключателя темы -->
+    <Style x:Key="ThemeToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignSwitchToggleButton}">
+        <Setter Property="materialDesign:ToggleButtonAssist.SwitchTrackOnBackground" Value="#FF6366F1"/>
+        <Setter Property="materialDesign:ToggleButtonAssist.SwitchTrackOffBackground" Value="#FF9CA3AF"/>
+    </Style>
+
+</ResourceDictionary>

@@ -227,7 +227,7 @@ public partial class BookingDialog : DialogBase
         if (RoomComboBox.SelectedValue is int roomId && CheckInDatePicker.SelectedDate.HasValue && CheckOutDatePicker.SelectedDate.HasValue)
         {
             var price = await _bookingService.CalculateBookingPriceAsync(roomId, CheckInDatePicker.SelectedDate.Value, CheckOutDatePicker.SelectedDate.Value);
-            TotalPriceText.Text = $"{price:N0}";
+            TotalPriceText.Text = AppConstants.FormatPrice(price);
             TotalPriceText.Foreground = System.Windows.Media.Brushes.White;
             Booking.TotalPrice = price;
         }

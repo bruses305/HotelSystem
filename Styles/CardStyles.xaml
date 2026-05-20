@@ -1,0 +1,83 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Основная карточка (белая/тёмная с тенью) -->
+    <Style x:Key="CardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.06" Color="Black"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Карточка с меньшей тенью -->
+    <Style x:Key="CardLightStyle" TargetType="Border" BasedOn="{StaticResource CardStyle}">
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.04" Color="Black"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Карточка статистики (цветная) -->
+    <Style x:Key="StatCardStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.15" Color="Black"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Заголовок страницы -->
+    <Style x:Key="PageTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{DynamicResource AppForeground}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Подзаголовок секции -->
+    <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource AppForeground}"/>
+        <Setter Property="Margin" Value="0,0,0,12"/>
+    </Style>
+
+    <!-- Текст вторичный -->
+    <Style x:Key="SecondaryTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="{DynamicResource AppForegroundSecondary}"/>
+    </Style>
+
+    <!-- Метка поля ввода -->
+    <Style x:Key="InputLabelStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource AppForegroundSecondary}"/>
+        <Setter Property="Margin" Value="0,0,0,6"/>
+    </Style>
+
+    <!-- Разделитель секций -->
+    <Style x:Key="SectionSeparatorStyle" TargetType="Separator">
+        <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="Margin" Value="0,16"/>
+        <Setter Property="Height" Value="1"/>
+    </Style>
+
+    <!-- Стиль для ScrollViewer -->
+    <Style x:Key="ModernScrollViewerStyle" TargetType="ScrollViewer">
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+</ResourceDictionary>

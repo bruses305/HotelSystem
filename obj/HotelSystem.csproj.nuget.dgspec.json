@@ -64,13 +64,17 @@
               "target": "Package",
               "version": "[3.0.0-rc0529, )"
             },
+            "MahApps.Metro.IconPacks": {
+              "target": "Package",
+              "version": "[6.2.1, )"
+            },
             "MaterialDesignColors": {
               "target": "Package",
-              "version": "[5.3.1, )"
+              "version": "[5.3.2, )"
             },
             "MaterialDesignThemes": {
               "target": "Package",
-              "version": "[5.3.1, )"
+              "version": "[5.3.2, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -97,6 +101,10 @@
             "OxyPlot.Wpf": {
               "target": "Package",
               "version": "[2.1.2, )"
+            },
+            "ShowMeTheXAML.MSBuild": {
+              "target": "Package",
+              "version": "[2.1.1, )"
             }
           },
           "imports": [

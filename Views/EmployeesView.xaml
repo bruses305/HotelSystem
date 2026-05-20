@@ -34,7 +34,7 @@
                     <DataGridTextColumn Header="Зарплата" Binding="{Binding Salary}" Width="100">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="{Binding Salary, Converter={StaticResource SmartDecimalConverter}}"/>
+                                <Setter Property="Text" Value="{Binding Salary, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>

@@ -5,6 +5,8 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using HotelSystem.Helpers;
+using HotelSystem.Services;
 using HotelSystem.Models.Entities;
 using HotelSystem.Services;
 using HotelSystem.Helpers;
@@ -112,7 +114,7 @@ public partial class ForecastWindow : Window
                 var expenses = (room?.TotalExpenses ?? 0) * booking.StayDays * booking.Count;
                 var profit = income - expenses;
                 details.AppendLine($"• {roomName} - {booking.Count}x{booking.StayDays}дней");
-                details.AppendLine($"  Доход: {income:N0} Br | Расходы: {expenses:N0} Br | Прибыль: {profit:N0} Br");
+                details.AppendLine($"  Доход: {AppConstants.FormatPriceDouble((double)income)} | Расходы: {AppConstants.FormatPriceDouble((double)expenses)} | Прибыль: {AppConstants.FormatPriceDouble((double)profit)}");
             }
             
             details.AppendLine();
@@ -131,7 +133,7 @@ public partial class ForecastWindow : Window
                 var expenses = 0m;
                 var profit = income - expenses;
                 details.AppendLine($"• {serviceName} - {service.Count} раз(а)");
-                details.AppendLine($"  Доход: {income:N0} Br | Расходы: 0 Br | Прибыль: {profit:N0} Br");
+                details.AppendLine($"  Доход: {AppConstants.FormatPriceDouble((double)income)} | Расходы: {AppConstants.FormatPriceDouble(0)} | Прибыль: {AppConstants.FormatPriceDouble((double)profit)}");
             }
         }
         
@@ -140,9 +142,9 @@ public partial class ForecastWindow : Window
 
     private void DisplayDetailedForecast(ForecastResult result)
     {
-        ForecastIncomeText.Text = $"{result.Income:N0} Br";
-        ForecastExpenseText.Text = $"{result.Expenses:N0} Br";
-        ForecastProfitText.Text = $"{result.Profit:N0} Br";
+        ForecastIncomeText.Text = AppConstants.FormatPrice(result.Income);
+        ForecastExpenseText.Text = AppConstants.FormatPrice(result.Expenses);
+        ForecastProfitText.Text = AppConstants.FormatPrice(result.Profit);
         
         ForecastDetailsPanel.Children.Clear();
         
@@ -279,7 +281,7 @@ public partial class ForecastWindow : Window
             
             var textBlock = new TextBlock
             {
-                Text = $"{room?.Name} - {booking.Count}x{booking.StayDays}д = {income:N0} Br (расход: {expenses:N0}, прибыль: {profit:N0})",
+                Text = $"{room?.Name} - {booking.Count}x{booking.StayDays}д = {AppConstants.FormatPriceDouble((double)income)} (расход: {AppConstants.FormatPriceDouble((double)expenses)}, прибыль: {AppConstants.FormatPriceDouble((double)profit)})",
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(0, 0, 10, 0)
             };
@@ -331,7 +333,7 @@ public partial class ForecastWindow : Window
             
             var textBlock = new TextBlock
             {
-                Text = $"{serviceData?.Name} - {service.Count} раз = {income:N0} Br (расход: 0, прибыль: {profit:N0})",
+                Text = $"{serviceData?.Name} - {service.Count} раз = {AppConstants.FormatPriceDouble((double)income)} (расход: 0, прибыль: {AppConstants.FormatPriceDouble((double)profit)})",
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(0, 0, 10, 0)
             };

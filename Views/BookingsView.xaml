@@ -1,195 +1,255 @@
 <Page x:Class="HotelSystem.Views.BookingsView"
- xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
- xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- xmlns:System="clr-namespace:System;assembly=mscorlib"
- Background="#ECF0F1">
-<Grid Margin="20">
-<Grid.RowDefinitions>
-<RowDefinition Height="Auto"/>
-<RowDefinition Height="*"/>
-</Grid.RowDefinitions>
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Бронирования"
+      Background="#F4F6F9">
 
-<Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
-<Grid>
-<Grid.ColumnDefinitions>
-<ColumnDefinition Width="Auto"/>
-<ColumnDefinition Width="*"/>
-<ColumnDefinition Width="Auto"/>
-</Grid.ColumnDefinitions>
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-<Button x:Name="AddBookingButton" Content="+ Новое бронирование" Click="AddBooking_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" Cursor="Hand">
-<Button.Template>
-<ControlTemplate TargetType="Button">
-<Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
-<ContentPresenter/>
-</Border>
-</ControlTemplate>
-</Button.Template>
-</Button>
+        <!-- Панель фильтров (горизонтальная прокрутка при нехватке места) -->
+        <Border Grid.Row="0" Background="White" CornerRadius="12" Padding="15" Margin="0,0,0,20">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.08"/>
+            </Border.Effect>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="AddBookingButton" Click="AddBooking_Click" 
+                            Background="#27AE60" Foreground="White" Padding="12,8" Margin="0,0,15,0"
+                            BorderThickness="0" Cursor="Hand" VerticalAlignment="Center">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <TextBlock Text="+ Новое бронирование" FontWeight="SemiBold"/>
+                    </Button>
 
-<StackPanel Grid.Column="1" Orientation="Horizontal" Margin="20,0">
-<TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-<TextBox x:Name="SearchTextBox" Width="200" Padding="8" TextChanged="SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown" Margin="0,0,15,0"/>
+                    <Border Background="#EEF2F7" CornerRadius="6" Padding="8,4" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🔍" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBox x:Name="SearchTextBox" Width="180" BorderThickness="0" Background="Transparent"
+                                     TextChanged="SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="#EEF2F7" CornerRadius="6" Padding="8,4" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📅" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <DatePicker x:Name="FilterStartDatePicker" Width="110" SelectedDateChanged="FilterChanged" BorderThickness="0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="—" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#7F8C8D"/>
+
+                    <Border Background="#EEF2F7" CornerRadius="6" Padding="8,4" Margin="0,0,15,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📅" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <DatePicker x:Name="FilterEndDatePicker" Width="110" SelectedDateChanged="FilterChanged" BorderThickness="0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="#EEF2F7" CornerRadius="6" Padding="8,4" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🏠" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <ComboBox x:Name="FilterRoomComboBox" Width="140" SelectionChanged="FilterChanged" BorderThickness="0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="#EEF2F7" CornerRadius="6" Padding="8,4" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🏷️" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <ComboBox x:Name="FilterStatusComboBox" Width="130" SelectionChanged="FilterChanged" BorderThickness="0">
+                                <ComboBoxItem Content="Все статусы" Tag="All" IsSelected="True"/>
+                                <ComboBoxItem Content="Ожидание" Tag="Pending"/>
+                                <ComboBoxItem Content="Оплачено" Tag="Paid"/>
+                                <ComboBoxItem Content="Заселён" Tag="CheckedIn"/>
+                                <ComboBoxItem Content="Отменено" Tag="Cancelled"/>
+                                <ComboBoxItem Content="Завершено" Tag="Completed"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Content="Сбросить" Click="ClearFilter_Click" Padding="10,6"
+                            Background="#7F8C8D" Foreground="White" BorderThickness="0" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- DataGrid -->
+        <Border Grid.Row="1" Background="White" CornerRadius="12">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.08"/>
+            </Border.Effect>
+            <DataGrid x:Name="BookingsGrid" 
+                      AutoGenerateColumns="False" 
+                      IsReadOnly="True" 
+                      CanUserAddRows="False" 
+                      GridLinesVisibility="Horizontal" 
+                      HeadersVisibility="Column"
+                      BorderThickness="0"
+                      MouseDoubleClick="BookingsGrid_MouseDoubleClick"
+                      RowBackground="White"
+                      AlternatingRowBackground="#F8FAFD"
+                      FontSize="13"
+                      RowHeight="48"
+                      VerticalGridLinesBrush="Transparent"
+                      HorizontalGridLinesBrush="#E5E9EC">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#F0F3F8"/>
+                        <Setter Property="Foreground" Value="#2C3E50"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Padding" Value="12,8"/>
+                        <Setter Property="BorderBrush" Value="#E0E5EC"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/> <!-- только нижняя граница -->
+                    </Style>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Padding" Value="8,4"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    </Style>
+                    <!-- Убираем выделение всей строки по умолчанию (опционально) -->
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="BorderThickness" Value="0"/>
+                    </Style>
+                </DataGrid.Resources>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
+                    <DataGridTextColumn Header="Номер" Binding="{Binding Room.Name}" Width="120"/>
+                    <DataGridTextColumn Header="Клиент" Binding="{Binding Client.FullName}" Width="180"/>
+                    <DataGridTextColumn Header="Заезд" Binding="{Binding CheckInDate, StringFormat=dd.MM.yyyy}" Width="100"/>
+                    <DataGridTextColumn Header="Выезд" Binding="{Binding CheckOutDate, StringFormat=dd.MM.yyyy}" Width="100"/>
+                    <DataGridTextColumn Header="Дней" Binding="{Binding Days}" Width="60"/>
+                    <DataGridTextColumn Header="Сумма" Binding="{Binding TotalPrice}" Width="100"/>
+                    <DataGridTextColumn Header="Оплачено" Binding="{Binding PaidAmount}" Width="100"/>
                     
-<TextBlock Text="С:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-<DatePicker x:Name="FilterStartDatePicker" Width="120" Margin="0,0,10,0" SelectedDateChanged="FilterChanged"/>
-<TextBlock Text="По:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-<DatePicker x:Name="FilterEndDatePicker" Width="120" Margin="0,0,15,0" SelectedDateChanged="FilterChanged"/>
-                    
-<TextBlock Text="Номер:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-<ComboBox x:Name="FilterRoomComboBox" Width="150" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,10,0" SelectionChanged="FilterChanged"/>
-                    
-<TextBlock Text="Статус:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-<ComboBox x:Name="FilterStatusComboBox" Width="130" Margin="0,0,10,0" SelectionChanged="FilterChanged">
-<ComboBoxItem Content="Все статусы" Tag="All" IsSelected="True"/>
-<ComboBoxItem Content="Ожидание" Tag="Pending"/>
-<ComboBoxItem Content="Оплачено" Tag="Paid"/>
-<ComboBoxItem Content="Заселён" Tag="CheckedIn"/>
-<ComboBoxItem Content="Отменено" Tag="Cancelled"/>
-<ComboBoxItem Content="Завершено" Tag="Completed"/>
-</ComboBox>
-<Button Content="Сбросить" Click="ClearFilter_Click" Padding="10,5"/>
-</StackPanel>
-</Grid>
-</Border>
+                    <!-- Колонка статуса с фиксированной шириной и центрированием -->
+                    <DataGridTemplateColumn Header="Статус" Width="110">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Border CornerRadius="12" Padding="8,4" 
+                                            HorizontalAlignment="Center" MinWidth="80">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="#95A5A6"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Ожидание"><Setter Property="Background" Value="#F39C12"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Оплачено"><Setter Property="Background" Value="#27AE60"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Заселён"><Setter Property="Background" Value="#9B59B6"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Отменено"><Setter Property="Background" Value="#E74C3C"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Завершено"><Setter Property="Background" Value="#7F8C8D"/></DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="{Binding Status}" Foreground="White" FontWeight="SemiBold" FontSize="11" TextAlignment="Center"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
-<Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
-<DataGrid x:Name="BookingsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0" MouseDoubleClick="BookingsGrid_MouseDoubleClick">
-<DataGrid.Columns>
-<DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-<DataGridTextColumn Header="Номер" Binding="{Binding Room.Name}" Width="100"/>
-<DataGridTextColumn Header="Клиент" Binding="{Binding Client.FullName}" Width="150"/>
-<DataGridTextColumn Header="Заезд" Binding="{Binding CheckInDate, StringFormat=dd.MM.yyyy}" Width="100"/>
-<DataGridTextColumn Header="Выезд" Binding="{Binding CheckOutDate, StringFormat=dd.MM.yyyy}" Width="100"/>
-<DataGridTextColumn Header="Дней" Binding="{Binding Days}" Width="60"/>
-<DataGridTextColumn Header="Сумма" Binding="{Binding TotalPrice}" Width="100">
-<DataGridTextColumn.ElementStyle>
-<Style TargetType="TextBlock">
-<Setter Property="Text" Value="{Binding TotalPrice, Converter={StaticResource SmartDecimalConverter}}"/>
-</Style>
-</DataGridTextColumn.ElementStyle>
-</DataGridTextColumn>
-<DataGridTextColumn Header="Оплачено" Binding="{Binding PaidAmount}" Width="100">
-<DataGridTextColumn.ElementStyle>
-<Style TargetType="TextBlock">
-<Setter Property="Text" Value="{Binding PaidAmount, Converter={StaticResource SmartDecimalConverter}}"/>
-</Style>
-</DataGridTextColumn.ElementStyle>
-</DataGridTextColumn>
-<DataGridTemplateColumn Header="Статус" Width="110">
-<DataGridTemplateColumn.CellTemplate>
-<DataTemplate>
-<Border CornerRadius="10" Padding="8,4">
-<Border.Style>
-<Style TargetType="Border">
-<Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Ожидание"><Setter Property="Background" Value="#F39C12"/></DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Ожидание"><Setter Property="Background" Value="#3498DB"/></DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Оплачено"><Setter Property="Background" Value="#27AE60"/></DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Заселён"><Setter Property="Background" Value="#9B59B6"/></DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Отменено"><Setter Property="Background" Value="#E74C3C"/></DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Завершено"><Setter Property="Background" Value="#95A5A6"/></DataTrigger>
-</Style.Triggers>
-</Style>
-</Border.Style>
-<TextBlock Text="{Binding Status}" Foreground="White" FontWeight="SemiBold" FontSize="11"/>
-</Border>
-</DataTemplate>
-</DataGridTemplateColumn.CellTemplate>
-</DataGridTemplateColumn>
-<DataGridTemplateColumn Header="Действия" Width="*">
-<DataGridTemplateColumn.CellTemplate>
-<DataTemplate>
-<StackPanel Orientation="Horizontal">
-<!-- Кнопка Оплата - показывается если не оплачено полностью и бронь активна -->
-<Button Content="Опл." Click="PayBooking_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5,2" Margin="2,0" ToolTip="Оплатить">
-<Button.Style>
-<Style TargetType="Button">
-<Setter Property="Visibility" Value="Visible"/>
-<Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Отменено">
-<Setter Property="Visibility" Value="Collapsed"/>
-</DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Завершено">
-<Setter Property="Visibility" Value="Collapsed"/>
-</DataTrigger>
-<DataTrigger Binding="{Binding IsFullyPaid}" Value="True">
-<Setter Property="Visibility" Value="Collapsed"/>
-</DataTrigger>
-</Style.Triggers>
-</Style>
-</Button.Style>
-</Button>
-<!-- Кнопка Редактировать -->
-<Button Content="Ред." Click="EditBooking_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5,2" Margin="2,0" ToolTip="Редактировать">
-<Button.Style>
-<Style TargetType="Button">
-<Setter Property="Visibility" Value="Visible"/>
-<Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Отменено">
-<Setter Property="Visibility" Value="Collapsed"/>
-</DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Завершено">
-<Setter Property="Visibility" Value="Collapsed"/>
-</DataTrigger>
-</Style.Triggers>
-</Style>
-</Button.Style>
-</Button>
-<!-- Кнопка Заезд - показывается если бронь подтверждена или оплачена -->
-<Button Content="Заезд" Click="CheckIn_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5,2" Margin="2,0" ToolTip="Заселить">
-<Button.Style>
-<Style TargetType="Button">
-<Setter Property="Visibility" Value="Collapsed"/>
-<Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Ожидание">
-<Setter Property="Visibility" Value="Visible"/>
-</DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Оплачено">
-<Setter Property="Visibility" Value="Visible"/>
-</DataTrigger>
-</Style.Triggers>
-</Style>
-</Button.Style>
-</Button>
-<!-- Кнопка Выезд - показывается если гость заселён -->
-<Button Content="Выезд" Click="CheckOut_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5,2" Margin="2,0" ToolTip="Выселить">
-<Button.Style>
-<Style TargetType="Button">
-<Setter Property="Visibility" Value="Collapsed"/>
-<Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Ожидание">
-<Setter Property="Visibility" Value="Visible"/>
-</DataTrigger>
-</Style.Triggers>
-</Style>
-</Button.Style>
-</Button>
-<!-- Кнопка Отмена - показывается если бронь активна -->
-<Button Content="Отм." Click="CancelBooking_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5,2" Margin="2,0" ToolTip="Отменить" Foreground="Red">
-<Button.Style>
-<Style TargetType="Button">
-<Setter Property="Visibility" Value="Visible"/>
-<Style.Triggers>
-<DataTrigger Binding="{Binding Status}" Value="Отменено">
-<Setter Property="Visibility" Value="Collapsed"/>
-</DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Завершено">
-<Setter Property="Visibility" Value="Collapsed"/>
-</DataTrigger>
-<DataTrigger Binding="{Binding Status}" Value="Ожидание">
-<Setter Property="Visibility" Value="Collapsed"/>
-</DataTrigger>
-</Style.Triggers>
-</Style>
-</Button.Style>
-</Button>
-</StackPanel>
-</DataTemplate>
-</DataGridTemplateColumn.CellTemplate>
-</DataGridTemplateColumn>
-</DataGrid.Columns>
-</DataGrid>
-</Border>
-</Grid>
+                    <!-- Колонка действий с условной видимостью кнопок -->
+                    <DataGridTemplateColumn Header="Действия" Width="*" MinWidth="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4,0">
+                                    <!-- Оплата -->
+                                    <Button Click="PayBooking_Click" Tag="{Binding}" ToolTip="Оплатить"
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand" Width="30" Height="30">
+                                        <TextBlock Text="💰" FontSize="18" Foreground="#27AE60"/>
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Отменено"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Завершено"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsFullyPaid}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+
+                                    <!-- Редактировать -->
+                                    <Button Click="EditBooking_Click" Tag="{Binding}" ToolTip="Редактировать"
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand" Width="30" Height="30">
+                                        <TextBlock Text="✏️" FontSize="18" Foreground="#3498DB"/>
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Отменено"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Завершено"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+
+                                    <!-- Заезд (только для статусов "Ожидание" и "Оплачено") -->
+                                    <Button Click="CheckIn_Click" Tag="{Binding}" ToolTip="Заселить"
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand" Width="30" Height="30">
+                                        <TextBlock Text="➡️" FontSize="18" Foreground="#9B59B6"/>
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Ожидание"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Оплачено"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+
+                                    <!-- Выезд (только для статуса "Заселён") -->
+                                    <Button Click="CheckOut_Click" Tag="{Binding}" ToolTip="Выселить"
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand" Width="30" Height="30">
+                                        <TextBlock Text="⬅️" FontSize="18" Foreground="#E67E22"/>
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Заселён"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+
+                                    <!-- Отмена (для статусов "Ожидание" и "Оплачено") -->
+                                    <Button Click="CancelBooking_Click" Tag="{Binding}" ToolTip="Отменить"
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand" Width="30" Height="30">
+                                        <TextBlock Text="❌" FontSize="18" Foreground="#E74C3C"/>
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Ожидание"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Оплачено"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
 </Page>

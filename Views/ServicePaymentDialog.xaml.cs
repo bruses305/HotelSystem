@@ -94,16 +94,16 @@ public partial class ServicePaymentDialog : Window
             if (ServiceComboBox.SelectedItem is Service service && int.TryParse(QuantityTextBox.Text, out var quantity))
             {
                 var total = service.Price * quantity;
-                TotalText.Text = $"{total:N0} Br";
+                TotalText.Text = AppConstants.FormatPrice(total);
             }
             else
             {
-                TotalText.Text = "0 Br";
+                TotalText.Text = AppConstants.FormatPrice(0);
             }
         }
         catch
         {
-            TotalText.Text = "0 Br";
+            TotalText.Text = AppConstants.FormatPrice(0);
         }
     }
 
