@@ -46,4 +46,5 @@ public interface IFinanceService
     Task RecordServicePaymentAsync(int bookingId, int serviceId, int quantity, decimal amount);
     Task RecordSalaryPaymentAsync(int employeeId, decimal amount);
     Task RecordRoomExpenseAsync(int roomId, string category, decimal amount);
+    Task RefundBookingPaymentAsync(int bookingId);
 }

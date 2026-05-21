@@ -82,33 +82,48 @@ public partial class BookingsView : Page
     {
         if (_allBookings == null)
             return;
-        
+
         var startDate = FilterStartDatePicker.SelectedDate;
         var endDate = FilterEndDatePicker.SelectedDate;
         var roomId = FilterRoomComboBox.SelectedValue as int?;
-        var status = (FilterStatusComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString();
+        var statusTag = (FilterStatusComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString();
         var searchQuery = SearchTextBox.Text;
-        
+
         var filtered = _allBookings.AsQueryable();
-        
+
+        // ----- Базовое правило: скрываем старые завершённые/отменённые, если нет явных фильтров -----
+        bool hasDateFilter = startDate.HasValue || endDate.HasValue;
+        bool hasExplicitStatus = !string.IsNullOrEmpty(statusTag) && statusTag != "All";
+
+        if (!hasDateFilter && !hasExplicitStatus)
+        {
+            // Нет фильтра по датам и не выбран конкретный статус → скрываем завершённые/отменённые старше 1 месяца
+            var oneMonthAgo = DateTime.Today.AddMonths(-1);
+            filtered = filtered.Where(b =>
+                !((b.Status == BookingStatus.Завершено || b.Status == BookingStatus.Отменено)
+                  && b.CheckOutDate < oneMonthAgo)
+            );
+        }
+
+        // ----- Фильтр по датам -----
         if (startDate.HasValue)
             filtered = filtered.Where(b => b.CheckOutDate >= startDate.Value);
-        
+
         if (endDate.HasValue)
             filtered = filtered.Where(b => b.CheckInDate <= endDate.Value.AddDays(1));
-        
+
+        // ----- Фильтр по номеру -----
         if (roomId.HasValue && roomId.Value > 0)
             filtered = filtered.Where(b => b.RoomId == roomId.Value);
-        
-        if (!string.IsNullOrEmpty(status) && status != "All")
+
+        // ----- Фильтр по статусу (исправлено) -----
+        if (!string.IsNullOrEmpty(statusTag) && statusTag != "All")
         {
-            // Для статуса Ожидание показываем и Pending и CheckedIn
-            if (status == "Pending")
-                filtered = filtered.Where(b => b.Status == BookingStatus.Оплачено || b.Status == BookingStatus.Заселён);
-            else
-                filtered = filtered.Where(b => b.Status.ToString() == status);
+            // statusTag теперь содержит русское название (например, "Ожидание", "Оплачено")
+            filtered = filtered.Where(b => b.Status.ToString() == statusTag);
         }
-        
+
+        // ----- Поиск -----
         if (!string.IsNullOrWhiteSpace(searchQuery))
         {
             var query = searchQuery.Trim().ToLower();
@@ -120,7 +135,7 @@ public partial class BookingsView : Page
                 b.CheckInDate.ToString("dd.MM.yyyy").Contains(query)
             );
         }
-        
+
         BookingsGrid.ItemsSource = filtered.ToList();
     }
 
@@ -259,15 +274,40 @@ public partial class BookingsView : Page
             MessageBox.Show("Недостаточно прав для отмены бронирования!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-        
+
         if (sender is Button btn && btn.Tag is Booking booking)
         {
-            var result = MessageBox.Show("Отменить бронирование?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.Yes)
+            // Если уже оплачено – предупредить о возврате
+            bool hasPayment = booking.PaidAmount > 0;
+            string message = hasPayment 
+                ? $"Отменить бронирование? Сумма {AppConstants.FormatPrice(booking.PaidAmount)} будет возвращена клиенту."
+                : "Отменить бронирование?";
+
+            var result = MessageBox.Show(message, "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result != MessageBoxResult.Yes) return;
+
+            try
             {
+                // Если есть оплата – записываем возврат
+                if (hasPayment)
+                {
+                    await _financeService.RefundBookingPaymentAsync(booking.Id);
+                }
+
+                // Обновляем статус бронирования
                 booking.Status = BookingStatus.Отменено;
                 await _bookingService.UpdateBookingAsync(booking);
-                LoadBookingsAsync();
+
+                MessageBox.Show("Бронирование отменено." + (hasPayment ? " Средства возвращены." : ""),
+                    "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при отмене: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                LoadBookingsAsync(); // обновить таблицу
             }
         }
     }

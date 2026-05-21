@@ -127,34 +127,33 @@ public partial class BookingDialog : DialogBase
         RoomComboBox.ItemsSource = _allRooms;
         RoomComboBox.DisplayMemberPath = "Name";
         RoomComboBox.SelectedValuePath = "Id";
-        
-        // Настройка автокомплита для клиента
+
         var clients = await _clientService.GetAllClientsAsync();
         ClientAutoComplete.SetClients(clients.ToList());
-        
-        // Обработчик выбора клиента
-        ClientAutoComplete.SetClientSelectedHandler(async client =>
+
+        ClientAutoComplete.SetClientSelectedHandler(client =>
         {
-            if (client != null)
-            {
-                Booking.ClientId = client.Id;
-            }
+            if (client != null) Booking.ClientId = client.Id;
+            return null;
         });
-        
-        // Обработчик создания нового клиента
-        ClientAutoComplete.SetCreateClientHandler(async () => await CreateNewClientAsync());
-        
+        ClientAutoComplete.SetCreateClientHandler(CreateNewClientAsync);
+
         if (_isEdit)
         {
             RoomComboBox.SelectedValue = Booking.RoomId;
-            if (Booking.Client != null)
+            // Загружаем клиента, если его нет в объекте Booking
+            if (Booking.Client == null && Booking.ClientId > 0)
             {
-                ClientAutoComplete.InputText = Booking.Client.FullName;
+                Booking.Client = await _clientService.GetClientByIdAsync(Booking.ClientId);
             }
+
+            if (Booking.Client != null)
+                ClientAutoComplete.InputText = Booking.Client.FullName;
+
             CheckInDatePicker.SelectedDate = Booking.CheckInDate;
             CheckOutDatePicker.SelectedDate = Booking.CheckOutDate;
             NotesTextBox.Text = Booking.Notes;
-            
+
             _originalRoomId = Booking.RoomId;
             _originalClientId = Booking.ClientId;
             _originalCheckIn = Booking.CheckInDate;
@@ -165,11 +164,33 @@ public partial class BookingDialog : DialogBase
         {
             CheckInDatePicker.SelectedDate = DateTime.Today;
             CheckOutDatePicker.SelectedDate = DateTime.Today.AddDays(1);
-            
             _originalCheckIn = DateTime.Today;
             _originalCheckOut = DateTime.Today.AddDays(1);
         }
-        UpdatePrice();
+
+        await UpdatePrice();
+    }
+
+    private async Task UpdatePrice()
+    {
+        if (RoomComboBox.SelectedValue is int roomId && 
+            CheckInDatePicker.SelectedDate.HasValue && 
+            CheckOutDatePicker.SelectedDate.HasValue)
+        {
+            try
+            {
+                var price = await _bookingService.CalculateBookingPriceAsync(roomId, 
+                    CheckInDatePicker.SelectedDate.Value, 
+                    CheckOutDatePicker.SelectedDate.Value);
+                TotalPriceText.Text = AppConstants.FormatPrice(price);   // ← так и есть
+                Booking.TotalPrice = price;
+            }
+            catch (Exception ex)
+            {
+                TotalPriceText.Text = "Ошибка";
+                MessageBox.Show($"UpdatePrice error: {ex.Message}");
+            }
+        }
     }
 
     private async Task<Client?> CreateNewClientAsync()
@@ -220,17 +241,6 @@ public partial class BookingDialog : DialogBase
         }
 
         return null;
-    }
-
-    private async void UpdatePrice()
-    {
-        if (RoomComboBox.SelectedValue is int roomId && CheckInDatePicker.SelectedDate.HasValue && CheckOutDatePicker.SelectedDate.HasValue)
-        {
-            var price = await _bookingService.CalculateBookingPriceAsync(roomId, CheckInDatePicker.SelectedDate.Value, CheckOutDatePicker.SelectedDate.Value);
-            TotalPriceText.Text = AppConstants.FormatPrice(price);
-            TotalPriceText.Foreground = System.Windows.Media.Brushes.White;
-            Booking.TotalPrice = price;
-        }
     }
 
     private async void Save_Click(object sender, RoutedEventArgs e)

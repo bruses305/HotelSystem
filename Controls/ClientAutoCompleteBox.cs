@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,12 +13,8 @@ using HotelSystem.Helpers;
 
 namespace HotelSystem.Controls;
 
-/// <summary>
-/// Компонент автодополнения для выбора клиента с умной сортировкой
-/// </summary>
 public class ClientAutoCompleteBox : UserControl
 {
-    
     private TextBox _inputBox;
     private Popup _popup;
     private ListBox _listBox;
@@ -30,6 +25,7 @@ public class ClientAutoCompleteBox : UserControl
     private Func<Client?, Task>? _onClientSelected;
     private Func<Task<Client?>?>? _onCreateClient;
     private bool _hasMatches = false;
+    private bool _isProgrammaticUpdate = false;   // <-- добавить
 
     public static readonly DependencyProperty WatermarkProperty =
         DependencyProperty.Register(nameof(Watermark), typeof(string), typeof(ClientAutoCompleteBox), 
@@ -54,7 +50,6 @@ public class ClientAutoCompleteBox : UserControl
     {
         var grid = new Grid();
         
-        // Ввод
         _inputBox = new TextBox
         {
             Padding = new Thickness(10),
@@ -67,7 +62,6 @@ public class ClientAutoCompleteBox : UserControl
         
         this.Content = grid;
         
-        // Popup для списка вариантов
         InitializePopup();
     }
 
@@ -78,7 +72,7 @@ public class ClientAutoCompleteBox : UserControl
             PlacementTarget = _inputBox,
             Placement = PlacementMode.Bottom,
             AllowsTransparency = true,
-            StaysOpen = true, // Меняем на true чтобы не закрывался при клике
+            StaysOpen = true,
             VerticalOffset = 2
         };
 
@@ -93,7 +87,6 @@ public class ClientAutoCompleteBox : UserControl
                 Setters = { new Setter(FrameworkElement.CursorProperty, Cursors.Hand) }
             },
             DisplayMemberPath = "FullName",
-            
         };
         
         _listBox.SelectionChanged += ListBox_SelectionChanged;
@@ -107,7 +100,6 @@ public class ClientAutoCompleteBox : UserControl
         _inputBox.PreviewKeyDown += OnKeyDown;
         _inputBox.LostFocus += (s, e) =>
         {
-            // Задержка чтобы успел сработать клик по элементу списка
             _ = Task.Delay(100).ContinueWith(_ => 
             {
                 Dispatcher.Invoke(() => _popup.IsOpen = false);
@@ -126,6 +118,10 @@ public class ClientAutoCompleteBox : UserControl
 
     private void OnTextChanged(object sender, TextChangedEventArgs e)
     {
+        // Если текст изменён программно – игнорируем фильтрацию
+        if (_isProgrammaticUpdate)
+            return;
+
         var query = _inputBox.Text.Trim();
 
         if (string.IsNullOrEmpty(query))
@@ -138,7 +134,6 @@ public class ClientAutoCompleteBox : UserControl
             return;
         }
 
-        // Фильтруем и сортируем клиентов
         _filteredClients = FilterAndSortClients(query).Take(10).ToList();
 
         if (_filteredClients.Any())
@@ -181,11 +176,9 @@ public class ClientAutoCompleteBox : UserControl
         var fullName = client.FullName.ToLower();
         var score = 0;
         
-        // Проверка точного совпадения
         if (fullName == query)
             return int.MaxValue;
         
-        // Проверка совпадения по частям
         var parts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         var queryParts = query.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         
@@ -219,16 +212,13 @@ public class ClientAutoCompleteBox : UserControl
             }
             
             if (!found)
-                return -1; // Не подходит
+                return -1;
             
             if (bestPosition < positionBonus)
                 positionBonus = bestPosition;
         }
         
-        // Считаем баллы: точные совпадения > частичные
         score = exactPartMatches * 100 + partialMatches * 10;
-        
-        // Бонус за позицию (чем раньше совпадение, тем лучше)
         if (positionBonus != int.MaxValue)
             score += (10 - positionBonus);
         
@@ -240,61 +230,48 @@ public class ClientAutoCompleteBox : UserControl
         switch (e.Key)
         {
             case Key.Down:
+                if (_popup.IsOpen)
                 {
-                    if (_popup.IsOpen)
-                    {
-                        if (_listBox.SelectedIndex < _listBox.Items.Count - 1)
-                            _listBox.SelectedIndex++;
-                        else
-                            _listBox.SelectedIndex = 0;
-                        
-                        e.Handled = true;
-                    }
+                    if (_listBox.SelectedIndex < _listBox.Items.Count - 1)
+                        _listBox.SelectedIndex++;
+                    else
+                        _listBox.SelectedIndex = 0;
+                    e.Handled = true;
                 }
                 break;
                 
             case Key.Up:
+                if (_popup.IsOpen)
                 {
-                    if (_popup.IsOpen)
-                    {
-                        if (_listBox.SelectedIndex > 0)
-                            _listBox.SelectedIndex--;
-                        else
-                            _listBox.SelectedIndex = _listBox.Items.Count - 1;
-                        
-                        e.Handled = true;
-                    }
+                    if (_listBox.SelectedIndex > 0)
+                        _listBox.SelectedIndex--;
+                    else
+                        _listBox.SelectedIndex = _listBox.Items.Count - 1;
+                    e.Handled = true;
                 }
                 break;
                 
             case Key.Enter:
+                if (_listBox.SelectedItem is Client c)
                 {
-                    if (_listBox.SelectedItem is Client c)
-                    {
-                        SelectClient(c);
-                        e.Handled = true;
-                    }
-                    else if (_filteredClients.Count == 0 && _onCreateClient != null)
-                    {
-                        _ = CreateNewClientAsync();
-                        e.Handled = true;
-                    }
+                    SelectClient(c);
+                    e.Handled = true;
+                }
+                else if (_filteredClients.Count == 0 && _onCreateClient != null)
+                {
+                    _ = CreateNewClientAsync();
+                    e.Handled = true;
                 }
                 break;
                 
             case Key.Escape:
-                {
-                    _popup.IsOpen = false;
-                    e.Handled = true;
-                }
+                _popup.IsOpen = false;
+                e.Handled = true;
                 break;
         }
     }
 
-    private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        // При выборе стрелками - только обновляем выделение, не выбираем клиента
-    }
+    private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) { }
 
     private void ListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
@@ -308,12 +285,12 @@ public class ClientAutoCompleteBox : UserControl
     private void SelectClient(Client client)
     {
         _selectedClient = client;
+        _isProgrammaticUpdate = true;
         _inputBox.Text = client.FullName;
+        _isProgrammaticUpdate = false;
         _inputBox.CaretIndex = _inputBox.Text.Length;
         _inputBox.Focus();
         _ = _onClientSelected?.Invoke(client);
-        
-        // Закрыть popup после выбора
         _popup.IsOpen = false;
     }
 
@@ -329,15 +306,11 @@ public class ClientAutoCompleteBox : UserControl
             return;
         }
 
-        // Вызываем обработчик создания
         var newClient = await _onCreateClient?.Invoke();
         
         if (newClient != null)
         {
-            // Обновляем список клиентов
             _allClients.Add(newClient);
-            
-            // Выбираем созданного клиента
             SelectClient(newClient);
         }
     }
@@ -359,7 +332,9 @@ public class ClientAutoCompleteBox : UserControl
 
     public void Clear()
     {
+        _isProgrammaticUpdate = true;
         _inputBox.Text = "";
+        _isProgrammaticUpdate = false;
         _selectedClient = null;
         _popup.IsOpen = false;
     }
@@ -369,6 +344,12 @@ public class ClientAutoCompleteBox : UserControl
     public string InputText
     {
         get => _inputBox.Text;
-        set { _inputBox.Text = value; _inputBox.CaretIndex = value.Length; }
+        set
+        {
+            _isProgrammaticUpdate = true;
+            _inputBox.Text = value;
+            _inputBox.CaretIndex = value.Length;
+            _isProgrammaticUpdate = false;
+        }
     }
 }

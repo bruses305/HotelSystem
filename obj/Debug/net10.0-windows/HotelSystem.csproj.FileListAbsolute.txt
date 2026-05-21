@@ -47,7 +47,6 @@ D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\Microsoft.ML.CpuMath.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\Microsoft.ML.DataView.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\Microsoft.Xaml.Behaviors.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\ModernWpf.dll
-D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\ModernWpf.Core.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\Mono.TextTemplating.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\Newtonsoft.Json.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\OxyPlot.dll
@@ -120,9 +119,6 @@ D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\ru\Microsoft.CodeAnalysis
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\ja\ModernWpf.Core.resources.dll
-D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\zh-Hans\ModernWpf.Core.resources.dll
-D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\zh-Hant\ModernWpf.Core.resources.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\runtimes\osx\native\libHarfBuzzSharp.dylib
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\runtimes\tizen-armel\native\libHarfBuzzSharp.so
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\runtimes\tizen-x86\native\libHarfBuzzSharp.so
@@ -281,3 +277,11 @@ D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\MahApps.Metro.IconPacks.U
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\MahApps.Metro.IconPacks.VaadinIcons.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\MahApps.Metro.IconPacks.WeatherIcons.dll
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\MahApps.Metro.IconPacks.Zondicons.dll
+D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\Wpf.Ui.dll
+D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\CommonWin32.dll
+D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\Ookii.Dialogs.Wpf.dll
+D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\Panuon.WPF.dll
+D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\Panuon.WPF.UI.dll
+D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\ja\ModernWPF.resources.dll
+D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\zh-Hans\ModernWPF.resources.dll
+D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\zh-Hant\ModernWPF.resources.dll

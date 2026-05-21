@@ -1,44 +1,124 @@
-﻿<helpers:DialogBase xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+﻿<helpers:DialogBase x:Class="HotelSystem.Views.BookingDialog"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:helpers="clr-namespace:HotelSystem.Helpers"
                     xmlns:controls="clr-namespace:HotelSystem.Controls"
-                    x:Class="HotelSystem.Views.BookingDialog"
-                    Title="Бронирование" Height="500" Width="420"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:views="clr-namespace:HotelSystem.Views"
+                    Title="Бронирование номера" 
+                    Height="560" Width="520"
                     WindowStartupLocation="CenterOwner"
                     ResizeMode="NoResize"
-                    Background="#ECF0F1">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="Бронирование номера" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
-        <ScrollViewer Grid.Row="1">
-            <StackPanel>
-                <TextBlock Text="Номер" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                <ComboBox x:Name="RoomComboBox" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,0,0,15" Padding="10" SelectionChanged="RoomComboBox_SelectionChanged"/>
-                <TextBlock Text="Клиент" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                <controls:ClientAutoCompleteBox x:Name="ClientAutoComplete" Margin="0,0,0,15"/>
-                <TextBlock Text="Дата заезда" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                <DatePicker x:Name="CheckInDatePicker" Margin="0,0,0,15" Padding="10" SelectedDateChanged="CheckInDatePicker_SelectedDateChanged"/>
-                <TextBlock Text="Дата выезда" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                <DatePicker x:Name="CheckOutDatePicker" Margin="0,0,0,15" Padding="10" SelectedDateChanged="CheckOutDatePicker_SelectedDateChanged"/>
-                <TextBlock Text="Примечание" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                <TextBox x:Name="NotesTextBox" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Padding="10" Margin="0,0,0,15"/>
-                <Border Background="#3498DB" CornerRadius="8" Padding="15" Margin="0,10,0,0">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Итого: " Foreground="White" FontSize="16"/>
-                        <TextBlock x:Name="TotalPriceText" Text="0" Foreground="White" FontSize="16" FontWeight="Bold"/>
-                    </StackPanel>
-                </Border>
+                    Background="Transparent"
+                    AllowsTransparency="True"
+                    WindowStyle="None">
+    
+    <Window.Resources>
+        <SolidColorBrush x:Key="PaperBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#3498DB"/>
+        <SolidColorBrush x:Key="BodyBrush" Color="#2C3E50"/>
+        <SolidColorBrush x:Key="BodyLightBrush" Color="#6B7A8A"/>
+
+        <helpers:PriceConverter x:Key="PriceConverter"/>
+
+        <Style x:Key="DialogButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+            <Setter Property="Width" Value="110"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Margin" Value="0,0,12,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{StaticResource PaperBrush}" 
+            CornerRadius="16"
+            BorderBrush="#D0D5DA" 
+            BorderThickness="1"
+            Effect="{StaticResource MaterialDesignShadowDepth3}">
+        <Grid Margin="28,20,28,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Заголовок -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <materialDesign:PackIcon Kind="BookOpenPageVariant" Width="28" Height="28" 
+                                         Foreground="{StaticResource PrimaryBrush}" 
+                                         Margin="0,0,12,0"/>
+                <TextBlock Text="Бронирование номера" FontSize="22" FontWeight="SemiBold" 
+                           Foreground="{StaticResource BodyBrush}" 
+                           VerticalAlignment="Center"/>
             </StackPanel>
-        </ScrollViewer>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-            <Button Content="Отмена" Click="Cancel_Click" Padding="20,10" Margin="0,0,10,0"/>
-            <Button Content="Сохранить" Click="Save_Click" Background="#27AE60" Foreground="White" Padding="20,10" BorderThickness="0">
-                <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center"/></Border></ControlTemplate></Button.Template>
-            </Button>
-        </StackPanel>
-    </Grid>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Номер" FontWeight="SemiBold" 
+                               Foreground="{StaticResource BodyLightBrush}" 
+                               Margin="0,0,0,4"/>
+                    <ComboBox x:Name="RoomComboBox" 
+                              DisplayMemberPath="Name" 
+                              SelectedValuePath="Id"
+                              SelectionChanged="RoomComboBox_SelectionChanged"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              Margin="0,0,0,20"/>
+
+                    <TextBlock Text="Клиент" FontWeight="SemiBold" 
+                               Foreground="{StaticResource BodyLightBrush}" 
+                               Margin="0,0,0,4"/>
+                    <controls:ClientAutoCompleteBox x:Name="ClientAutoComplete" 
+                                                     Margin="0,0,0,20"/>
+
+                    <TextBlock Text="Дата заезда" FontWeight="SemiBold" 
+                               Foreground="{StaticResource BodyLightBrush}" 
+                               Margin="0,0,0,4"/>
+                    <DatePicker x:Name="CheckInDatePicker" 
+                                SelectedDateChanged="CheckInDatePicker_SelectedDateChanged"
+                                Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                                Margin="0,0,0,20"/>
+
+                    <TextBlock Text="Дата выезда" FontWeight="SemiBold" 
+                               Foreground="{StaticResource BodyLightBrush}" 
+                               Margin="0,0,0,4"/>
+                    <DatePicker x:Name="CheckOutDatePicker" 
+                                SelectedDateChanged="CheckOutDatePicker_SelectedDateChanged"
+                                Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                                Margin="0,0,0,20"/>
+
+                    <TextBlock Text="Примечание" FontWeight="SemiBold" 
+                               Foreground="{StaticResource BodyLightBrush}" 
+                               Margin="0,0,0,4"/>
+                    <TextBox x:Name="NotesTextBox" 
+                             TextWrapping="Wrap" 
+                             AcceptsReturn="True" 
+                             MinHeight="80"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Margin="0,0,0,20"/>
+
+                    <!-- Итоговая цена с привязкой через конвертер -->
+                    <Border Background="{StaticResource PrimaryBrush}" 
+                            CornerRadius="12" Padding="16,12" Margin="0,16,0,0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <materialDesign:PackIcon Kind="CashMultiple" Width="24" Height="24" 
+                                                     Foreground="White" Margin="0,0,8,0"/>
+                            <TextBlock Text="Итого:" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="TotalPriceText" 
+                                       Foreground="White" FontSize="18" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Кнопки -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button Content="Отмена" Click="Cancel_Click" Style="{StaticResource DialogButton}"/>
+                <Button Content="Сохранить" Click="Save_Click" 
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        Background="{StaticResource PrimaryBrush}"
+                        Foreground="White"
+                        Width="110" Height="42"
+                        Cursor="Hand"/>
+            </StackPanel>
+        </Grid>
+    </Border>
 </helpers:DialogBase>

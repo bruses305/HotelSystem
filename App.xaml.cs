@@ -11,6 +11,10 @@ public partial class App : System.Windows.Application
 {
     protected override async void OnStartup(StartupEventArgs e)
     {
+        // Устанавливаем русскую культуру для всего приложения
+        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
+        System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("ru-RU");
+        
         base.OnStartup(e);
         
         // Глобальный обработчик исключений

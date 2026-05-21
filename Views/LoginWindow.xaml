@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:HotelSystem.Views"
         Title="Hotel System - Вход" 
-        Height="600" Width="480"
+        Height="640" Width="480"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         AllowsTransparency="True"
@@ -45,7 +45,7 @@
         <Style x:Key="FloatingHintTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="46"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="5,5,5,0"/>
+            <Setter Property="Padding" Value="10,10,10,10"/>
             <Setter Property="BorderBrush" Value="#FFD0D5DA"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Background" Value="White"/>
@@ -86,7 +86,7 @@
         <Style x:Key="FloatingHintPasswordBox" TargetType="PasswordBox">
             <Setter Property="Height" Value="46"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="5,5,5,0"/>
+            <Setter Property="Padding" Value="10,10,10,10"/>
             <Setter Property="BorderBrush" Value="#FFD0D5DA"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Background" Value="White"/>
@@ -191,12 +191,15 @@
                                   Background="Transparent"
                                   BorderThickness="0"
                                   Cursor="Hand"
-                                  VerticalAlignment="Center">
-                        <ToggleButton.Content>
-                            <TextBlock Text="🙈" FontSize="18" Foreground="{StaticResource TextSecondaryBrush}"/>
-                        </ToggleButton.Content>
+                                  VerticalAlignment="Center"
+                                  IsChecked="False">
                         <ToggleButton.Style>
                             <Style TargetType="ToggleButton">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <TextBlock Text="🙈" FontSize="18" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    </Setter.Value>
+                                </Setter>
                                 <Style.Triggers>
                                     <Trigger Property="IsChecked" Value="True">
                                         <Setter Property="Content">
@@ -297,6 +300,23 @@
                     </StackPanel>
                 </Border>
             </StackPanel>
+        </Border>
+        <!-- Индикатор раскладки -->
+        <Border Grid.Row="0" 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Top" 
+                Margin="0,20,30,0"
+                Background="#CCFFFFFF" 
+                CornerRadius="12" 
+                Padding="10,5"
+                BorderBrush="{StaticResource AccentBrush}"
+                BorderThickness="1">
+            <TextBlock x:Name="LanguageIndicator" 
+                       Text="??" 
+                       FontSize="14" 
+                       FontWeight="SemiBold" 
+                       Foreground="{StaticResource AccentBrush}"
+                       TextAlignment="Center"/>
         </Border>
     </Grid>
 </Window>

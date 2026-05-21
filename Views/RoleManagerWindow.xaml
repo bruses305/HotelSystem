@@ -42,13 +42,15 @@
                              DisplayMemberPath="Name"
                              Margin="0,0,0,10"/>
                     
-                    <StackPanel Grid.Row="2" Orientation="Vertical">
-                        <Button x:Name="AddRoleButton" Content="+" Width="30" Height="30" 
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="AddRoleButton" Content="+" Width="30" Height="30"
                                 Click="AddRole_Click"
-                                Margin="0,0,0,5"/>
+                                Padding="0"
+                                Margin="-10,0,0,5"/>
                         <Button x:Name="DeleteRoleButton" Content="✕" Width="30" Height="30" 
                                 Click="DeleteRole_Click"
-                                Margin="0,0,0,5"/>
+                                Padding="0"
+                                Margin="10,0,0,5"/>
                     </StackPanel>
                 </Grid>
             </Border>

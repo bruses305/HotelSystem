@@ -18,10 +18,13 @@
                 <Button x:Name="AddClientButton" Content="+ Добавить клиента" Click="AddClient_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
                     <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border></ControlTemplate></Button.Template>
                 </Button>
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <TextBox x:Name="SearchTextBox" Width="250" Padding="10" TextChanged="SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown"/>
-                    <Button Content="🔍" Click="Search_Click" Background="Transparent" BorderThickness="0" Padding="10" FontSize="14"/>
-                </StackPanel>
+                <Border Grid.Column="2"  Background="#EEF2F7" CornerRadius="6" Padding="8,4" Margin="0,0,10,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🔍" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox x:Name="SearchTextBox" Width="250" BorderThickness="0" Background="Transparent"
+                                 TextChanged="SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown"/>
+                    </StackPanel>
+                </Border>
             </Grid>
         </Border>
 
@@ -29,23 +32,27 @@
             <DataGrid x:Name="ClientsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0" MouseDoubleClick="ClientsGrid_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-                    <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}" Width="180"/>
+                    <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}" Width="200"/>
                     <DataGridTextColumn Header="Паспорт" Binding="{Binding Passport}" Width="120"/>
                     <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="130"/>
                     <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="180"/>
-                    <DataGridTextColumn Header="Потрачено" Binding="{Binding TotalSpent}" Width="130">
+                    <DataGridTextColumn Header="Потрачено" 
+                                        Binding="{Binding TotalSpent, Converter={StaticResource PriceConverter}}" 
+                                        Width="130">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="{Binding TotalSpent, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="TextAlignment" Value="Right"/>
+                                <Setter Property="Margin" Value="0,0,8,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTemplateColumn Header="Действия" Width="100">
+                    <DataGridTemplateColumn Header="Действия" Width="110">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="E" Click="EditClient_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
-                                    <Button Content="X" Click="DeleteClient_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
+                                    <Button Content="Ред." Click="EditClient_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
+                                    <Button Content="Удал." Click="DeleteClient_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

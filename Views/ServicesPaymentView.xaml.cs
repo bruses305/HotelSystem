@@ -137,7 +137,7 @@ public partial class ServicesPaymentView : Page
             {
                 await _financeService.RecordServicePaymentAsync(dialog.BookingId, dialog.ServiceId, dialog.Quantity, dialog.Amount);
                 LoadPaymentsAsync();
-                MessageBox.Show($"Услуга была успешно добавленна в количестве: {dialog.Amount:N0} штук", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Услуга {dialog.ServiceId} была успешно добавленна в количестве: {dialog.Quantity:N0} штук", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
         catch (Exception ex)

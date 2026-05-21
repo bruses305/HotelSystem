@@ -25,16 +25,20 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="120"/>
-                    <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="100"/>
-                    <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="100">
+                    <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="115"/>
+                    <DataGridTextColumn Header="Цена" 
+                                        Binding="{Binding Price, Converter={StaticResource PriceConverter}}" 
+                                        Width="100">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="{Binding Price, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="TextAlignment" Value="Right"/>
+                                <Setter Property="Margin" Value="0,0,8,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Вместимость" Binding="{Binding Capacity}" Width="80"/>
-                    <DataGridTemplateColumn Header="Статус" Width="120">
+                    <DataGridTextColumn Header="Вместимость" Binding="{Binding Capacity, Converter={StaticResource PeopleCountConverter}}" Width="120"/>
+                    <DataGridTemplateColumn Header="Статус" Width="110">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Border CornerRadius="10" Padding="8,4">
@@ -53,20 +57,24 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Расходы" Binding="{Binding TotalExpenses}" Width="100">
+                    <DataGridTextColumn Header="Расходы" 
+                                        Binding="{Binding TotalExpenses, Converter={StaticResource PriceConverter}}" 
+                                        Width="100">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="{Binding TotalExpenses, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="TextAlignment" Value="Right"/>
+                                <Setter Property="Margin" Value="0,0,8,0"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="*"/>
-                    <DataGridTemplateColumn Header="Действия" Width="100">
+                    <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="320"/>
+                    <DataGridTemplateColumn Header="Действия" Width="110">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="E" Click="EditRoom_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
-                                    <Button Content="X" Click="DeleteRoom_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
+                                    <Button Content="Ред." Click="EditRoom_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
+                                    <Button Content="Удал." Click="DeleteRoom_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

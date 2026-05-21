@@ -14,14 +14,19 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Content="&lt;" Click="PreviousMonth_Click" Padding="15,8" FontSize="16"/>
+                <Button Content="&lt;" Click="PreviousMonth_Click" Padding="15,5" FontSize="16"/>
                 <TextBlock x:Name="MonthYearText" Grid.Column="1" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Button Content="&gt;" Grid.Column="2" Click="NextMonth_Click" Padding="15,8" FontSize="16" Margin="0,0,15,0"/>
+                <Button Content="&gt;" Grid.Column="2" Click="NextMonth_Click" Padding="15,5" FontSize="16" Margin="0,0,15,0"/>
                 
                 <StackPanel Grid.Column="3" Orientation="Horizontal">
-                    <TextBlock Text="Номер:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox x:Name="RoomFilterComboBox" Width="120" DisplayMemberPath="Name" SelectedValuePath="Id" SelectionChanged="RoomFilter_SelectionChanged"/>
-                    <Button Content="Очистить" Click="ClearFilter_Click" Padding="10,8" Margin="5,0,0,0" Background="#E74C3C" Foreground="White" BorderThickness="0"/>
+                    <Border Background="#EEF2F7" CornerRadius="6" Padding="8,4" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🏠" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <ComboBox x:Name="RoomFilterComboBox" Width="130" SelectionChanged="RoomFilter_SelectionChanged" BorderThickness="0"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <Button Content="Сбросить" Click="ClearFilter_Click" Padding="10,8" Margin="15,0,0,0" Background="#7F8C8D" Foreground="White" BorderThickness="0"/>
                 </StackPanel>
             </Grid>
         </Border>

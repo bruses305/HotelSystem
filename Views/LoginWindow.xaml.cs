@@ -49,6 +49,10 @@ namespace HotelSystem.Views
             {
                 MessageBox.Show($"Ошибка инициализации: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            
+            // Подписка на изменение языка ввода
+            InputLanguageManager.Current.InputLanguageChanged += OnInputLanguageChanged;
+            UpdateLanguageIndicator(); // установить текущий язык
 
             var enterAnimation = TryFindResource("WindowEnterAnimation") as Storyboard;
             enterAnimation?.Begin(this);
@@ -251,6 +255,26 @@ namespace HotelSystem.Views
                 if (result != null) return result;
             }
             return null;
+        }
+        
+        private void OnInputLanguageChanged(object sender, InputLanguageEventArgs e)
+        {
+            UpdateLanguageIndicator();
+        }
+
+        private void UpdateLanguageIndicator()
+        {
+            var currentLang = InputLanguageManager.Current.CurrentInputLanguage;
+            if (currentLang != null)
+            {
+                // Показываем двухбуквенный код (например, "RU", "EN", "BE")
+                var culture = new CultureInfo(currentLang.Name);
+                LanguageIndicator.Text = culture.TwoLetterISOLanguageName.ToUpperInvariant();
+            }
+            else
+            {
+                LanguageIndicator.Text = "??";
+            }
         }
         
         

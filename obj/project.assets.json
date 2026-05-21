@@ -21,6 +21,19 @@
           }
         }
       },
+      "CommonWin32/2.1.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net35-Client/CommonWin32.dll": {
+            "related": ".pdb;.XML"
+          }
+        },
+        "runtime": {
+          "lib/net35-Client/CommonWin32.dll": {
+            "related": ".pdb;.XML"
+          }
+        }
+      },
       "ControlzEx/7.0.3": {
         "type": "package",
         "dependencies": {
@@ -152,26 +165,26 @@
           }
         }
       },
-      "MahApps.Metro/3.0.0-rc0529": {
+      "MahApps.Metro/2.4.11": {
         "type": "package",
         "dependencies": {
-          "ControlzEx": "7.0.2"
+          "ControlzEx": "[4.4.0, 6.0.0)"
         },
         "compile": {
-          "lib/net8.0-windows7.0/MahApps.Metro.dll": {
-            "related": ".xml"
+          "lib/netcoreapp3.1/MahApps.Metro.dll": {
+            "related": ".pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net8.0-windows7.0/MahApps.Metro.dll": {
-            "related": ".xml"
+          "lib/netcoreapp3.1/MahApps.Metro.dll": {
+            "related": ".pdb;.xml"
           }
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WPF"
         ],
         "resource": {
-          "lib/net8.0-windows7.0/de/MahApps.Metro.resources.dll": {
+          "lib/netcoreapp3.1/de/MahApps.Metro.resources.dll": {
             "locale": "de"
           }
         }
@@ -1662,7 +1675,7 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0": {
+      "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2": {
         "type": "package",
         "compile": {
           "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
@@ -1715,10 +1728,10 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.Logging.Abstractions/8.0.0": {
+      "Microsoft.Extensions.Logging.Abstractions/8.0.3": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2"
         },
         "compile": {
           "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
@@ -1953,42 +1966,29 @@
           "Microsoft.WindowsDesktop.App.WPF"
         ]
       },
-      "ModernWpf/2.0.0-alpha97": {
+      "ModernWPF/1.4.6": {
         "type": "package",
         "dependencies": {
-          "ModernWpf.Core": "2.0.0-alpha98"
+          "CommonWin32": "2.1.0.3"
         },
         "compile": {
-          "lib/net40-Client/ModernWpf.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net40-Client/ModernWpf.dll": {
-            "related": ".pdb;.xml"
-          }
-        }
-      },
-      "ModernWpf.Core/2.0.0-alpha98": {
-        "type": "package",
-        "compile": {
-          "lib/net40-Client/ModernWpf.Core.dll": {
+          "lib/net40-Client/ModernWPF.dll": {
             "related": ".pdb;.XML"
           }
         },
         "runtime": {
-          "lib/net40-Client/ModernWpf.Core.dll": {
+          "lib/net40-Client/ModernWPF.dll": {
             "related": ".pdb;.XML"
           }
         },
         "resource": {
-          "lib/net40-Client/ja/ModernWpf.Core.resources.dll": {
+          "lib/net40-Client/ja/ModernWPF.resources.dll": {
             "locale": "ja"
           },
-          "lib/net40-Client/zh-Hans/ModernWpf.Core.resources.dll": {
+          "lib/net40-Client/zh-Hans/ModernWPF.resources.dll": {
             "locale": "zh-Hans"
           },
-          "lib/net40-Client/zh-Hant/ModernWpf.Core.resources.dll": {
+          "lib/net40-Client/zh-Hant/ModernWPF.resources.dll": {
             "locale": "zh-Hant"
           }
         }
@@ -2020,6 +2020,37 @@
             "related": ".xml"
           }
         }
+      },
+      "Ookii.Dialogs/5.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Ookii.Dialogs.Wpf": "[5.0.1]"
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App"
+        ],
+        "build": {
+          "build/Ookii.Dialogs.targets": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/Ookii.Dialogs.targets": {}
+        }
+      },
+      "Ookii.Dialogs.Wpf/5.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0-windows7.0/Ookii.Dialogs.Wpf.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0-windows7.0/Ookii.Dialogs.Wpf.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App"
+        ]
       },
       "OxyPlot.Core/2.1.2": {
         "type": "package",
@@ -2085,6 +2116,166 @@
         "runtime": {
           "lib/netcoreapp3.1/OxyPlot.Wpf.Shared.dll": {
             "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WPF"
+        ]
+      },
+      "Panuon.WPF/1.1.3": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0-windows/Panuon.WPF.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-windows/Panuon.WPF.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "Panuon.WPF.UI/1.3.0.2": {
+        "type": "package",
+        "dependencies": {
+          "Panuon.WPF": "1.1.3"
+        },
+        "compile": {
+          "lib/net8.0-windows/Panuon.WPF.UI.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-windows/Panuon.WPF.UI.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "PDFsharp/6.2.4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.3"
+        },
+        "compile": {
+          "lib/net10.0/PdfSharp.BarCodes.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.Charting.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.Cryptography.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.Quality.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.Shared.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.Snippets.dll": {
+            "related": ".pdb"
+          },
+          "lib/net10.0/PdfSharp.System.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.WPFonts.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.dll": {
+            "related": ".BarCodes.pdb;.BarCodes.xml;.Charting.pdb;.Charting.xml;.Cryptography.pdb;.Cryptography.xml;.pdb;.Quality.pdb;.Quality.xml;.Shared.pdb;.Shared.xml;.Snippets.pdb;.System.pdb;.System.xml;.WPFonts.pdb;.WPFonts.xml;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/PdfSharp.BarCodes.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.Charting.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.Cryptography.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.Quality.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.Shared.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.Snippets.dll": {
+            "related": ".pdb"
+          },
+          "lib/net10.0/PdfSharp.System.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.WPFonts.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0/PdfSharp.dll": {
+            "related": ".BarCodes.pdb;.BarCodes.xml;.Charting.pdb;.Charting.xml;.Cryptography.pdb;.Cryptography.xml;.pdb;.Quality.pdb;.Quality.xml;.Shared.pdb;.Shared.xml;.Snippets.pdb;.System.pdb;.System.xml;.WPFonts.pdb;.WPFonts.xml;.xml"
+          }
+        }
+      },
+      "PDFsharp-WPF/6.2.4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.3"
+        },
+        "compile": {
+          "lib/net10.0-windows7.0/PdfSharp-wpf.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.BarCodes-wpf.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Charting-wpf.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Cryptography.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Quality-wpf.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Shared.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Snippets-wpf.dll": {
+            "related": ".pdb"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.System.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.WPFonts.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0-windows7.0/PdfSharp-wpf.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.BarCodes-wpf.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Charting-wpf.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Cryptography.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Quality-wpf.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Shared.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Snippets-wpf.dll": {
+            "related": ".pdb"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.System.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.WPFonts.dll": {
+            "related": ".pdb;.xml"
           }
         },
         "frameworkReferences": [
@@ -2416,6 +2607,19 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
+      "WPF.UI/3.4.2.7": {
+        "type": "package",
+        "compile": {
+          "lib/net451/WPF.UI.dll": {
+            "related": ".md"
+          }
+        },
+        "runtime": {
+          "lib/net451/WPF.UI.dll": {
+            "related": ".md"
+          }
+        }
+      },
       "XLParser/1.5.2": {
         "type": "package",
         "dependencies": {
@@ -2446,6 +2650,20 @@
         "lib/netstandard2.1/ClosedXML.dll",
         "lib/netstandard2.1/ClosedXML.xml",
         "nuget-logo.png"
+      ]
+    },
+    "CommonWin32/2.1.0.3": {
+      "sha512": "yNA2Udhv3SNzoHAjZXPW04LLQLIr652RWTN5oMHeDTcq5ml92tYMaJaZiwqIdLMWd6CXfLv5VQ+EAMMKeE4iJw==",
+      "type": "package",
+      "path": "commonwin32/2.1.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "commonwin32.2.1.0.3.nupkg.sha512",
+        "commonwin32.nuspec",
+        "lib/net35-Client/CommonWin32.XML",
+        "lib/net35-Client/CommonWin32.dll",
+        "lib/net35-Client/CommonWin32.pdb"
       ]
     },
     "ControlzEx/7.0.3": {
@@ -2632,24 +2850,35 @@
         "readme.txt"
       ]
     },
-    "MahApps.Metro/3.0.0-rc0529": {
-      "sha512": "3k5YxcSiBEuUJ//8I0nwHTBPAgiaZ3Jb78wdpsSVc+uXPSU4Xvv/D2uqXB6XOszO1X5XFubFNCzFniwbdE4TNg==",
+    "MahApps.Metro/2.4.11": {
+      "sha512": "pvk757N/ViZy+zlbB56AakryuZkts328M6pX2mMn/Z7r5ifkScDrS300zSBjLd+eGOPeHgUjH4f7cZbRiMyvQg==",
       "type": "package",
-      "path": "mahapps.metro/3.0.0-rc0529",
+      "path": "mahapps.metro/2.4.11",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net462/MahApps.Metro.dll",
-        "lib/net462/MahApps.Metro.xml",
-        "lib/net462/de/MahApps.Metro.resources.dll",
-        "lib/net6.0-windows7.0/MahApps.Metro.dll",
-        "lib/net6.0-windows7.0/MahApps.Metro.xml",
-        "lib/net6.0-windows7.0/de/MahApps.Metro.resources.dll",
-        "lib/net8.0-windows7.0/MahApps.Metro.dll",
-        "lib/net8.0-windows7.0/MahApps.Metro.xml",
-        "lib/net8.0-windows7.0/de/MahApps.Metro.resources.dll",
-        "mahapps.metro.3.0.0-rc0529.nupkg.sha512",
+        "lib/net452/MahApps.Metro.dll",
+        "lib/net452/MahApps.Metro.pdb",
+        "lib/net452/MahApps.Metro.xml",
+        "lib/net452/de/MahApps.Metro.resources.dll",
+        "lib/net46/MahApps.Metro.dll",
+        "lib/net46/MahApps.Metro.pdb",
+        "lib/net46/MahApps.Metro.xml",
+        "lib/net46/de/MahApps.Metro.resources.dll",
+        "lib/net47/MahApps.Metro.dll",
+        "lib/net47/MahApps.Metro.pdb",
+        "lib/net47/MahApps.Metro.xml",
+        "lib/net47/de/MahApps.Metro.resources.dll",
+        "lib/netcoreapp3.0/MahApps.Metro.dll",
+        "lib/netcoreapp3.0/MahApps.Metro.pdb",
+        "lib/netcoreapp3.0/MahApps.Metro.xml",
+        "lib/netcoreapp3.0/de/MahApps.Metro.resources.dll",
+        "lib/netcoreapp3.1/MahApps.Metro.dll",
+        "lib/netcoreapp3.1/MahApps.Metro.pdb",
+        "lib/netcoreapp3.1/MahApps.Metro.xml",
+        "lib/netcoreapp3.1/de/MahApps.Metro.resources.dll",
+        "mahapps.metro.2.4.11.nupkg.sha512",
         "mahapps.metro.logo.png",
         "mahapps.metro.nuspec",
         "tools/VisualStudioToolsManifest.xml"
@@ -4370,10 +4599,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0": {
-      "sha512": "cjWrLkJXK0rs4zofsK4bSdg+jhDLTaxrkXu4gS6Y7MAlCvRyNNgwY/lJi5RDlQOnSZweHqoyvgvbdvQsRIW+hg==",
+    "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2": {
+      "sha512": "3iE7UF7MQkCv1cxzCahz+Y/guQbTqieyxyaWKhrRO91itI9cOKO76OHeQDahqG4MmW5umr3CcCvGmK92lWNlbg==",
       "type": "package",
-      "path": "microsoft.extensions.dependencyinjection.abstractions/8.0.0",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/8.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4397,7 +4626,7 @@
         "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
         "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
-        "microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
         "microsoft.extensions.dependencyinjection.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -4464,10 +4693,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Logging.Abstractions/8.0.0": {
-      "sha512": "arDBqTgFCyS0EvRV7O3MZturChstm50OJ0y9bDJvAcmEPJm0FFpFyjU/JLYyStNGGey081DvnQYlncNX5SJJGA==",
+    "Microsoft.Extensions.Logging.Abstractions/8.0.3": {
+      "sha512": "dL0QGToTxggRLMYY4ZYX5AMwBb+byQBd/5dMiZE07Nv73o6I5Are3C7eQTh7K2+A4ct0PVISSr7TZANbiNb2yQ==",
       "type": "package",
-      "path": "microsoft.extensions.logging.abstractions/8.0.0",
+      "path": "microsoft.extensions.logging.abstractions/8.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4532,7 +4761,7 @@
         "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.xml",
-        "microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+        "microsoft.extensions.logging.abstractions.8.0.3.nupkg.sha512",
         "microsoft.extensions.logging.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -4737,35 +4966,21 @@
         "tools/Install.ps1"
       ]
     },
-    "ModernWpf/2.0.0-alpha97": {
-      "sha512": "tzVOQxrr7MkpG7OBLz3pl2RfXFrYmwou6DBgI/nT+eJG1UxXoshTYxWc3g2tvwQpEYqd8qdC76qriMmTT2+Deg==",
+    "ModernWPF/1.4.6": {
+      "sha512": "gEANBGhLAE5E9Q/2S5UGVdQHQT1OaoH12Qpy/cu0ebw1i828HC0cZqx3sq7YD9h9udfx4nTg3nYDRRpSH/hAnw==",
       "type": "package",
-      "path": "modernwpf/2.0.0-alpha97",
+      "path": "modernwpf/1.4.6",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net40-Client/ModernWpf.dll",
-        "lib/net40-Client/ModernWpf.pdb",
-        "lib/net40-Client/ModernWpf.xml",
-        "modernwpf.2.0.0-alpha97.nupkg.sha512",
+        "lib/net40-Client/ModernWPF.XML",
+        "lib/net40-Client/ModernWPF.dll",
+        "lib/net40-Client/ModernWPF.pdb",
+        "lib/net40-Client/ja/ModernWPF.resources.dll",
+        "lib/net40-Client/zh-Hans/ModernWPF.resources.dll",
+        "lib/net40-Client/zh-Hant/ModernWPF.resources.dll",
+        "modernwpf.1.4.6.nupkg.sha512",
         "modernwpf.nuspec"
-      ]
-    },
-    "ModernWpf.Core/2.0.0-alpha98": {
-      "sha512": "vU0mQENZ9HOIVMe2eLlO1manzdl/k0I6G9q5KEJBrbaV2MTJ2fjvw38EurjDi1emZQ+4Gj4HvS40pEdojsIjIQ==",
-      "type": "package",
-      "path": "modernwpf.core/2.0.0-alpha98",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40-Client/ModernWpf.Core.XML",
-        "lib/net40-Client/ModernWpf.Core.dll",
-        "lib/net40-Client/ModernWpf.Core.pdb",
-        "lib/net40-Client/ja/ModernWpf.Core.resources.dll",
-        "lib/net40-Client/zh-Hans/ModernWpf.Core.resources.dll",
-        "lib/net40-Client/zh-Hant/ModernWpf.Core.resources.dll",
-        "modernwpf.core.2.0.0-alpha98.nupkg.sha512",
-        "modernwpf.core.nuspec"
       ]
     },
     "Mono.TextTemplating/2.2.1": {
@@ -4819,6 +5034,44 @@
         "newtonsoft.json.13.0.1.nupkg.sha512",
         "newtonsoft.json.nuspec",
         "packageIcon.png"
+      ]
+    },
+    "Ookii.Dialogs/5.0.1": {
+      "sha512": "0kUzrrI5HFTC8ZA52nT5ZLPC7Ybe6KR8baHGolpm1LhbssKrzW+V+8E3gPpGz61nHTKEwMZztYrjona/fUiHrA==",
+      "type": "package",
+      "path": "ookii.dialogs/5.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/Ookii.Dialogs.targets",
+        "buildMultiTargeting/Ookii.Dialogs.targets",
+        "images/icon.png",
+        "ookii.dialogs.5.0.1.nupkg.sha512",
+        "ookii.dialogs.nuspec"
+      ]
+    },
+    "Ookii.Dialogs.Wpf/5.0.1": {
+      "sha512": "iZNnZwqTpK0cfR0vkotncP1c025/PHlIdzc7iEKBYwhVv1V0zXp9/RT/O0kMhsmlwXqRxxbE4pdhfinbJXtjPg==",
+      "type": "package",
+      "path": "ookii.dialogs.wpf/5.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "images/icon.png",
+        "lib/net462/Ookii.Dialogs.Wpf.dll",
+        "lib/net462/Ookii.Dialogs.Wpf.pdb",
+        "lib/net462/Ookii.Dialogs.Wpf.xml",
+        "lib/net5.0-windows7.0/Ookii.Dialogs.Wpf.dll",
+        "lib/net5.0-windows7.0/Ookii.Dialogs.Wpf.pdb",
+        "lib/net5.0-windows7.0/Ookii.Dialogs.Wpf.xml",
+        "lib/net6.0-windows7.0/Ookii.Dialogs.Wpf.dll",
+        "lib/net6.0-windows7.0/Ookii.Dialogs.Wpf.pdb",
+        "lib/net6.0-windows7.0/Ookii.Dialogs.Wpf.xml",
+        "lib/netcoreapp3.1/Ookii.Dialogs.Wpf.dll",
+        "lib/netcoreapp3.1/Ookii.Dialogs.Wpf.pdb",
+        "lib/netcoreapp3.1/Ookii.Dialogs.Wpf.xml",
+        "ookii.dialogs.wpf.5.0.1.nupkg.sha512",
+        "ookii.dialogs.wpf.nuspec"
       ]
     },
     "OxyPlot.Core/2.1.2": {
@@ -4895,6 +5148,300 @@
         "lib/netcoreapp3.1/OxyPlot.Wpf.Shared.xml",
         "oxyplot.wpf.shared.2.1.2.nupkg.sha512",
         "oxyplot.wpf.shared.nuspec"
+      ]
+    },
+    "Panuon.WPF/1.1.3": {
+      "sha512": "YaOjrqWktWKq2vioGibTYku3DxOKGuOlAIch2VCFz5U+PKolf+EZn1Q9RkLOaJk8bB+iUZj8p/c2UXCo4NlbYw==",
+      "type": "package",
+      "path": "panuon.wpf/1.1.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net452/Panuon.WPF.dll",
+        "lib/net452/Panuon.WPF.pdb",
+        "lib/net462/Panuon.WPF.dll",
+        "lib/net462/Panuon.WPF.pdb",
+        "lib/net472/Panuon.WPF.dll",
+        "lib/net472/Panuon.WPF.pdb",
+        "lib/net48/Panuon.WPF.dll",
+        "lib/net48/Panuon.WPF.pdb",
+        "lib/net5.0-windows/Panuon.WPF.dll",
+        "lib/net5.0-windows/Panuon.WPF.pdb",
+        "lib/net6.0-windows/Panuon.WPF.dll",
+        "lib/net6.0-windows/Panuon.WPF.pdb",
+        "lib/net7.0-windows/Panuon.WPF.dll",
+        "lib/net7.0-windows/Panuon.WPF.pdb",
+        "lib/net8.0-windows/Panuon.WPF.dll",
+        "lib/net8.0-windows/Panuon.WPF.pdb",
+        "lib/netcoreapp3.1/Panuon.WPF.dll",
+        "lib/netcoreapp3.1/Panuon.WPF.pdb",
+        "panuon.wpf.1.1.3.nupkg.sha512",
+        "panuon.wpf.nuspec"
+      ]
+    },
+    "Panuon.WPF.UI/1.3.0.2": {
+      "sha512": "WgjOp9xPIpcPMPIT/G74V8vriXscDHwlhMpnMHt/KnyfOqDSLab+DmI+PVX4zQju8YI6x6HVpyG3M8vBtH6Ofg==",
+      "type": "package",
+      "path": "panuon.wpf.ui/1.3.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net452/Panuon.WPF.UI.dll",
+        "lib/net452/Panuon.WPF.UI.pdb",
+        "lib/net462/Panuon.WPF.UI.dll",
+        "lib/net462/Panuon.WPF.UI.pdb",
+        "lib/net472/Panuon.WPF.UI.dll",
+        "lib/net472/Panuon.WPF.UI.pdb",
+        "lib/net48/Panuon.WPF.UI.dll",
+        "lib/net48/Panuon.WPF.UI.pdb",
+        "lib/net5.0-windows/Panuon.WPF.UI.dll",
+        "lib/net5.0-windows/Panuon.WPF.UI.pdb",
+        "lib/net6.0-windows/Panuon.WPF.UI.dll",
+        "lib/net6.0-windows/Panuon.WPF.UI.pdb",
+        "lib/net7.0-windows/Panuon.WPF.UI.dll",
+        "lib/net7.0-windows/Panuon.WPF.UI.pdb",
+        "lib/net8.0-windows/Panuon.WPF.UI.dll",
+        "lib/net8.0-windows/Panuon.WPF.UI.pdb",
+        "lib/netcoreapp3.1/Panuon.WPF.UI.dll",
+        "lib/netcoreapp3.1/Panuon.WPF.UI.pdb",
+        "panuon.wpf.ui.1.3.0.2.nupkg.sha512",
+        "panuon.wpf.ui.nuspec"
+      ]
+    },
+    "PDFsharp/6.2.4": {
+      "sha512": "GhTr9F1uOYXHCIEOB5PXIgqn5a8WLsJL2m0eewTA0IvY1j6N4HGXHKKmEyB90/N6vrjmYamf41V9zbmdW2HY3g==",
+      "type": "package",
+      "path": "pdfsharp/6.2.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "images/PDFsharp-128x128.png",
+        "lib/net10.0/PdfSharp.BarCodes.dll",
+        "lib/net10.0/PdfSharp.BarCodes.pdb",
+        "lib/net10.0/PdfSharp.BarCodes.xml",
+        "lib/net10.0/PdfSharp.Charting.dll",
+        "lib/net10.0/PdfSharp.Charting.pdb",
+        "lib/net10.0/PdfSharp.Charting.xml",
+        "lib/net10.0/PdfSharp.Cryptography.dll",
+        "lib/net10.0/PdfSharp.Cryptography.pdb",
+        "lib/net10.0/PdfSharp.Cryptography.xml",
+        "lib/net10.0/PdfSharp.Quality.dll",
+        "lib/net10.0/PdfSharp.Quality.pdb",
+        "lib/net10.0/PdfSharp.Quality.xml",
+        "lib/net10.0/PdfSharp.Shared.dll",
+        "lib/net10.0/PdfSharp.Shared.pdb",
+        "lib/net10.0/PdfSharp.Shared.xml",
+        "lib/net10.0/PdfSharp.Snippets.dll",
+        "lib/net10.0/PdfSharp.Snippets.pdb",
+        "lib/net10.0/PdfSharp.System.dll",
+        "lib/net10.0/PdfSharp.System.pdb",
+        "lib/net10.0/PdfSharp.System.xml",
+        "lib/net10.0/PdfSharp.WPFonts.dll",
+        "lib/net10.0/PdfSharp.WPFonts.pdb",
+        "lib/net10.0/PdfSharp.WPFonts.xml",
+        "lib/net10.0/PdfSharp.dll",
+        "lib/net10.0/PdfSharp.pdb",
+        "lib/net10.0/PdfSharp.xml",
+        "lib/net8.0/PdfSharp.BarCodes.dll",
+        "lib/net8.0/PdfSharp.BarCodes.pdb",
+        "lib/net8.0/PdfSharp.BarCodes.xml",
+        "lib/net8.0/PdfSharp.Charting.dll",
+        "lib/net8.0/PdfSharp.Charting.pdb",
+        "lib/net8.0/PdfSharp.Charting.xml",
+        "lib/net8.0/PdfSharp.Cryptography.dll",
+        "lib/net8.0/PdfSharp.Cryptography.pdb",
+        "lib/net8.0/PdfSharp.Cryptography.xml",
+        "lib/net8.0/PdfSharp.Quality.dll",
+        "lib/net8.0/PdfSharp.Quality.pdb",
+        "lib/net8.0/PdfSharp.Quality.xml",
+        "lib/net8.0/PdfSharp.Shared.dll",
+        "lib/net8.0/PdfSharp.Shared.pdb",
+        "lib/net8.0/PdfSharp.Shared.xml",
+        "lib/net8.0/PdfSharp.Snippets.dll",
+        "lib/net8.0/PdfSharp.Snippets.pdb",
+        "lib/net8.0/PdfSharp.System.dll",
+        "lib/net8.0/PdfSharp.System.pdb",
+        "lib/net8.0/PdfSharp.System.xml",
+        "lib/net8.0/PdfSharp.WPFonts.dll",
+        "lib/net8.0/PdfSharp.WPFonts.pdb",
+        "lib/net8.0/PdfSharp.WPFonts.xml",
+        "lib/net8.0/PdfSharp.dll",
+        "lib/net8.0/PdfSharp.pdb",
+        "lib/net8.0/PdfSharp.xml",
+        "lib/net9.0/PdfSharp.BarCodes.dll",
+        "lib/net9.0/PdfSharp.BarCodes.pdb",
+        "lib/net9.0/PdfSharp.BarCodes.xml",
+        "lib/net9.0/PdfSharp.Charting.dll",
+        "lib/net9.0/PdfSharp.Charting.pdb",
+        "lib/net9.0/PdfSharp.Charting.xml",
+        "lib/net9.0/PdfSharp.Cryptography.dll",
+        "lib/net9.0/PdfSharp.Cryptography.pdb",
+        "lib/net9.0/PdfSharp.Cryptography.xml",
+        "lib/net9.0/PdfSharp.Quality.dll",
+        "lib/net9.0/PdfSharp.Quality.pdb",
+        "lib/net9.0/PdfSharp.Quality.xml",
+        "lib/net9.0/PdfSharp.Shared.dll",
+        "lib/net9.0/PdfSharp.Shared.pdb",
+        "lib/net9.0/PdfSharp.Shared.xml",
+        "lib/net9.0/PdfSharp.Snippets.dll",
+        "lib/net9.0/PdfSharp.Snippets.pdb",
+        "lib/net9.0/PdfSharp.System.dll",
+        "lib/net9.0/PdfSharp.System.pdb",
+        "lib/net9.0/PdfSharp.System.xml",
+        "lib/net9.0/PdfSharp.WPFonts.dll",
+        "lib/net9.0/PdfSharp.WPFonts.pdb",
+        "lib/net9.0/PdfSharp.WPFonts.xml",
+        "lib/net9.0/PdfSharp.dll",
+        "lib/net9.0/PdfSharp.pdb",
+        "lib/net9.0/PdfSharp.xml",
+        "lib/netstandard2.0/PdfSharp.BarCodes.dll",
+        "lib/netstandard2.0/PdfSharp.BarCodes.pdb",
+        "lib/netstandard2.0/PdfSharp.BarCodes.xml",
+        "lib/netstandard2.0/PdfSharp.Charting.dll",
+        "lib/netstandard2.0/PdfSharp.Charting.pdb",
+        "lib/netstandard2.0/PdfSharp.Charting.xml",
+        "lib/netstandard2.0/PdfSharp.Cryptography.dll",
+        "lib/netstandard2.0/PdfSharp.Cryptography.pdb",
+        "lib/netstandard2.0/PdfSharp.Cryptography.xml",
+        "lib/netstandard2.0/PdfSharp.Quality.dll",
+        "lib/netstandard2.0/PdfSharp.Quality.pdb",
+        "lib/netstandard2.0/PdfSharp.Quality.xml",
+        "lib/netstandard2.0/PdfSharp.Shared.dll",
+        "lib/netstandard2.0/PdfSharp.Shared.pdb",
+        "lib/netstandard2.0/PdfSharp.Shared.xml",
+        "lib/netstandard2.0/PdfSharp.Snippets.dll",
+        "lib/netstandard2.0/PdfSharp.Snippets.pdb",
+        "lib/netstandard2.0/PdfSharp.System.dll",
+        "lib/netstandard2.0/PdfSharp.System.pdb",
+        "lib/netstandard2.0/PdfSharp.System.xml",
+        "lib/netstandard2.0/PdfSharp.WPFonts.dll",
+        "lib/netstandard2.0/PdfSharp.WPFonts.pdb",
+        "lib/netstandard2.0/PdfSharp.WPFonts.xml",
+        "lib/netstandard2.0/PdfSharp.dll",
+        "lib/netstandard2.0/PdfSharp.pdb",
+        "lib/netstandard2.0/PdfSharp.xml",
+        "pdfsharp.6.2.4.nupkg.sha512",
+        "pdfsharp.nuspec"
+      ]
+    },
+    "PDFsharp-WPF/6.2.4": {
+      "sha512": "wD2byoUNGc/IDmSSSPLGGCNMXf4TybnjKlcYa40nuWIYLVA4DSvnCvWr7HbsBEwFvAYRP6DceQ4MN35COD/pdw==",
+      "type": "package",
+      "path": "pdfsharp-wpf/6.2.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "images/PDFsharp-128x128.png",
+        "lib/net10.0-windows7.0/PdfSharp-wpf.dll",
+        "lib/net10.0-windows7.0/PdfSharp-wpf.pdb",
+        "lib/net10.0-windows7.0/PdfSharp-wpf.xml",
+        "lib/net10.0-windows7.0/PdfSharp.BarCodes-wpf.dll",
+        "lib/net10.0-windows7.0/PdfSharp.BarCodes-wpf.pdb",
+        "lib/net10.0-windows7.0/PdfSharp.BarCodes-wpf.xml",
+        "lib/net10.0-windows7.0/PdfSharp.Charting-wpf.dll",
+        "lib/net10.0-windows7.0/PdfSharp.Charting-wpf.pdb",
+        "lib/net10.0-windows7.0/PdfSharp.Charting-wpf.xml",
+        "lib/net10.0-windows7.0/PdfSharp.Cryptography.dll",
+        "lib/net10.0-windows7.0/PdfSharp.Cryptography.pdb",
+        "lib/net10.0-windows7.0/PdfSharp.Cryptography.xml",
+        "lib/net10.0-windows7.0/PdfSharp.Quality-wpf.dll",
+        "lib/net10.0-windows7.0/PdfSharp.Quality-wpf.pdb",
+        "lib/net10.0-windows7.0/PdfSharp.Quality-wpf.xml",
+        "lib/net10.0-windows7.0/PdfSharp.Shared.dll",
+        "lib/net10.0-windows7.0/PdfSharp.Shared.pdb",
+        "lib/net10.0-windows7.0/PdfSharp.Shared.xml",
+        "lib/net10.0-windows7.0/PdfSharp.Snippets-wpf.dll",
+        "lib/net10.0-windows7.0/PdfSharp.Snippets-wpf.pdb",
+        "lib/net10.0-windows7.0/PdfSharp.System.dll",
+        "lib/net10.0-windows7.0/PdfSharp.System.pdb",
+        "lib/net10.0-windows7.0/PdfSharp.System.xml",
+        "lib/net10.0-windows7.0/PdfSharp.WPFonts.dll",
+        "lib/net10.0-windows7.0/PdfSharp.WPFonts.pdb",
+        "lib/net10.0-windows7.0/PdfSharp.WPFonts.xml",
+        "lib/net462/PdfSharp-wpf.dll",
+        "lib/net462/PdfSharp-wpf.pdb",
+        "lib/net462/PdfSharp-wpf.xml",
+        "lib/net462/PdfSharp.BarCodes-wpf.dll",
+        "lib/net462/PdfSharp.BarCodes-wpf.pdb",
+        "lib/net462/PdfSharp.BarCodes-wpf.xml",
+        "lib/net462/PdfSharp.Charting-wpf.dll",
+        "lib/net462/PdfSharp.Charting-wpf.pdb",
+        "lib/net462/PdfSharp.Charting-wpf.xml",
+        "lib/net462/PdfSharp.Cryptography.dll",
+        "lib/net462/PdfSharp.Cryptography.pdb",
+        "lib/net462/PdfSharp.Cryptography.xml",
+        "lib/net462/PdfSharp.Quality-wpf.dll",
+        "lib/net462/PdfSharp.Quality-wpf.pdb",
+        "lib/net462/PdfSharp.Quality-wpf.xml",
+        "lib/net462/PdfSharp.Shared.dll",
+        "lib/net462/PdfSharp.Shared.pdb",
+        "lib/net462/PdfSharp.Shared.xml",
+        "lib/net462/PdfSharp.Snippets-wpf.dll",
+        "lib/net462/PdfSharp.Snippets-wpf.pdb",
+        "lib/net462/PdfSharp.System.dll",
+        "lib/net462/PdfSharp.System.pdb",
+        "lib/net462/PdfSharp.System.xml",
+        "lib/net462/PdfSharp.WPFonts.dll",
+        "lib/net462/PdfSharp.WPFonts.pdb",
+        "lib/net462/PdfSharp.WPFonts.xml",
+        "lib/net8.0-windows7.0/PdfSharp-wpf.dll",
+        "lib/net8.0-windows7.0/PdfSharp-wpf.pdb",
+        "lib/net8.0-windows7.0/PdfSharp-wpf.xml",
+        "lib/net8.0-windows7.0/PdfSharp.BarCodes-wpf.dll",
+        "lib/net8.0-windows7.0/PdfSharp.BarCodes-wpf.pdb",
+        "lib/net8.0-windows7.0/PdfSharp.BarCodes-wpf.xml",
+        "lib/net8.0-windows7.0/PdfSharp.Charting-wpf.dll",
+        "lib/net8.0-windows7.0/PdfSharp.Charting-wpf.pdb",
+        "lib/net8.0-windows7.0/PdfSharp.Charting-wpf.xml",
+        "lib/net8.0-windows7.0/PdfSharp.Cryptography.dll",
+        "lib/net8.0-windows7.0/PdfSharp.Cryptography.pdb",
+        "lib/net8.0-windows7.0/PdfSharp.Cryptography.xml",
+        "lib/net8.0-windows7.0/PdfSharp.Quality-wpf.dll",
+        "lib/net8.0-windows7.0/PdfSharp.Quality-wpf.pdb",
+        "lib/net8.0-windows7.0/PdfSharp.Quality-wpf.xml",
+        "lib/net8.0-windows7.0/PdfSharp.Shared.dll",
+        "lib/net8.0-windows7.0/PdfSharp.Shared.pdb",
+        "lib/net8.0-windows7.0/PdfSharp.Shared.xml",
+        "lib/net8.0-windows7.0/PdfSharp.Snippets-wpf.dll",
+        "lib/net8.0-windows7.0/PdfSharp.Snippets-wpf.pdb",
+        "lib/net8.0-windows7.0/PdfSharp.System.dll",
+        "lib/net8.0-windows7.0/PdfSharp.System.pdb",
+        "lib/net8.0-windows7.0/PdfSharp.System.xml",
+        "lib/net8.0-windows7.0/PdfSharp.WPFonts.dll",
+        "lib/net8.0-windows7.0/PdfSharp.WPFonts.pdb",
+        "lib/net8.0-windows7.0/PdfSharp.WPFonts.xml",
+        "lib/net9.0-windows7.0/PdfSharp-wpf.dll",
+        "lib/net9.0-windows7.0/PdfSharp-wpf.pdb",
+        "lib/net9.0-windows7.0/PdfSharp-wpf.xml",
+        "lib/net9.0-windows7.0/PdfSharp.BarCodes-wpf.dll",
+        "lib/net9.0-windows7.0/PdfSharp.BarCodes-wpf.pdb",
+        "lib/net9.0-windows7.0/PdfSharp.BarCodes-wpf.xml",
+        "lib/net9.0-windows7.0/PdfSharp.Charting-wpf.dll",
+        "lib/net9.0-windows7.0/PdfSharp.Charting-wpf.pdb",
+        "lib/net9.0-windows7.0/PdfSharp.Charting-wpf.xml",
+        "lib/net9.0-windows7.0/PdfSharp.Cryptography.dll",
+        "lib/net9.0-windows7.0/PdfSharp.Cryptography.pdb",
+        "lib/net9.0-windows7.0/PdfSharp.Cryptography.xml",
+        "lib/net9.0-windows7.0/PdfSharp.Quality-wpf.dll",
+        "lib/net9.0-windows7.0/PdfSharp.Quality-wpf.pdb",
+        "lib/net9.0-windows7.0/PdfSharp.Quality-wpf.xml",
+        "lib/net9.0-windows7.0/PdfSharp.Shared.dll",
+        "lib/net9.0-windows7.0/PdfSharp.Shared.pdb",
+        "lib/net9.0-windows7.0/PdfSharp.Shared.xml",
+        "lib/net9.0-windows7.0/PdfSharp.Snippets-wpf.dll",
+        "lib/net9.0-windows7.0/PdfSharp.Snippets-wpf.pdb",
+        "lib/net9.0-windows7.0/PdfSharp.System.dll",
+        "lib/net9.0-windows7.0/PdfSharp.System.pdb",
+        "lib/net9.0-windows7.0/PdfSharp.System.xml",
+        "lib/net9.0-windows7.0/PdfSharp.WPFonts.dll",
+        "lib/net9.0-windows7.0/PdfSharp.WPFonts.pdb",
+        "lib/net9.0-windows7.0/PdfSharp.WPFonts.xml",
+        "pdfsharp-wpf.6.2.4.nupkg.sha512",
+        "pdfsharp-wpf.nuspec"
       ]
     },
     "ShowMeTheXAML.MSBuild/2.1.1": {
@@ -5264,6 +5811,19 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "WPF.UI/3.4.2.7": {
+      "sha512": "sE+BGb+mFJB96wQ8wArVBqoUQkj1/vOV7GdFb1iWD5Y8iwHSIX83aEcda5gxzCOH2h5ifD9ul7JEm7mvohbgMg==",
+      "type": "package",
+      "path": "wpf.ui/3.4.2.7",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net451/WPF.UI.dll",
+        "lib/net451/WPF.UI.md",
+        "wpf.ui.3.4.2.7.nupkg.sha512",
+        "wpf.ui.nuspec"
+      ]
+    },
     "XLParser/1.5.2": {
       "sha512": "8tnUCmMbn6c/HGuHFyq1sulHym8YReTKDNXFFQk0U8nldNx6RGrwRvLh0+aQjEc7YoC3Q1ztH1npLt7dClKqjw==",
       "type": "package",
@@ -5285,17 +5845,23 @@
       "ControlzEx >= 7.0.3",
       "FontAwesome.WPF >= 4.7.0.9",
       "LiveCharts >= 0.9.7",
-      "MahApps.Metro >= 3.0.0-rc0529",
+      "MahApps.Metro >= 2.4.11",
       "MahApps.Metro.IconPacks >= 6.2.1",
       "MaterialDesignColors >= 5.3.2",
       "MaterialDesignThemes >= 5.3.2",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.0",
       "Microsoft.EntityFrameworkCore.Sqlite >= 8.0.0",
       "Microsoft.ML >= 3.0.0",
-      "ModernWPF >= 2.0.0-alpha97",
+      "ModernWPF >= 1.4.6",
+      "Ookii.Dialogs >= 5.0.1",
+      "Ookii.Dialogs.Wpf >= 5.0.1",
       "OxyPlot.SkiaSharp >= 2.1.2",
       "OxyPlot.Wpf >= 2.1.2",
-      "ShowMeTheXAML.MSBuild >= 2.1.1"
+      "PDFsharp >= 6.2.4",
+      "PDFsharp-WPF >= 6.2.4",
+      "Panuon.WPF.UI >= 1.3.0.2",
+      "ShowMeTheXAML.MSBuild >= 2.1.1",
+      "WPF.UI >= 3.4.2.7"
     ]
   },
   "packageFolders": {
@@ -5359,7 +5925,7 @@
           },
           "MahApps.Metro": {
             "target": "Package",
-            "version": "[3.0.0-rc0529, )"
+            "version": "[2.4.11, )"
           },
           "MahApps.Metro.IconPacks": {
             "target": "Package",
@@ -5389,7 +5955,15 @@
           },
           "ModernWPF": {
             "target": "Package",
-            "version": "[2.0.0-alpha97, )"
+            "version": "[1.4.6, )"
+          },
+          "Ookii.Dialogs": {
+            "target": "Package",
+            "version": "[5.0.1, )"
+          },
+          "Ookii.Dialogs.Wpf": {
+            "target": "Package",
+            "version": "[5.0.1, )"
           },
           "OxyPlot.SkiaSharp": {
             "target": "Package",
@@ -5399,9 +5973,25 @@
             "target": "Package",
             "version": "[2.1.2, )"
           },
+          "PDFsharp": {
+            "target": "Package",
+            "version": "[6.2.4, )"
+          },
+          "PDFsharp-WPF": {
+            "target": "Package",
+            "version": "[6.2.4, )"
+          },
+          "Panuon.WPF.UI": {
+            "target": "Package",
+            "version": "[1.3.0.2, )"
+          },
           "ShowMeTheXAML.MSBuild": {
             "target": "Package",
             "version": "[2.1.1, )"
+          },
+          "WPF.UI": {
+            "target": "Package",
+            "version": "[3.4.2.7, )"
           }
         },
         "imports": [
@@ -5719,11 +6309,31 @@
   },
   "logs": [
     {
+      "code": "NU1608",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Версия обнаруженного пакета нарушает ограничение зависимости: MahApps.Metro 2.4.11 требуется ControlzEx (>= 4.4.0 && < 6.0.0), но в результате разрешения получена версия ControlzEx 7.0.3.",
+      "libraryId": "ControlzEx",
+      "targetGraphs": [
+        "net10.0-windows7.0"
+      ]
+    },
+    {
       "code": "NU1903",
       "level": "Warning",
       "warningLevel": 1,
       "message": "У пакета \"Microsoft.Extensions.Caching.Memory\" 8.0.0 есть известная уязвимость https://github.com/advisories/GHSA-qj66-m88j-hmgj (уровень серьезности: высокий уровень)",
       "libraryId": "Microsoft.Extensions.Caching.Memory",
+      "targetGraphs": [
+        "net10.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Пакет \"CommonWin32 2.1.0.3\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "libraryId": "CommonWin32",
       "targetGraphs": [
         "net10.0-windows7.0"
       ]
@@ -5752,8 +6362,8 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Пакет \"ModernWpf 2.0.0-alpha97\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
-      "libraryId": "ModernWpf",
+      "message": "Пакет \"ModernWPF 1.4.6\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "libraryId": "ModernWPF",
       "targetGraphs": [
         "net10.0-windows7.0"
       ]
@@ -5762,8 +6372,8 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Пакет \"ModernWpf.Core 2.0.0-alpha98\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
-      "libraryId": "ModernWpf.Core",
+      "message": "Пакет \"WPF.UI 3.4.2.7\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "libraryId": "WPF.UI",
       "targetGraphs": [
         "net10.0-windows7.0"
       ]

@@ -29,33 +29,33 @@ public class FinanceService : IFinanceService
         _logService = logService;
     }
 
- public async Task<decimal> GetTotalIncomeAsync(DateTime? startDate = null, DateTime? endDate = null)
- {
- return await _transactionRepository.GetTotalIncomeAsync(startDate, endDate);
- }
+    public async Task<decimal> GetTotalIncomeAsync(DateTime? startDate = null, DateTime? endDate = null)
+    {
+        return await _transactionRepository.GetTotalIncomeAsync(startDate, endDate);
+    }
 
- public async Task<decimal> GetTotalExpensesAsync(DateTime? startDate = null, DateTime? endDate = null)
- {
- return await _transactionRepository.GetTotalExpensesAsync(startDate, endDate);
- }
+    public async Task<decimal> GetTotalExpensesAsync(DateTime? startDate = null, DateTime? endDate = null)
+    {
+        return await _transactionRepository.GetTotalExpensesAsync(startDate, endDate);
+    }
 
- public async Task<decimal> GetProfitAsync(DateTime? startDate = null, DateTime? endDate = null)
- {
- var income = await GetTotalIncomeAsync(startDate, endDate);
- var expenses = await GetTotalExpensesAsync(startDate, endDate);
- return income - expenses;
- }
+    public async Task<decimal> GetProfitAsync(DateTime? startDate = null, DateTime? endDate = null)
+    {
+        var income = await GetTotalIncomeAsync(startDate, endDate);
+        var expenses = await GetTotalExpensesAsync(startDate, endDate);
+        return income - expenses;
+    }
 
     public async Task<FinanceReport> GetFinanceReportAsync(DateTime startDate, DateTime endDate)
     {
         var report = new FinanceReport();
-        
+
         // Получаем транзакции
         var transactions = (await _transactionRepository.GetTransactionsByDateRangeAsync(startDate, endDate)).ToList();
-        
+
         // Сохраняем транзакции для использования в отчётах
         report.Transactions = transactions;
-        
+
         // Основные показатели из транзакций
         report.TotalIncome = (double)transactions.Where(t => t.Type == TransactionType.Доход).Sum(t => t.Amount);
         report.TotalExpenses = (double)transactions.Where(t => t.Type == TransactionType.Расход).Sum(t => t.Amount);
@@ -89,12 +89,12 @@ public class FinanceService : IFinanceService
         var bookings = await _bookingRepository.GetBookingsByDateRangeAsync(startDate, endDate);
         var clients = await _clientRepository.GetAllAsync();
         var rooms = await _roomRepository.GetAllAsync();
-        
+
         foreach (var booking in bookings)
         {
             var client = clients.FirstOrDefault(c => c.Id == booking.ClientId);
             var room = rooms.FirstOrDefault(r => r.Id == booking.RoomId);
-            
+
             // Добавляем информацию об оплате бронирования
             if (booking.PaidAmount > 0)
             {
@@ -107,9 +107,10 @@ public class FinanceService : IFinanceService
                     Type = "Оплата бронирования"
                 });
             }
-            
+
             // Добавляем информацию о расходах (коммунальные, уборка)
-            var bookingTransactions = transactions.Where(t => t.BookingId == booking.Id && t.Type == TransactionType.Расход);
+            var bookingTransactions =
+                transactions.Where(t => t.BookingId == booking.Id && t.Type == TransactionType.Расход);
             foreach (var tx in bookingTransactions)
             {
                 report.BookingDetails.Add(new BookingTransactionDetail
@@ -123,7 +124,7 @@ public class FinanceService : IFinanceService
                 report.TotalExpenses += (double)tx.Amount;
             }
         }
-        
+
         // Пересчитываем прибыль
         report.Profit = report.TotalIncome - report.TotalExpenses;
 
@@ -135,7 +136,7 @@ public class FinanceService : IFinanceService
             var service = services.FirstOrDefault(s => s.Id == tx.ServiceId);
             var booking = bookings.FirstOrDefault(b => b.Id == tx.BookingId);
             var client = clients.FirstOrDefault(c => c.Id == booking?.ClientId);
-            
+
             report.ServiceDetails.Add(new ServiceTransactionDetail
             {
                 Date = tx.TransactionDate,
@@ -145,29 +146,31 @@ public class FinanceService : IFinanceService
                 Amount = tx.Amount
             });
         }
-        
+
         return report;
     }
 
- public async Task<Transaction> AddTransactionAsync(Transaction transaction)
- {
- var created = await _transactionRepository.AddAsync(transaction);
- await _logService.LogAsync(LogLevel.Средние, 
- $"Добавлена транзакция: {transaction.Type} {transaction.Amount} пользователем: {AuthService.CurrentEmployee.FullName}", "FinanceService");
- return created;
- }
+    public async Task<Transaction> AddTransactionAsync(Transaction transaction)
+    {
+        var created = await _transactionRepository.AddAsync(transaction);
+        await _logService.LogAsync(LogLevel.Средние,
+            $"Добавлена транзакция: {transaction.Type} {transaction.Amount} пользователем: {AuthService.CurrentEmployee.FullName}",
+            "FinanceService");
+        return created;
+    }
 
- public async Task<IEnumerable<Transaction>> GetTransactionsAsync(DateTime? startDate = null, DateTime? endDate = null)
- {
-     if (startDate.HasValue && endDate.HasValue)
-     {
-         return await _transactionRepository.GetTransactionsByDateRangeAsync(startDate.Value, endDate.Value);
-     }
+    public async Task<IEnumerable<Transaction>> GetTransactionsAsync(DateTime? startDate = null,
+        DateTime? endDate = null)
+    {
+        if (startDate.HasValue && endDate.HasValue)
+        {
+            return await _transactionRepository.GetTransactionsByDateRangeAsync(startDate.Value, endDate.Value);
+        }
 
-     return await _transactionRepository.GetAllWithDetailsAsync();
- }
+        return await _transactionRepository.GetAllWithDetailsAsync();
+    }
 
- public async Task RecordBookingPaymentAsync(int bookingId, decimal amount)
+    public async Task RecordBookingPaymentAsync(int bookingId, decimal amount)
     {
         // Обновляем статус бронирования и TotalSpent клиента
         var booking = await _bookingRepository.GetByIdAsync(bookingId);
@@ -175,21 +178,22 @@ public class FinanceService : IFinanceService
         {
             var room = await _roomRepository.GetByIdAsync(booking.RoomId);
             var client = await _clientRepository.GetByIdAsync(booking.ClientId);
-            
+
             booking.PaidAmount += amount;
             if (booking.PaidAmount >= booking.TotalPrice)
             {
                 booking.Status = BookingStatus.Оплачено;
             }
+
             await _bookingRepository.UpdateAsync(booking);
-            
+
             // Обновляем TotalSpent клиента
             if (client != null)
             {
                 client.TotalSpent += amount;
                 await _clientRepository.UpdateAsync(client);
             }
-            
+
             // Создаём транзакцию с подробным описанием (включая номер комнаты)
             var transaction = new Transaction
             {
@@ -199,7 +203,8 @@ public class FinanceService : IFinanceService
                 BookingId = bookingId,
                 RoomId = booking.RoomId,
                 TransactionDate = DateTime.Now,
-                Description = $"Оплата бронирования #{bookingId} (Номер: {room?.Name ?? "№" + booking.RoomId}) - {client?.FullName ?? "Клиент"}"
+                Description =
+                    $"Оплата бронирования #{bookingId} (Номер: {room?.Name ?? "№" + booking.RoomId}) - {client?.FullName ?? "Клиент"}"
             };
 
             await AddTransactionAsync(transaction);
@@ -210,7 +215,7 @@ public class FinanceService : IFinanceService
     {
         var booking = await _bookingRepository.GetBookingWithDetailsAsync(bookingId);
         var service = await _serviceRepository.GetByIdAsync(serviceId);
-        
+
         // Создаём транзакцию с подробным описанием
         var transaction = new Transaction
         {
@@ -222,11 +227,12 @@ public class FinanceService : IFinanceService
             ServiceId = serviceId,
             Quantity = quantity,
             TransactionDate = DateTime.Now,
-            Description = $"Услуга \"{service?.Name ?? "Услуга"}\" для бронирования #{bookingId} (Номер: {booking?.Room?.Name ?? "№" + booking?.RoomId})"
+            Description =
+                $"Услуга \"{service?.Name ?? "Услуга"}\" для бронирования #{bookingId} (Номер: {booking?.Room?.Name ?? "№" + booking?.RoomId})"
         };
 
         await AddTransactionAsync(transaction);
-        
+
         // Обновляем TotalSpent клиента
         if (booking != null)
         {
@@ -237,7 +243,7 @@ public class FinanceService : IFinanceService
                 await _clientRepository.UpdateAsync(client);
             }
         }
-        
+
         // Обновляем счётчик покупок услуги
         if (service != null)
         {
@@ -246,33 +252,60 @@ public class FinanceService : IFinanceService
         }
     }
 
- public async Task RecordSalaryPaymentAsync(int employeeId, decimal amount)
- {
- var transaction = new Transaction
- {
- Type = TransactionType.Расход,
- Category = TransactionCategory.Зарплата,
- Amount = amount,
- EmployeeId = employeeId,
- TransactionDate = DateTime.Now,
- Description = $"Выплата зарплаты сотруднику #{employeeId}"
- };
+    // В FinanceService.cs
+    public async Task RefundBookingPaymentAsync(int bookingId)
+    {
+        var booking = await _bookingRepository.GetBookingWithDetailsAsync(bookingId);
+        if (booking == null) throw new Exception("Бронирование не найдено");
+        if (booking.Status == BookingStatus.Отменено) return;
 
- await AddTransactionAsync(transaction);
- }
+        if (booking.PaidAmount > 0)
+        {
+            // Создаём транзакцию возврата (отрицательная сумма)
+            var transaction = new Transaction
+            {
+                BookingId = bookingId,
+                Amount = booking.PaidAmount,
+                Type = TransactionType.Расход,
+                Category = TransactionCategory.Бронирование,
+                TransactionDate = DateTime.Now,
+                Description = $"Возврат средств за отмену бронирования #{bookingId}",
+            };
+            await _transactionRepository.AddAsync(transaction);
 
- public async Task RecordRoomExpenseAsync(int roomId, string category, decimal amount)
- {
- var transaction = new Transaction
- {
- Type = TransactionType.Расход,
- Category = TransactionCategory.Обслуживание,
- Amount = amount,
- RoomId = roomId,
- TransactionDate = DateTime.Now,
- Description = $"Расход по номеру #{roomId}: {category}"
- };
+            // Обнуляем оплаченную сумму в брони
+            booking.PaidAmount = 0;
+            await _bookingRepository.UpdateAsync(booking);
+        }
+    }
 
- await AddTransactionAsync(transaction);
- }
+    public async Task RecordSalaryPaymentAsync(int employeeId, decimal amount)
+    {
+        var transaction = new Transaction
+        {
+            Type = TransactionType.Расход,
+            Category = TransactionCategory.Зарплата,
+            Amount = amount,
+            EmployeeId = employeeId,
+            TransactionDate = DateTime.Now,
+            Description = $"Выплата зарплаты сотруднику #{employeeId}"
+        };
+
+        await AddTransactionAsync(transaction);
+    }
+
+    public async Task RecordRoomExpenseAsync(int roomId, string category, decimal amount)
+    {
+        var transaction = new Transaction
+        {
+            Type = TransactionType.Расход,
+            Category = TransactionCategory.Обслуживание,
+            Amount = amount,
+            RoomId = roomId,
+            TransactionDate = DateTime.Now,
+            Description = $"Расход по номеру #{roomId}: {category}"
+        };
+
+        await AddTransactionAsync(transaction);
+    }
 }
