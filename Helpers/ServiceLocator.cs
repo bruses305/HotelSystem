@@ -25,6 +25,7 @@ public static class ServiceLocator
         services.AddScoped<ITransactionRepository, TransactionRepository>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<ILogRepository, LogRepository>();
+        services.AddScoped<IExpenseRepository, ExpenseRepository>();
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IClientService, ClientService>();
@@ -32,6 +33,7 @@ public static class ServiceLocator
         services.AddScoped<IFinanceService, FinanceService>();
         services.AddScoped<IServiceService, ServiceService>();
         services.AddScoped<ILogService, LogService>();
+        services.AddScoped<IExpenseService, ExpenseService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<INavigationService, NavigationService>();
         services.AddScoped<PermissionService>();

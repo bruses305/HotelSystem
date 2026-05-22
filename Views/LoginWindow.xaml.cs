@@ -181,12 +181,6 @@ namespace HotelSystem.Views
             ErrorBorder.Visibility = Visibility.Visible;
         }
 
-        private void ForgotPassword_Click(object sender, MouseButtonEventArgs e)
-        {
-            MessageBox.Show("Функция восстановления пароля будет доступна в следующей версии.",
-                "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
         // ========== Сохранение "Запомнить меня" через JSON ==========
         private class UserSettings
         {

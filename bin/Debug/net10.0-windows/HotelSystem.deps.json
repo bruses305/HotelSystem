@@ -8,10 +8,14 @@
     ".NETCoreApp,Version=v10.0": {
       "HotelSystem/1.0.0": {
         "dependencies": {
-          "ClosedXML": "0.102.3",
+          "ClosedXML": "0.105.0",
           "ControlzEx": "7.0.3",
           "FontAwesome.WPF": "4.7.0.9",
           "LiveCharts": "0.9.7",
+          "LiveCharts.Wpf": "0.9.7",
+          "LiveChartsCore": "2.0.4",
+          "LiveChartsCore.SkiaSharpView": "2.0.4",
+          "LiveChartsCore.SkiaSharpView.WPF": "2.0.4",
           "MahApps.Metro": "2.4.11",
           "MahApps.Metro.IconPacks": "6.2.1",
           "MaterialDesignColors": "5.3.2",
@@ -21,8 +25,11 @@
           "Microsoft.ML": "3.0.0",
           "ModernWPF": "1.4.6",
           "Ookii.Dialogs.Wpf": "5.0.1",
-          "OxyPlot.SkiaSharp": "2.1.2",
-          "OxyPlot.Wpf": "2.1.2",
+          "OxyPlot.Core": "2.2.0",
+          "OxyPlot.SkiaSharp": "2.2.0",
+          "OxyPlot.Wpf": "2.2.0",
+          "PDFsharp": "6.2.4",
+          "PDFsharp-WPF": "6.2.4",
           "Panuon.WPF.UI": "1.3.0.2",
           "WPF.UI": "3.4.2.7"
         },
@@ -30,17 +37,26 @@
           "HotelSystem.dll": {}
         }
       },
-      "ClosedXML/0.102.3": {
+      "ClosedXML/0.105.0": {
         "dependencies": {
-          "DocumentFormat.OpenXml": "2.16.0",
+          "ClosedXML.Parser": "2.0.0",
+          "DocumentFormat.OpenXml": "3.1.1",
           "ExcelNumberFormat": "1.1.0",
-          "SixLabors.Fonts": "1.0.0",
-          "XLParser": "1.5.2"
+          "RBush.Signed": "4.0.0",
+          "SixLabors.Fonts": "1.0.0"
         },
         "runtime": {
           "lib/netstandard2.1/ClosedXML.dll": {
-            "assemblyVersion": "0.102.3.0",
-            "fileVersion": "0.102.3.0"
+            "assemblyVersion": "0.105.0.0",
+            "fileVersion": "0.105.0.0"
+          }
+        }
+      },
+      "ClosedXML.Parser/2.0.0": {
+        "runtime": {
+          "lib/netstandard2.1/ClosedXML.Parser.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       },
@@ -63,11 +79,22 @@
           }
         }
       },
-      "DocumentFormat.OpenXml/2.16.0": {
+      "DocumentFormat.OpenXml/3.1.1": {
+        "dependencies": {
+          "DocumentFormat.OpenXml.Framework": "3.1.1"
+        },
         "runtime": {
-          "lib/netstandard2.0/DocumentFormat.OpenXml.dll": {
-            "assemblyVersion": "2.16.0.0",
-            "fileVersion": "2.16.0.0"
+          "lib/net8.0/DocumentFormat.OpenXml.dll": {
+            "assemblyVersion": "3.1.1.0",
+            "fileVersion": "3.1.1.0"
+          }
+        }
+      },
+      "DocumentFormat.OpenXml.Framework/3.1.1": {
+        "runtime": {
+          "lib/net8.0/DocumentFormat.OpenXml.Framework.dll": {
+            "assemblyVersion": "3.1.1.0",
+            "fileVersion": "3.1.1.0"
           }
         }
       },
@@ -87,26 +114,31 @@
           }
         }
       },
-      "HarfBuzzSharp/2.6.1.4": {
-        "runtime": {
-          "lib/netstandard2.0/HarfBuzzSharp.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "2.6.1.4"
-          }
+      "HarfBuzzSharp/8.3.1.1": {
+        "dependencies": {
+          "HarfBuzzSharp.NativeAssets.Win32": "8.3.1.1",
+          "HarfBuzzSharp.NativeAssets.macOS": "8.3.1.1"
         },
+        "runtime": {
+          "lib/net8.0/HarfBuzzSharp.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "8.3.1.1"
+          }
+        }
+      },
+      "HarfBuzzSharp.NativeAssets.macOS/8.3.1.1": {
         "runtimeTargets": {
           "runtimes/osx/native/libHarfBuzzSharp.dylib": {
             "rid": "osx",
             "assetType": "native",
             "fileVersion": "0.0.0.0"
-          },
-          "runtimes/tizen-armel/native/libHarfBuzzSharp.so": {
-            "rid": "tizen-armel",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/tizen-x86/native/libHarfBuzzSharp.so": {
-            "rid": "tizen-x86",
+          }
+        }
+      },
+      "HarfBuzzSharp.NativeAssets.Win32/8.3.1.1": {
+        "runtimeTargets": {
+          "runtimes/win-arm64/native/libHarfBuzzSharp.dll": {
+            "rid": "win-arm64",
             "assetType": "native",
             "fileVersion": "0.0.0.0"
           },
@@ -130,19 +162,56 @@
           }
         }
       },
-      "Irony.NetCore/1.0.11": {
-        "runtime": {
-          "lib/netstandard1.6/Irony.dll": {
-            "assemblyVersion": "1.0.11.0",
-            "fileVersion": "1.0.11.0"
-          }
-        }
-      },
       "LiveCharts/0.9.7": {
         "runtime": {
           "lib/net45/LiveCharts.dll": {
             "assemblyVersion": "0.9.7.0",
             "fileVersion": "0.9.7.0"
+          }
+        }
+      },
+      "LiveCharts.Wpf/0.9.7": {
+        "dependencies": {
+          "LiveCharts": "0.9.7"
+        },
+        "runtime": {
+          "lib/net45/LiveCharts.Wpf.dll": {
+            "assemblyVersion": "0.9.7.0",
+            "fileVersion": "0.9.7.0"
+          }
+        }
+      },
+      "LiveChartsCore/2.0.4": {
+        "runtime": {
+          "lib/net8.0-windows7.0/LiveChartsCore.dll": {
+            "assemblyVersion": "2.0.4.0",
+            "fileVersion": "2.0.4.0"
+          }
+        }
+      },
+      "LiveChartsCore.SkiaSharpView/2.0.4": {
+        "dependencies": {
+          "LiveChartsCore": "2.0.4",
+          "SkiaSharp": "3.119.0",
+          "SkiaSharp.HarfBuzz": "3.119.0"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.dll": {
+            "assemblyVersion": "2.0.4.0",
+            "fileVersion": "2.0.4.0"
+          }
+        }
+      },
+      "LiveChartsCore.SkiaSharpView.WPF/2.0.4": {
+        "dependencies": {
+          "LiveChartsCore.SkiaSharpView": "2.0.4",
+          "SkiaSharp.HarfBuzz": "3.119.0",
+          "SkiaSharp.Views.WPF": "3.119.0"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.WPF.dll": {
+            "assemblyVersion": "2.0.4.0",
+            "fileVersion": "2.0.4.0"
           }
         }
       },
@@ -1016,8 +1085,8 @@
       "Microsoft.Extensions.Caching.Memory/8.0.0": {
         "dependencies": {
           "Microsoft.Extensions.Caching.Abstractions": "8.0.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
-          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.3",
           "Microsoft.Extensions.Options": "8.0.0",
           "Microsoft.Extensions.Primitives": "8.0.0"
         },
@@ -1041,7 +1110,7 @@
       },
       "Microsoft.Extensions.DependencyInjection/8.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2"
         },
         "runtime": {
           "lib/net8.0/Microsoft.Extensions.DependencyInjection.dll": {
@@ -1050,11 +1119,11 @@
           }
         }
       },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0": {
+      "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2": {
         "runtime": {
           "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
             "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+            "fileVersion": "8.0.1024.46610"
           }
         }
       },
@@ -1069,7 +1138,7 @@
       "Microsoft.Extensions.Logging/8.0.0": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "8.0.0",
-          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.3",
           "Microsoft.Extensions.Options": "8.0.0"
         },
         "runtime": {
@@ -1079,20 +1148,20 @@
           }
         }
       },
-      "Microsoft.Extensions.Logging.Abstractions/8.0.0": {
+      "Microsoft.Extensions.Logging.Abstractions/8.0.3": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2"
         },
         "runtime": {
           "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
             "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+            "fileVersion": "8.0.1325.6609"
           }
         }
       },
       "Microsoft.Extensions.Options/8.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2",
           "Microsoft.Extensions.Primitives": "8.0.0"
         },
         "runtime": {
@@ -1262,47 +1331,66 @@
           }
         }
       },
-      "OxyPlot.Core/2.1.2": {
+      "OpenTK/3.3.1": {
         "runtime": {
-          "lib/netstandard2.0/OxyPlot.dll": {
-            "assemblyVersion": "2.1.2.0",
-            "fileVersion": "2.1.2.0"
+          "lib/net20/OpenTK.dll": {
+            "assemblyVersion": "3.3.1.0",
+            "fileVersion": "3.3.1.0"
           }
         }
       },
-      "OxyPlot.SkiaSharp/2.1.2": {
+      "OpenTK.GLWpfControl/3.3.0": {
         "dependencies": {
-          "OxyPlot.Core": "2.1.2",
-          "SkiaSharp": "1.68.3",
-          "SkiaSharp.HarfBuzz": "1.68.3"
+          "OpenTK": "3.3.1"
         },
         "runtime": {
-          "lib/netstandard2.0/OxyPlot.SkiaSharp.dll": {
-            "assemblyVersion": "2.1.2.0",
-            "fileVersion": "2.1.2.0"
+          "lib/net452/GLWpfControl.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.3.0.0"
           }
         }
       },
-      "OxyPlot.Wpf/2.1.2": {
-        "dependencies": {
-          "OxyPlot.Core": "2.1.2",
-          "OxyPlot.Wpf.Shared": "2.1.2"
-        },
+      "OxyPlot.Core/2.2.0": {
         "runtime": {
-          "lib/netcoreapp3.1/OxyPlot.Wpf.dll": {
-            "assemblyVersion": "2.1.2.0",
-            "fileVersion": "2.1.2.0"
+          "lib/net8.0/OxyPlot.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.0"
           }
         }
       },
-      "OxyPlot.Wpf.Shared/2.1.2": {
+      "OxyPlot.SkiaSharp/2.2.0": {
         "dependencies": {
-          "OxyPlot.Core": "2.1.2"
+          "OxyPlot.Core": "2.2.0",
+          "SkiaSharp": "3.119.0",
+          "SkiaSharp.HarfBuzz": "3.119.0"
         },
         "runtime": {
-          "lib/netcoreapp3.1/OxyPlot.Wpf.Shared.dll": {
-            "assemblyVersion": "2.1.2.0",
-            "fileVersion": "2.1.2.0"
+          "lib/net8.0/OxyPlot.SkiaSharp.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.0"
+          }
+        }
+      },
+      "OxyPlot.Wpf/2.2.0": {
+        "dependencies": {
+          "OxyPlot.Core": "2.2.0",
+          "OxyPlot.Wpf.Shared": "2.2.0"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/OxyPlot.Wpf.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.0"
+          }
+        }
+      },
+      "OxyPlot.Wpf.Shared/2.2.0": {
+        "dependencies": {
+          "OxyPlot.Core": "2.2.0"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/OxyPlot.Wpf.Shared.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.0"
           }
         }
       },
@@ -1325,6 +1413,84 @@
           }
         }
       },
+      "PDFsharp/6.2.4": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.3"
+        },
+        "runtime": {
+          "lib/net10.0/PdfSharp.BarCodes.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0/PdfSharp.Charting.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0/PdfSharp.Cryptography.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0/PdfSharp.Quality.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0/PdfSharp.Shared.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0/PdfSharp.Snippets.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0/PdfSharp.System.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0/PdfSharp.WPFonts.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0/PdfSharp.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          }
+        }
+      },
+      "PDFsharp-WPF/6.2.4": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.3"
+        },
+        "runtime": {
+          "lib/net10.0-windows7.0/PdfSharp-wpf.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.BarCodes-wpf.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Charting-wpf.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Quality-wpf.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          },
+          "lib/net10.0-windows7.0/PdfSharp.Snippets-wpf.dll": {
+            "assemblyVersion": "6.2.4.0",
+            "fileVersion": "6.2.4.7675"
+          }
+        }
+      },
+      "RBush.Signed/4.0.0": {
+        "runtime": {
+          "lib/net8.0/RBush.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.0"
+          }
+        }
+      },
       "SixLabors.Fonts/1.0.0": {
         "runtime": {
           "lib/netcoreapp3.1/SixLabors.Fonts.dll": {
@@ -1333,26 +1499,43 @@
           }
         }
       },
-      "SkiaSharp/1.68.3": {
-        "runtime": {
-          "lib/netstandard2.0/SkiaSharp.dll": {
-            "assemblyVersion": "1.68.0.0",
-            "fileVersion": "1.68.3.0"
-          }
+      "SkiaSharp/3.119.0": {
+        "dependencies": {
+          "SkiaSharp.NativeAssets.Win32": "3.119.0",
+          "SkiaSharp.NativeAssets.macOS": "3.119.0"
         },
+        "runtime": {
+          "lib/net8.0/SkiaSharp.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.0.0"
+          }
+        }
+      },
+      "SkiaSharp.HarfBuzz/3.119.0": {
+        "dependencies": {
+          "HarfBuzzSharp": "8.3.1.1",
+          "SkiaSharp": "3.119.0"
+        },
+        "runtime": {
+          "lib/net8.0/SkiaSharp.HarfBuzz.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.0.0"
+          }
+        }
+      },
+      "SkiaSharp.NativeAssets.macOS/3.119.0": {
         "runtimeTargets": {
           "runtimes/osx/native/libSkiaSharp.dylib": {
             "rid": "osx",
             "assetType": "native",
             "fileVersion": "0.0.0.0"
-          },
-          "runtimes/tizen-armel/native/libSkiaSharp.so": {
-            "rid": "tizen-armel",
-            "assetType": "native",
-            "fileVersion": "0.0.0.0"
-          },
-          "runtimes/tizen-x86/native/libSkiaSharp.so": {
-            "rid": "tizen-x86",
+          }
+        }
+      },
+      "SkiaSharp.NativeAssets.Win32/3.119.0": {
+        "runtimeTargets": {
+          "runtimes/win-arm64/native/libSkiaSharp.dll": {
+            "rid": "win-arm64",
             "assetType": "native",
             "fileVersion": "0.0.0.0"
           },
@@ -1368,15 +1551,28 @@
           }
         }
       },
-      "SkiaSharp.HarfBuzz/1.68.3": {
+      "SkiaSharp.Views.Desktop.Common/3.119.0": {
         "dependencies": {
-          "HarfBuzzSharp": "2.6.1.4",
-          "SkiaSharp": "1.68.3"
+          "SkiaSharp": "3.119.0"
         },
         "runtime": {
-          "lib/netstandard2.0/SkiaSharp.HarfBuzz.dll": {
-            "assemblyVersion": "1.68.0.0",
-            "fileVersion": "1.68.3.0"
+          "lib/net8.0/SkiaSharp.Views.Desktop.Common.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.0.0"
+          }
+        }
+      },
+      "SkiaSharp.Views.WPF/3.119.0": {
+        "dependencies": {
+          "OpenTK": "3.3.1",
+          "OpenTK.GLWpfControl": "3.3.0",
+          "SkiaSharp": "3.119.0",
+          "SkiaSharp.Views.Desktop.Common": "3.119.0"
+        },
+        "runtime": {
+          "lib/net462/SkiaSharp.Views.WPF.dll": {
+            "assemblyVersion": "3.119.0.0",
+            "fileVersion": "3.119.0.0"
           }
         }
       },
@@ -1590,17 +1786,6 @@
             "fileVersion": "3.4.2.7"
           }
         }
-      },
-      "XLParser/1.5.2": {
-        "dependencies": {
-          "Irony.NetCore": "1.0.11"
-        },
-        "runtime": {
-          "lib/netstandard1.6/XLParser.dll": {
-            "assemblyVersion": "1.5.2.0",
-            "fileVersion": "1.5.2.0"
-          }
-        }
       }
     }
   },
@@ -1610,12 +1795,19 @@
       "serviceable": false,
       "sha512": ""
     },
-    "ClosedXML/0.102.3": {
+    "ClosedXML/0.105.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4PN5JZsloPGfV2iSa2g62CSETQAtHELECwo9rzMvOAibe1fsPv0CNTOXXji+ihXOyEZBZDLhkE7s1MhHJzMxIA==",
-      "path": "closedxml/0.102.3",
-      "hashPath": "closedxml.0.102.3.nupkg.sha512"
+      "sha512": "sha512-U0hAdnYyPvF7TqHMFloxrS7pmozab79tFFF4c/bgPtqeelUs7ILpUd3r3c7C0a/DXsUZb3k1n4Pf7Q2LMyMQOg==",
+      "path": "closedxml/0.105.0",
+      "hashPath": "closedxml.0.105.0.nupkg.sha512"
+    },
+    "ClosedXML.Parser/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ngTqjYreDYNytG1W5d3ewHsw0ukmmrgV7EKnS4/40rXoYZGt07jrBvo+N+GxT49rcageUMUiprV0jYT4nwVBHQ==",
+      "path": "closedxml.parser/2.0.0",
+      "hashPath": "closedxml.parser.2.0.0.nupkg.sha512"
     },
     "CommonWin32/2.1.0.3": {
       "type": "package",
@@ -1631,12 +1823,19 @@
       "path": "controlzex/7.0.3",
       "hashPath": "controlzex.7.0.3.nupkg.sha512"
     },
-    "DocumentFormat.OpenXml/2.16.0": {
+    "DocumentFormat.OpenXml/3.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-RhpnDgyyx1KjZm98T3w3bSXFHG/7ZNUaVmz4NAUA+jmV3PcVNZeW87Y04CpBNLdDHEMSspirfo0B5kLRaoE97w==",
-      "path": "documentformat.openxml/2.16.0",
-      "hashPath": "documentformat.openxml.2.16.0.nupkg.sha512"
+      "sha512": "sha512-2z9QBzeTLNNKWM9SaOSDMegfQk/7hDuElOsmF77pKZMkFRP/GHA/W/4yOAQD9kn15N/FsFxHn3QVYkatuZghiA==",
+      "path": "documentformat.openxml/3.1.1",
+      "hashPath": "documentformat.openxml.3.1.1.nupkg.sha512"
+    },
+    "DocumentFormat.OpenXml.Framework/3.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6APEp/ElZV58S/4v8mf4Ke3ONEDORs64MqdD64Z7wWpcHANB9oovQsGIwtqjnKihulOj7T0a6IxHIHOfMqKOng==",
+      "path": "documentformat.openxml.framework/3.1.1",
+      "hashPath": "documentformat.openxml.framework.3.1.1.nupkg.sha512"
     },
     "ExcelNumberFormat/1.1.0": {
       "type": "package",
@@ -1652,12 +1851,26 @@
       "path": "fontawesome.wpf/4.7.0.9",
       "hashPath": "fontawesome.wpf.4.7.0.9.nupkg.sha512"
     },
-    "HarfBuzzSharp/2.6.1.4": {
+    "HarfBuzzSharp/8.3.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-7qJsdLtOxDY495v3SV9b8HEyu8/7Sf6OqHjPV5O09qh13r1phDvhj+bOdC+lcvgrF2M/FWq322gOeLgsT9J2cQ==",
-      "path": "harfbuzzsharp/2.6.1.4",
-      "hashPath": "harfbuzzsharp.2.6.1.4.nupkg.sha512"
+      "sha512": "sha512-tLZN66oe/uiRPTZfrCU4i8ScVGwqHNh5MHrXj0yVf4l7Mz0FhTGnQ71RGySROTmdognAs0JtluHkL41pIabWuQ==",
+      "path": "harfbuzzsharp/8.3.1.1",
+      "hashPath": "harfbuzzsharp.8.3.1.1.nupkg.sha512"
+    },
+    "HarfBuzzSharp.NativeAssets.macOS/8.3.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jbtCsgftcaFLCA13tVKo5iWdElJScrulLTKJre36O4YQTIlwDtPPqhRZNk+Y0vv4D1gxbscasGRucUDfS44ofQ==",
+      "path": "harfbuzzsharp.nativeassets.macos/8.3.1.1",
+      "hashPath": "harfbuzzsharp.nativeassets.macos.8.3.1.1.nupkg.sha512"
+    },
+    "HarfBuzzSharp.NativeAssets.Win32/8.3.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UsJtQsfAJoFDZrXc4hCUfRPMqccfKZ0iumJ/upcUjz/cmsTgVFGNEL5yaJWmkqsuFYdMWbj/En5/kS4PFl9hBA==",
+      "path": "harfbuzzsharp.nativeassets.win32/8.3.1.1",
+      "hashPath": "harfbuzzsharp.nativeassets.win32.8.3.1.1.nupkg.sha512"
     },
     "Humanizer.Core/2.14.1": {
       "type": "package",
@@ -1666,19 +1879,40 @@
       "path": "humanizer.core/2.14.1",
       "hashPath": "humanizer.core.2.14.1.nupkg.sha512"
     },
-    "Irony.NetCore/1.0.11": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-/2MCkqdhEjPiSTZKYXg6u9AO9o3m68biqcFHAnM28WdnrcZii2vYbmKPzT5ejByyV72FUlygOtHBMt8SLnUyNw==",
-      "path": "irony.netcore/1.0.11",
-      "hashPath": "irony.netcore.1.0.11.nupkg.sha512"
-    },
     "LiveCharts/0.9.7": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-p4xyBrUaNNfkWZSNsIle0r51cyVyFg0Yi0uBRZM5GQtdFiA/7guZHlffFyNUILIdux10Ch2hUaJpcZENVU9aaQ==",
       "path": "livecharts/0.9.7",
       "hashPath": "livecharts.0.9.7.nupkg.sha512"
+    },
+    "LiveCharts.Wpf/0.9.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lv6YZoK0B4yWykMq5b9grZXtIbTj+OWu4sVN9GDpdgV6zffu64m4d5CW8KSjfSl9rB8VU649x1NZvhoU67hCDg==",
+      "path": "livecharts.wpf/0.9.7",
+      "hashPath": "livecharts.wpf.0.9.7.nupkg.sha512"
+    },
+    "LiveChartsCore/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AHFa0WVdlHPXpo9yki4RnC4Vl2Akn9beEFUjeqRXi/x9KstHtV5WN6fH07DV641n7p1yf9kYPqjR5Yx0YUXWPQ==",
+      "path": "livechartscore/2.0.4",
+      "hashPath": "livechartscore.2.0.4.nupkg.sha512"
+    },
+    "LiveChartsCore.SkiaSharpView/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Smrk6vSIVkKo6M5ZP/brfeqME3eSZhhcRuwLDBA5LdCa3scYWj3XjlhYspyMnI4+0MvoXcXbea/ysAMnatFiKg==",
+      "path": "livechartscore.skiasharpview/2.0.4",
+      "hashPath": "livechartscore.skiasharpview.2.0.4.nupkg.sha512"
+    },
+    "LiveChartsCore.SkiaSharpView.WPF/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-51/PGHnD79lrrWwD1DcZ8rBawUnvQa1Ngn+p7nERJgYnI32GVPZ5GQYe5cyoOSQi1wyr/9dGzPX/BJ8Xx3oJ+g==",
+      "path": "livechartscore.skiasharpview.wpf/2.0.4",
+      "hashPath": "livechartscore.skiasharpview.wpf.2.0.4.nupkg.sha512"
     },
     "MahApps.Metro/2.4.11": {
       "type": "package",
@@ -2121,12 +2355,12 @@
       "path": "microsoft.extensions.dependencyinjection/8.0.0",
       "hashPath": "microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512"
     },
-    "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0": {
+    "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-cjWrLkJXK0rs4zofsK4bSdg+jhDLTaxrkXu4gS6Y7MAlCvRyNNgwY/lJi5RDlQOnSZweHqoyvgvbdvQsRIW+hg==",
-      "path": "microsoft.extensions.dependencyinjection.abstractions/8.0.0",
-      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512"
+      "sha512": "sha512-3iE7UF7MQkCv1cxzCahz+Y/guQbTqieyxyaWKhrRO91itI9cOKO76OHeQDahqG4MmW5umr3CcCvGmK92lWNlbg==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/8.0.2",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512"
     },
     "Microsoft.Extensions.DependencyModel/8.0.0": {
       "type": "package",
@@ -2142,12 +2376,12 @@
       "path": "microsoft.extensions.logging/8.0.0",
       "hashPath": "microsoft.extensions.logging.8.0.0.nupkg.sha512"
     },
-    "Microsoft.Extensions.Logging.Abstractions/8.0.0": {
+    "Microsoft.Extensions.Logging.Abstractions/8.0.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-arDBqTgFCyS0EvRV7O3MZturChstm50OJ0y9bDJvAcmEPJm0FFpFyjU/JLYyStNGGey081DvnQYlncNX5SJJGA==",
-      "path": "microsoft.extensions.logging.abstractions/8.0.0",
-      "hashPath": "microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512"
+      "sha512": "sha512-dL0QGToTxggRLMYY4ZYX5AMwBb+byQBd/5dMiZE07Nv73o6I5Are3C7eQTh7K2+A4ct0PVISSr7TZANbiNb2yQ==",
+      "path": "microsoft.extensions.logging.abstractions/8.0.3",
+      "hashPath": "microsoft.extensions.logging.abstractions.8.0.3.nupkg.sha512"
     },
     "Microsoft.Extensions.Options/8.0.0": {
       "type": "package",
@@ -2219,33 +2453,47 @@
       "path": "ookii.dialogs.wpf/5.0.1",
       "hashPath": "ookii.dialogs.wpf.5.0.1.nupkg.sha512"
     },
-    "OxyPlot.Core/2.1.2": {
+    "OpenTK/3.3.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-/BuPL1Wa7ZhpKA2DBe72md+S8PgIHF+UP/NsKfO9BiheXnbns1/tqS7s2MWIR1xFy5i+PWVC67KziGPY48mNgA==",
-      "path": "oxyplot.core/2.1.2",
-      "hashPath": "oxyplot.core.2.1.2.nupkg.sha512"
+      "sha512": "sha512-vJ00JIs0EOEhqU3+1w6ocurNUFaewd7YXV8sixI029AQeQaht0QjDGgXm2Fk/y8A5Wtx6UsmrjJDKi4USoVeSg==",
+      "path": "opentk/3.3.1",
+      "hashPath": "opentk.3.3.1.nupkg.sha512"
     },
-    "OxyPlot.SkiaSharp/2.1.2": {
+    "OpenTK.GLWpfControl/3.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-cR2wrcTvsykHNGm5kWxY4X1RsTDL/KZQ5xQU1mP6Fv+lGtcfmMQ2p1Ti+EQ5Lb5BuDWUTNoFhSCvj0/1LnFgxg==",
-      "path": "oxyplot.skiasharp/2.1.2",
-      "hashPath": "oxyplot.skiasharp.2.1.2.nupkg.sha512"
+      "sha512": "sha512-viHlwA0RIYLA1EyoA+gOkfqpA9xMZV6HigVYhaHaEsYb3jk518RdCKEdFggu/P4oYUNYZmmHaUYDC9pwarkXjA==",
+      "path": "opentk.glwpfcontrol/3.3.0",
+      "hashPath": "opentk.glwpfcontrol.3.3.0.nupkg.sha512"
     },
-    "OxyPlot.Wpf/2.1.2": {
+    "OxyPlot.Core/2.2.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-udX9T1YC5BnnTZkVSNgJqvzXLaBcZDYG32YHWlDELk1UDWQeJi0Z2jBLoIiv4hcW16N4ptYO5cGC3e8m5/z0hw==",
-      "path": "oxyplot.wpf/2.1.2",
-      "hashPath": "oxyplot.wpf.2.1.2.nupkg.sha512"
+      "sha512": "sha512-QhXNdXR5FPpro/VoLx3BOp6AhQo7YrbfmWEZ9cgY+pnYM7RYORZjnu+aDMA8ka9A1r8hLkX//NbCPZNUv+l8qA==",
+      "path": "oxyplot.core/2.2.0",
+      "hashPath": "oxyplot.core.2.2.0.nupkg.sha512"
     },
-    "OxyPlot.Wpf.Shared/2.1.2": {
+    "OxyPlot.SkiaSharp/2.2.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-6Cj7UET7AS5gVf77+avKG+PzaKQhTdqRYbyBTCPWW9JEbAsojpNdLICjVXO+5o/HP+DjshZJ6oCFw8eyRnHtCA==",
-      "path": "oxyplot.wpf.shared/2.1.2",
-      "hashPath": "oxyplot.wpf.shared.2.1.2.nupkg.sha512"
+      "sha512": "sha512-0+t9fNJK/pTPZdjUjFOeiE22s7KoVwDw4apCP7HVpGDVyUQ2FNIMxCQpJaN6qX/HK+n8xTnFv0DdG1g5MMcDLQ==",
+      "path": "oxyplot.skiasharp/2.2.0",
+      "hashPath": "oxyplot.skiasharp.2.2.0.nupkg.sha512"
+    },
+    "OxyPlot.Wpf/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-69KzgsMWpJSZmeXZt07FwfV7B1D4CM1nl0MWMj4wjrCsb3USBMo32up1+fQIjxp5tHCPdGwX9VWhSxW8nsY7pQ==",
+      "path": "oxyplot.wpf/2.2.0",
+      "hashPath": "oxyplot.wpf.2.2.0.nupkg.sha512"
+    },
+    "OxyPlot.Wpf.Shared/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-JoOD/feTOlKFmgXqeTNrl4Ze0i0L6WizPapNw9pXwot+cnI0qhFgYv3tFjlSdu51hZw0EgmcgeRXMtm5bkueYA==",
+      "path": "oxyplot.wpf.shared/2.2.0",
+      "hashPath": "oxyplot.wpf.shared.2.2.0.nupkg.sha512"
     },
     "Panuon.WPF/1.1.3": {
       "type": "package",
@@ -2261,6 +2509,27 @@
       "path": "panuon.wpf.ui/1.3.0.2",
       "hashPath": "panuon.wpf.ui.1.3.0.2.nupkg.sha512"
     },
+    "PDFsharp/6.2.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-GhTr9F1uOYXHCIEOB5PXIgqn5a8WLsJL2m0eewTA0IvY1j6N4HGXHKKmEyB90/N6vrjmYamf41V9zbmdW2HY3g==",
+      "path": "pdfsharp/6.2.4",
+      "hashPath": "pdfsharp.6.2.4.nupkg.sha512"
+    },
+    "PDFsharp-WPF/6.2.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wD2byoUNGc/IDmSSSPLGGCNMXf4TybnjKlcYa40nuWIYLVA4DSvnCvWr7HbsBEwFvAYRP6DceQ4MN35COD/pdw==",
+      "path": "pdfsharp-wpf/6.2.4",
+      "hashPath": "pdfsharp-wpf.6.2.4.nupkg.sha512"
+    },
+    "RBush.Signed/4.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-aP5KQxL5RnFNGW1f0euYVBfCatkLw5iEzMRJcXKq8LWWP4Cp3+qoSq1tDDL2vvJ2rM0ychmVMa2VaEKLS6uX4w==",
+      "path": "rbush.signed/4.0.0",
+      "hashPath": "rbush.signed.4.0.0.nupkg.sha512"
+    },
     "SixLabors.Fonts/1.0.0": {
       "type": "package",
       "serviceable": true,
@@ -2268,19 +2537,47 @@
       "path": "sixlabors.fonts/1.0.0",
       "hashPath": "sixlabors.fonts.1.0.0.nupkg.sha512"
     },
-    "SkiaSharp/1.68.3": {
+    "SkiaSharp/3.119.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-78YvBVmR52PoLPf0aTZMWOZVrMxlXlgPOgU3vGk7W50wrYHi3lSd886ccYd7MkJmm+oInP8shf0vSy1321ERCQ==",
-      "path": "skiasharp/1.68.3",
-      "hashPath": "skiasharp.1.68.3.nupkg.sha512"
+      "sha512": "sha512-gR9yVoOta2Mc1Rxt15LD65AckfHMfwjIs/3kkD59C9bT2nYYISsE6uz3t4aMPNHA6CgsIL0Ssn+jE5OVilZ1yw==",
+      "path": "skiasharp/3.119.0",
+      "hashPath": "skiasharp.3.119.0.nupkg.sha512"
     },
-    "SkiaSharp.HarfBuzz/1.68.3": {
+    "SkiaSharp.HarfBuzz/3.119.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Zo/bZafpVYyUbl2W+Fvgqkt9tfLnUPsfm8NI2ULhxVgD56NI0PoOKrZL72fh9ORa2QG9agaRmW160308naGuuA==",
-      "path": "skiasharp.harfbuzz/1.68.3",
-      "hashPath": "skiasharp.harfbuzz.1.68.3.nupkg.sha512"
+      "sha512": "sha512-5ocGzl+RYEZFnUPUbModshnEFvKTku4hTtOBsLvy5MCK2KAHjq5Nw2+uAVUx79Rjh0z8fTojT6ZVav8MJgW0ug==",
+      "path": "skiasharp.harfbuzz/3.119.0",
+      "hashPath": "skiasharp.harfbuzz.3.119.0.nupkg.sha512"
+    },
+    "SkiaSharp.NativeAssets.macOS/3.119.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YE1vNn0Nyw2PWtv7hw1PYkKJO0itFiQp9vSqGppZUKzQJqwp28a2jgdCMPfYtOiR8KCnDgZqQoynqJRRaE2ZVg==",
+      "path": "skiasharp.nativeassets.macos/3.119.0",
+      "hashPath": "skiasharp.nativeassets.macos.3.119.0.nupkg.sha512"
+    },
+    "SkiaSharp.NativeAssets.Win32/3.119.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IwC9yx36lOdXVT2DjgmWHl1qkVspfj8ctd4+li8CNnvqdfaTolXCOh6TLznURcPAvzatx9K/tLOB7zT6T8EA9w==",
+      "path": "skiasharp.nativeassets.win32/3.119.0",
+      "hashPath": "skiasharp.nativeassets.win32.3.119.0.nupkg.sha512"
+    },
+    "SkiaSharp.Views.Desktop.Common/3.119.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KST7Q3n+X5BhDj1aKTJXk9tITWWznveka9n+pBjOtE53Omc+wlZR0s4fQStybWCVVaWG9eaeOMaw93J3zEMklA==",
+      "path": "skiasharp.views.desktop.common/3.119.0",
+      "hashPath": "skiasharp.views.desktop.common.3.119.0.nupkg.sha512"
+    },
+    "SkiaSharp.Views.WPF/3.119.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1Dmj9RlBW/gvmJwSUER+N9plA/kcWOgiL5g3q2DB+USVQav8rQtfOZIQZ1Wt/AqhwepOacv1M6pZKDWtXmwDAg==",
+      "path": "skiasharp.views.wpf/3.119.0",
+      "hashPath": "skiasharp.views.wpf.3.119.0.nupkg.sha512"
     },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.6": {
       "type": "package",
@@ -2365,13 +2662,6 @@
       "sha512": "sha512-sE+BGb+mFJB96wQ8wArVBqoUQkj1/vOV7GdFb1iWD5Y8iwHSIX83aEcda5gxzCOH2h5ifD9ul7JEm7mvohbgMg==",
       "path": "wpf.ui/3.4.2.7",
       "hashPath": "wpf.ui.3.4.2.7.nupkg.sha512"
-    },
-    "XLParser/1.5.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-8tnUCmMbn6c/HGuHFyq1sulHym8YReTKDNXFFQk0U8nldNx6RGrwRvLh0+aQjEc7YoC3Q1ztH1npLt7dClKqjw==",
-      "path": "xlparser/1.5.2",
-      "hashPath": "xlparser.1.5.2.nupkg.sha512"
     }
   }
 }

@@ -2,21 +2,35 @@
   "version": 3,
   "targets": {
     "net10.0-windows7.0": {
-      "ClosedXML/0.102.3": {
+      "ClosedXML/0.105.0": {
         "type": "package",
         "dependencies": {
-          "DocumentFormat.OpenXml": "[2.16.0, 3.0.0)",
+          "ClosedXML.Parser": "2.0.0",
+          "DocumentFormat.OpenXml": "[3.1.1, 4.0.0)",
           "ExcelNumberFormat": "1.1.0",
-          "SixLabors.Fonts": "1.0.0",
-          "XLParser": "1.5.2"
+          "RBush.Signed": "4.0.0",
+          "SixLabors.Fonts": "1.0.0"
         },
         "compile": {
           "lib/netstandard2.1/ClosedXML.dll": {
-            "related": ".xml"
+            "related": ".pdb;.xml"
           }
         },
         "runtime": {
           "lib/netstandard2.1/ClosedXML.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "ClosedXML.Parser/2.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/ClosedXML.Parser.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/ClosedXML.Parser.dll": {
             "related": ".xml"
           }
         }
@@ -53,15 +67,31 @@
           "Microsoft.WindowsDesktop.App.WPF"
         ]
       },
-      "DocumentFormat.OpenXml/2.16.0": {
+      "DocumentFormat.OpenXml/3.1.1": {
         "type": "package",
+        "dependencies": {
+          "DocumentFormat.OpenXml.Framework": "3.1.1"
+        },
         "compile": {
-          "lib/netstandard2.0/DocumentFormat.OpenXml.dll": {
+          "lib/net8.0/DocumentFormat.OpenXml.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/DocumentFormat.OpenXml.dll": {
+          "lib/net8.0/DocumentFormat.OpenXml.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "DocumentFormat.OpenXml.Framework/3.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/DocumentFormat.OpenXml.Framework.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/DocumentFormat.OpenXml.Framework.dll": {
             "related": ".xml"
           }
         }
@@ -92,30 +122,50 @@
           }
         }
       },
-      "HarfBuzzSharp/2.6.1.4": {
+      "HarfBuzzSharp/8.3.1.1": {
         "type": "package",
+        "dependencies": {
+          "HarfBuzzSharp.NativeAssets.Win32": "8.3.1.1",
+          "HarfBuzzSharp.NativeAssets.macOS": "8.3.1.1"
+        },
         "compile": {
-          "lib/netstandard2.0/HarfBuzzSharp.dll": {
-            "related": ".xml"
+          "lib/net8.0/HarfBuzzSharp.dll": {
+            "related": ".pdb"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/HarfBuzzSharp.dll": {
-            "related": ".xml"
+          "lib/net8.0/HarfBuzzSharp.dll": {
+            "related": ".pdb"
           }
+        }
+      },
+      "HarfBuzzSharp.NativeAssets.macOS/8.3.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/_._": {}
+        },
+        "runtime": {
+          "lib/net8.0/_._": {}
         },
         "runtimeTargets": {
           "runtimes/osx/native/libHarfBuzzSharp.dylib": {
             "assetType": "native",
             "rid": "osx"
-          },
-          "runtimes/tizen-armel/native/libHarfBuzzSharp.so": {
+          }
+        }
+      },
+      "HarfBuzzSharp.NativeAssets.Win32/8.3.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/_._": {}
+        },
+        "runtime": {
+          "lib/net8.0/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win-arm64/native/libHarfBuzzSharp.dll": {
             "assetType": "native",
-            "rid": "tizen-armel"
-          },
-          "runtimes/tizen-x86/native/libHarfBuzzSharp.so": {
-            "assetType": "native",
-            "rid": "tizen-x86"
+            "rid": "win-arm64"
           },
           "runtimes/win-x64/native/libHarfBuzzSharp.dll": {
             "assetType": "native",
@@ -140,18 +190,6 @@
           }
         }
       },
-      "Irony.NetCore/1.0.11": {
-        "type": "package",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1"
-        },
-        "compile": {
-          "lib/netstandard1.6/Irony.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.6/Irony.dll": {}
-        }
-      },
       "LiveCharts/0.9.7": {
         "type": "package",
         "compile": {
@@ -164,6 +202,74 @@
             "related": ".pdb;.xml"
           }
         }
+      },
+      "LiveCharts.Wpf/0.9.7": {
+        "type": "package",
+        "dependencies": {
+          "LiveCharts": "0.9.7"
+        },
+        "compile": {
+          "lib/net45/LiveCharts.Wpf.dll": {
+            "related": ".pdb;.XML"
+          }
+        },
+        "runtime": {
+          "lib/net45/LiveCharts.Wpf.dll": {
+            "related": ".pdb;.XML"
+          }
+        }
+      },
+      "LiveChartsCore/2.0.4": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0-windows7.0/LiveChartsCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/LiveChartsCore.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "LiveChartsCore.SkiaSharpView/2.0.4": {
+        "type": "package",
+        "dependencies": {
+          "LiveChartsCore": "2.0.4",
+          "SkiaSharp": "2.88.9",
+          "SkiaSharp.HarfBuzz": "2.88.9"
+        },
+        "compile": {
+          "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "LiveChartsCore.SkiaSharpView.WPF/2.0.4": {
+        "type": "package",
+        "dependencies": {
+          "LiveChartsCore.SkiaSharpView": "2.0.4",
+          "SkiaSharp.HarfBuzz": "3.119.0",
+          "SkiaSharp.Views.WPF": "3.119.0"
+        },
+        "compile": {
+          "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.WPF.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.WPF.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WPF"
+        ]
       },
       "MahApps.Metro/2.4.11": {
         "type": "package",
@@ -1941,15 +2047,6 @@
           }
         }
       },
-      "Microsoft.NETCore.Platforms/1.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard1.0/_._": {}
-        },
-        "runtime": {
-          "lib/netstandard1.0/_._": {}
-        }
-      },
       "Microsoft.Xaml.Behaviors.Wpf/1.1.135": {
         "type": "package",
         "compile": {
@@ -2002,12 +2099,6 @@
           "lib/netstandard2.0/Mono.TextTemplating.dll": {}
         }
       },
-      "NETStandard.Library/1.6.1": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "1.1.0"
-        }
-      },
       "Newtonsoft.Json/13.0.1": {
         "type": "package",
         "compile": {
@@ -2052,50 +2143,79 @@
           "Microsoft.WindowsDesktop.App"
         ]
       },
-      "OxyPlot.Core/2.1.2": {
+      "OpenTK/3.3.1": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/OxyPlot.dll": {
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net20/OpenTK.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "OpenTK.GLWpfControl/3.3.0": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK": "[3.3.0, 3.4.0)"
+        },
+        "compile": {
+          "lib/net452/GLWpfControl.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net452/GLWpfControl.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "OxyPlot.Core/2.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/OxyPlot.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/OxyPlot.dll": {
+          "lib/net8.0/OxyPlot.dll": {
             "related": ".xml"
           }
         }
       },
-      "OxyPlot.SkiaSharp/2.1.2": {
+      "OxyPlot.SkiaSharp/2.2.0": {
         "type": "package",
         "dependencies": {
-          "OxyPlot.Core": "2.1.2",
-          "SkiaSharp": "1.68.3",
-          "SkiaSharp.HarfBuzz": "1.68.3"
+          "OxyPlot.Core": "2.2.0",
+          "SkiaSharp": "2.88.8",
+          "SkiaSharp.HarfBuzz": "2.88.8"
         },
         "compile": {
-          "lib/netstandard2.0/OxyPlot.SkiaSharp.dll": {
+          "lib/net8.0/OxyPlot.SkiaSharp.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/OxyPlot.SkiaSharp.dll": {
+          "lib/net8.0/OxyPlot.SkiaSharp.dll": {
             "related": ".xml"
           }
         }
       },
-      "OxyPlot.Wpf/2.1.2": {
+      "OxyPlot.Wpf/2.2.0": {
         "type": "package",
         "dependencies": {
-          "OxyPlot.Core": "2.1.2",
-          "OxyPlot.Wpf.Shared": "2.1.2"
+          "OxyPlot.Core": "2.2.0",
+          "OxyPlot.Wpf.Shared": "2.2.0"
         },
         "compile": {
-          "lib/netcoreapp3.1/OxyPlot.Wpf.dll": {
+          "lib/net8.0-windows7.0/OxyPlot.Wpf.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netcoreapp3.1/OxyPlot.Wpf.dll": {
+          "lib/net8.0-windows7.0/OxyPlot.Wpf.dll": {
             "related": ".xml"
           }
         },
@@ -2103,18 +2223,18 @@
           "Microsoft.WindowsDesktop.App.WPF"
         ]
       },
-      "OxyPlot.Wpf.Shared/2.1.2": {
+      "OxyPlot.Wpf.Shared/2.2.0": {
         "type": "package",
         "dependencies": {
-          "OxyPlot.Core": "2.1.2"
+          "OxyPlot.Core": "2.2.0"
         },
         "compile": {
-          "lib/netcoreapp3.1/OxyPlot.Wpf.Shared.dll": {
+          "lib/net8.0-windows7.0/OxyPlot.Wpf.Shared.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netcoreapp3.1/OxyPlot.Wpf.Shared.dll": {
+          "lib/net8.0-windows7.0/OxyPlot.Wpf.Shared.dll": {
             "related": ".xml"
           }
         },
@@ -2282,6 +2402,19 @@
           "Microsoft.WindowsDesktop.App.WPF"
         ]
       },
+      "RBush.Signed/4.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/RBush.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/RBush.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "ShowMeTheXAML.MSBuild/2.1.1": {
         "type": "package",
         "compile": {
@@ -2307,30 +2440,65 @@
           }
         }
       },
-      "SkiaSharp/1.68.3": {
+      "SkiaSharp/3.119.0": {
         "type": "package",
+        "dependencies": {
+          "SkiaSharp.NativeAssets.Win32": "3.119.0",
+          "SkiaSharp.NativeAssets.macOS": "3.119.0"
+        },
         "compile": {
-          "lib/netstandard2.0/SkiaSharp.dll": {
-            "related": ".xml"
+          "ref/net8.0/SkiaSharp.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/SkiaSharp.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "SkiaSharp.HarfBuzz/3.119.0": {
+        "type": "package",
+        "dependencies": {
+          "HarfBuzzSharp": "8.3.1.1",
+          "SkiaSharp": "3.119.0"
+        },
+        "compile": {
+          "lib/net8.0/SkiaSharp.HarfBuzz.dll": {
+            "related": ".pdb"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/SkiaSharp.dll": {
-            "related": ".xml"
+          "lib/net8.0/SkiaSharp.HarfBuzz.dll": {
+            "related": ".pdb"
           }
+        }
+      },
+      "SkiaSharp.NativeAssets.macOS/3.119.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/_._": {}
+        },
+        "runtime": {
+          "lib/net8.0/_._": {}
         },
         "runtimeTargets": {
           "runtimes/osx/native/libSkiaSharp.dylib": {
             "assetType": "native",
             "rid": "osx"
-          },
-          "runtimes/tizen-armel/native/libSkiaSharp.so": {
+          }
+        }
+      },
+      "SkiaSharp.NativeAssets.Win32/3.119.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/_._": {}
+        },
+        "runtime": {
+          "lib/net8.0/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win-arm64/native/libSkiaSharp.dll": {
             "assetType": "native",
-            "rid": "tizen-armel"
-          },
-          "runtimes/tizen-x86/native/libSkiaSharp.so": {
-            "assetType": "native",
-            "rid": "tizen-x86"
+            "rid": "win-arm64"
           },
           "runtimes/win-x64/native/libSkiaSharp.dll": {
             "assetType": "native",
@@ -2342,20 +2510,38 @@
           }
         }
       },
-      "SkiaSharp.HarfBuzz/1.68.3": {
+      "SkiaSharp.Views.Desktop.Common/3.119.0": {
         "type": "package",
         "dependencies": {
-          "HarfBuzzSharp": "2.6.1.4",
-          "SkiaSharp": "1.68.3"
+          "SkiaSharp": "3.119.0"
         },
         "compile": {
-          "lib/netstandard2.0/SkiaSharp.HarfBuzz.dll": {
-            "related": ".xml"
+          "lib/net8.0/SkiaSharp.Views.Desktop.Common.dll": {
+            "related": ".pdb"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/SkiaSharp.HarfBuzz.dll": {
-            "related": ".xml"
+          "lib/net8.0/SkiaSharp.Views.Desktop.Common.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "SkiaSharp.Views.WPF/3.119.0": {
+        "type": "package",
+        "dependencies": {
+          "OpenTK": "3.3.1",
+          "OpenTK.GLWpfControl": "3.3.0",
+          "SkiaSharp": "3.119.0",
+          "SkiaSharp.Views.Desktop.Common": "3.119.0"
+        },
+        "compile": {
+          "lib/net462/SkiaSharp.Views.WPF.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net462/SkiaSharp.Views.WPF.dll": {
+            "related": ".pdb"
           }
         }
       },
@@ -2619,37 +2805,42 @@
             "related": ".md"
           }
         }
-      },
-      "XLParser/1.5.2": {
-        "type": "package",
-        "dependencies": {
-          "Irony.NetCore": "1.0.11",
-          "NETStandard.Library": "1.6.1"
-        },
-        "compile": {
-          "lib/netstandard1.6/XLParser.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.6/XLParser.dll": {}
-        }
       }
     }
   },
   "libraries": {
-    "ClosedXML/0.102.3": {
-      "sha512": "4PN5JZsloPGfV2iSa2g62CSETQAtHELECwo9rzMvOAibe1fsPv0CNTOXXji+ihXOyEZBZDLhkE7s1MhHJzMxIA==",
+    "ClosedXML/0.105.0": {
+      "sha512": "U0hAdnYyPvF7TqHMFloxrS7pmozab79tFFF4c/bgPtqeelUs7ILpUd3r3c7C0a/DXsUZb3k1n4Pf7Q2LMyMQOg==",
       "type": "package",
-      "path": "closedxml/0.102.3",
+      "path": "closedxml/0.105.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "closedxml.0.102.3.nupkg.sha512",
+        "closedxml.0.105.0.nupkg.sha512",
         "closedxml.nuspec",
         "lib/netstandard2.0/ClosedXML.dll",
+        "lib/netstandard2.0/ClosedXML.pdb",
         "lib/netstandard2.0/ClosedXML.xml",
         "lib/netstandard2.1/ClosedXML.dll",
+        "lib/netstandard2.1/ClosedXML.pdb",
         "lib/netstandard2.1/ClosedXML.xml",
         "nuget-logo.png"
+      ]
+    },
+    "ClosedXML.Parser/2.0.0": {
+      "sha512": "ngTqjYreDYNytG1W5d3ewHsw0ukmmrgV7EKnS4/40rXoYZGt07jrBvo+N+GxT49rcageUMUiprV0jYT4nwVBHQ==",
+      "type": "package",
+      "path": "closedxml.parser/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "closedxml.parser.2.0.0.nupkg.sha512",
+        "closedxml.parser.nuspec",
+        "lib/netstandard2.0/ClosedXML.Parser.dll",
+        "lib/netstandard2.0/ClosedXML.Parser.xml",
+        "lib/netstandard2.1/ClosedXML.Parser.dll",
+        "lib/netstandard2.1/ClosedXML.Parser.xml"
       ]
     },
     "CommonWin32/2.1.0.3": {
@@ -2684,14 +2875,15 @@
         "logo-mini.png"
       ]
     },
-    "DocumentFormat.OpenXml/2.16.0": {
-      "sha512": "RhpnDgyyx1KjZm98T3w3bSXFHG/7ZNUaVmz4NAUA+jmV3PcVNZeW87Y04CpBNLdDHEMSspirfo0B5kLRaoE97w==",
+    "DocumentFormat.OpenXml/3.1.1": {
+      "sha512": "2z9QBzeTLNNKWM9SaOSDMegfQk/7hDuElOsmF77pKZMkFRP/GHA/W/4yOAQD9kn15N/FsFxHn3QVYkatuZghiA==",
       "type": "package",
-      "path": "documentformat.openxml/2.16.0",
+      "path": "documentformat.openxml/3.1.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "documentformat.openxml.2.16.0.nupkg.sha512",
+        "README.md",
+        "documentformat.openxml.3.1.1.nupkg.sha512",
         "documentformat.openxml.nuspec",
         "icon.png",
         "lib/net35/DocumentFormat.OpenXml.dll",
@@ -2700,10 +2892,35 @@
         "lib/net40/DocumentFormat.OpenXml.xml",
         "lib/net46/DocumentFormat.OpenXml.dll",
         "lib/net46/DocumentFormat.OpenXml.xml",
-        "lib/netstandard1.3/DocumentFormat.OpenXml.dll",
-        "lib/netstandard1.3/DocumentFormat.OpenXml.xml",
+        "lib/net8.0/DocumentFormat.OpenXml.dll",
+        "lib/net8.0/DocumentFormat.OpenXml.xml",
         "lib/netstandard2.0/DocumentFormat.OpenXml.dll",
         "lib/netstandard2.0/DocumentFormat.OpenXml.xml"
+      ]
+    },
+    "DocumentFormat.OpenXml.Framework/3.1.1": {
+      "sha512": "6APEp/ElZV58S/4v8mf4Ke3ONEDORs64MqdD64Z7wWpcHANB9oovQsGIwtqjnKihulOj7T0a6IxHIHOfMqKOng==",
+      "type": "package",
+      "path": "documentformat.openxml.framework/3.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "documentformat.openxml.framework.3.1.1.nupkg.sha512",
+        "documentformat.openxml.framework.nuspec",
+        "icon.png",
+        "lib/net35/DocumentFormat.OpenXml.Framework.dll",
+        "lib/net35/DocumentFormat.OpenXml.Framework.xml",
+        "lib/net40/DocumentFormat.OpenXml.Framework.dll",
+        "lib/net40/DocumentFormat.OpenXml.Framework.xml",
+        "lib/net46/DocumentFormat.OpenXml.Framework.dll",
+        "lib/net46/DocumentFormat.OpenXml.Framework.xml",
+        "lib/net6.0/DocumentFormat.OpenXml.Framework.dll",
+        "lib/net6.0/DocumentFormat.OpenXml.Framework.xml",
+        "lib/net8.0/DocumentFormat.OpenXml.Framework.dll",
+        "lib/net8.0/DocumentFormat.OpenXml.Framework.xml",
+        "lib/netstandard2.0/DocumentFormat.OpenXml.Framework.dll",
+        "lib/netstandard2.0/DocumentFormat.OpenXml.Framework.xml"
       ]
     },
     "ExcelNumberFormat/1.1.0": {
@@ -2747,54 +2964,93 @@
         "tools/install.ps1"
       ]
     },
-    "HarfBuzzSharp/2.6.1.4": {
-      "sha512": "7qJsdLtOxDY495v3SV9b8HEyu8/7Sf6OqHjPV5O09qh13r1phDvhj+bOdC+lcvgrF2M/FWq322gOeLgsT9J2cQ==",
+    "HarfBuzzSharp/8.3.1.1": {
+      "sha512": "tLZN66oe/uiRPTZfrCU4i8ScVGwqHNh5MHrXj0yVf4l7Mz0FhTGnQ71RGySROTmdognAs0JtluHkL41pIabWuQ==",
       "type": "package",
-      "path": "harfbuzzsharp/2.6.1.4",
+      "path": "harfbuzzsharp/8.3.1.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.txt",
-        "THIRD-PARTY-NOTICES.txt",
-        "build/net45/HarfBuzzSharp.targets",
-        "build/net462/HarfBuzzSharp.targets",
-        "build/tizen40/HarfBuzzSharp.targets",
-        "buildTransitive/net45/HarfBuzzSharp.targets",
-        "buildTransitive/net462/HarfBuzzSharp.targets",
-        "harfbuzzsharp.2.6.1.4.nupkg.sha512",
+        "README.md",
+        "harfbuzzsharp.8.3.1.1.nupkg.sha512",
         "harfbuzzsharp.nuspec",
-        "lib/monoandroid1.0/HarfBuzzSharp.dll",
-        "lib/monoandroid1.0/HarfBuzzSharp.xml",
-        "lib/net45/HarfBuzzSharp.dll",
-        "lib/net45/HarfBuzzSharp.xml",
+        "icon.png",
         "lib/net462/HarfBuzzSharp.dll",
-        "lib/net462/HarfBuzzSharp.xml",
-        "lib/netstandard1.3/HarfBuzzSharp.dll",
-        "lib/netstandard1.3/HarfBuzzSharp.xml",
+        "lib/net462/HarfBuzzSharp.pdb",
+        "lib/net6.0/HarfBuzzSharp.dll",
+        "lib/net6.0/HarfBuzzSharp.pdb",
+        "lib/net8.0-android34.0/HarfBuzzSharp.dll",
+        "lib/net8.0-android34.0/HarfBuzzSharp.pdb",
+        "lib/net8.0-android34.0/HarfBuzzSharp.xml",
+        "lib/net8.0-ios17.0/HarfBuzzSharp.dll",
+        "lib/net8.0-ios17.0/HarfBuzzSharp.pdb",
+        "lib/net8.0-maccatalyst17.0/HarfBuzzSharp.dll",
+        "lib/net8.0-maccatalyst17.0/HarfBuzzSharp.pdb",
+        "lib/net8.0-macos14.0/HarfBuzzSharp.dll",
+        "lib/net8.0-macos14.0/HarfBuzzSharp.pdb",
+        "lib/net8.0-tizen7.0/HarfBuzzSharp.dll",
+        "lib/net8.0-tizen7.0/HarfBuzzSharp.pdb",
+        "lib/net8.0-tvos17.0/HarfBuzzSharp.dll",
+        "lib/net8.0-tvos17.0/HarfBuzzSharp.pdb",
+        "lib/net8.0-windows10.0.19041/HarfBuzzSharp.dll",
+        "lib/net8.0-windows10.0.19041/HarfBuzzSharp.pdb",
+        "lib/net8.0/HarfBuzzSharp.dll",
+        "lib/net8.0/HarfBuzzSharp.pdb",
         "lib/netstandard2.0/HarfBuzzSharp.dll",
-        "lib/netstandard2.0/HarfBuzzSharp.xml",
-        "lib/tizen40/HarfBuzzSharp.dll",
-        "lib/tizen40/HarfBuzzSharp.xml",
-        "lib/uap10.0.10240/HarfBuzzSharp.dll",
-        "lib/uap10.0.10240/HarfBuzzSharp.xml",
-        "lib/uap10.0.16299/HarfBuzzSharp.dll",
-        "lib/uap10.0.16299/HarfBuzzSharp.xml",
-        "lib/xamarinios1.0/HarfBuzzSharp.dll",
-        "lib/xamarinios1.0/HarfBuzzSharp.xml",
-        "lib/xamarinmac2.0/HarfBuzzSharp.dll",
-        "lib/xamarinmac2.0/HarfBuzzSharp.xml",
-        "lib/xamarintvos1.0/HarfBuzzSharp.dll",
-        "lib/xamarintvos1.0/HarfBuzzSharp.xml",
-        "lib/xamarinwatchos1.0/HarfBuzzSharp.dll",
-        "lib/xamarinwatchos1.0/HarfBuzzSharp.xml",
-        "runtimes/osx/native/libHarfBuzzSharp.dylib",
-        "runtimes/tizen-armel/native/libHarfBuzzSharp.so",
-        "runtimes/tizen-x86/native/libHarfBuzzSharp.so",
+        "lib/netstandard2.0/HarfBuzzSharp.pdb",
+        "lib/netstandard2.1/HarfBuzzSharp.dll",
+        "lib/netstandard2.1/HarfBuzzSharp.pdb"
+      ]
+    },
+    "HarfBuzzSharp.NativeAssets.macOS/8.3.1.1": {
+      "sha512": "jbtCsgftcaFLCA13tVKo5iWdElJScrulLTKJre36O4YQTIlwDtPPqhRZNk+Y0vv4D1gxbscasGRucUDfS44ofQ==",
+      "type": "package",
+      "path": "harfbuzzsharp.nativeassets.macos/8.3.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "THIRD-PARTY-NOTICES.txt",
+        "buildTransitive/net462/HarfBuzzSharp.NativeAssets.macOS.targets",
+        "buildTransitive/net8.0-macos14.0/HarfBuzzSharp.NativeAssets.macOS.targets",
+        "harfbuzzsharp.nativeassets.macos.8.3.1.1.nupkg.sha512",
+        "harfbuzzsharp.nativeassets.macos.nuspec",
+        "icon.png",
+        "lib/net462/_._",
+        "lib/net6.0/_._",
+        "lib/net8.0-macos14.0/_._",
+        "lib/net8.0/_._",
+        "lib/netstandard2.0/_._",
+        "lib/netstandard2.1/_._",
+        "runtimes/osx/native/libHarfBuzzSharp.dylib"
+      ]
+    },
+    "HarfBuzzSharp.NativeAssets.Win32/8.3.1.1": {
+      "sha512": "UsJtQsfAJoFDZrXc4hCUfRPMqccfKZ0iumJ/upcUjz/cmsTgVFGNEL5yaJWmkqsuFYdMWbj/En5/kS4PFl9hBA==",
+      "type": "package",
+      "path": "harfbuzzsharp.nativeassets.win32/8.3.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "THIRD-PARTY-NOTICES.txt",
+        "buildTransitive/net462/HarfBuzzSharp.NativeAssets.Win32.targets",
+        "harfbuzzsharp.nativeassets.win32.8.3.1.1.nupkg.sha512",
+        "harfbuzzsharp.nativeassets.win32.nuspec",
+        "icon.png",
+        "lib/net462/_._",
+        "lib/net6.0-windows10.0.19041/_._",
+        "lib/net6.0/_._",
+        "lib/net8.0-windows10.0.19041/_._",
+        "lib/net8.0/_._",
+        "lib/netstandard2.0/_._",
+        "lib/netstandard2.1/_._",
+        "runtimes/win-arm64/native/libHarfBuzzSharp.dll",
         "runtimes/win-x64/native/libHarfBuzzSharp.dll",
-        "runtimes/win-x86/native/libHarfBuzzSharp.dll",
-        "runtimes/win10-arm/nativeassets/uap10.0/libHarfBuzzSharp.dll",
-        "runtimes/win10-x64/nativeassets/uap10.0/libHarfBuzzSharp.dll",
-        "runtimes/win10-x86/nativeassets/uap10.0/libHarfBuzzSharp.dll"
+        "runtimes/win-x86/native/libHarfBuzzSharp.dll"
       ]
     },
     "Humanizer.Core/2.14.1": {
@@ -2813,20 +3069,6 @@
         "lib/netstandard2.0/Humanizer.dll",
         "lib/netstandard2.0/Humanizer.xml",
         "logo.png"
-      ]
-    },
-    "Irony.NetCore/1.0.11": {
-      "sha512": "/2MCkqdhEjPiSTZKYXg6u9AO9o3m68biqcFHAnM28WdnrcZii2vYbmKPzT5ejByyV72FUlygOtHBMt8SLnUyNw==",
-      "type": "package",
-      "path": "irony.netcore/1.0.11",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "irony.netcore.1.0.11.nupkg.sha512",
-        "irony.netcore.nuspec",
-        "lib/net452/Irony.dll",
-        "lib/net461/Irony.dll",
-        "lib/netstandard1.6/Irony.dll"
       ]
     },
     "LiveCharts/0.9.7": {
@@ -2848,6 +3090,86 @@
         "livecharts.0.9.7.nupkg.sha512",
         "livecharts.nuspec",
         "readme.txt"
+      ]
+    },
+    "LiveCharts.Wpf/0.9.7": {
+      "sha512": "lv6YZoK0B4yWykMq5b9grZXtIbTj+OWu4sVN9GDpdgV6zffu64m4d5CW8KSjfSl9rB8VU649x1NZvhoU67hCDg==",
+      "type": "package",
+      "path": "livecharts.wpf/0.9.7",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/LiveCharts.Wpf.XML",
+        "lib/net40/LiveCharts.Wpf.dll",
+        "lib/net40/LiveCharts.Wpf.pdb",
+        "lib/net45/LiveCharts.Wpf.XML",
+        "lib/net45/LiveCharts.Wpf.dll",
+        "lib/net45/LiveCharts.Wpf.pdb",
+        "livecharts.wpf.0.9.7.nupkg.sha512",
+        "livecharts.wpf.nuspec",
+        "tools/install.ps1"
+      ]
+    },
+    "LiveChartsCore/2.0.4": {
+      "sha512": "AHFa0WVdlHPXpo9yki4RnC4Vl2Akn9beEFUjeqRXi/x9KstHtV5WN6fH07DV641n7p1yf9kYPqjR5Yx0YUXWPQ==",
+      "type": "package",
+      "path": "livechartscore/2.0.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net462/LiveChartsCore.dll",
+        "lib/net462/LiveChartsCore.xml",
+        "lib/net8.0-windows7.0/LiveChartsCore.dll",
+        "lib/net8.0-windows7.0/LiveChartsCore.xml",
+        "lib/net8.0/LiveChartsCore.dll",
+        "lib/net8.0/LiveChartsCore.xml",
+        "lib/netstandard2.0/LiveChartsCore.dll",
+        "lib/netstandard2.0/LiveChartsCore.xml",
+        "livechartscore.2.0.4.nupkg.sha512",
+        "livechartscore.nuspec"
+      ]
+    },
+    "LiveChartsCore.SkiaSharpView/2.0.4": {
+      "sha512": "Smrk6vSIVkKo6M5ZP/brfeqME3eSZhhcRuwLDBA5LdCa3scYWj3XjlhYspyMnI4+0MvoXcXbea/ysAMnatFiKg==",
+      "type": "package",
+      "path": "livechartscore.skiasharpview/2.0.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net462/LiveChartsCore.SkiaSharpView.dll",
+        "lib/net462/LiveChartsCore.SkiaSharpView.xml",
+        "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.dll",
+        "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.xml",
+        "lib/net8.0/LiveChartsCore.SkiaSharpView.dll",
+        "lib/net8.0/LiveChartsCore.SkiaSharpView.xml",
+        "lib/netstandard2.0/LiveChartsCore.SkiaSharpView.dll",
+        "lib/netstandard2.0/LiveChartsCore.SkiaSharpView.xml",
+        "livechartscore.skiasharpview.2.0.4.nupkg.sha512",
+        "livechartscore.skiasharpview.nuspec"
+      ]
+    },
+    "LiveChartsCore.SkiaSharpView.WPF/2.0.4": {
+      "sha512": "51/PGHnD79lrrWwD1DcZ8rBawUnvQa1Ngn+p7nERJgYnI32GVPZ5GQYe5cyoOSQi1wyr/9dGzPX/BJ8Xx3oJ+g==",
+      "type": "package",
+      "path": "livechartscore.skiasharpview.wpf/2.0.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net462/LiveChartsCore.SkiaSharpView.WPF.dll",
+        "lib/net462/LiveChartsCore.SkiaSharpView.WPF.xml",
+        "lib/net8.0-windows10.0.19041/LiveChartsCore.SkiaSharpView.WPF.dll",
+        "lib/net8.0-windows10.0.19041/LiveChartsCore.SkiaSharpView.WPF.xml",
+        "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.WPF.dll",
+        "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.WPF.xml",
+        "livechartscore.skiasharpview.wpf.2.0.4.nupkg.sha512",
+        "livechartscore.skiasharpview.wpf.nuspec"
       ]
     },
     "MahApps.Metro/2.4.11": {
@@ -4929,21 +5251,6 @@
         "mlnetlogo.png"
       ]
     },
-    "Microsoft.NETCore.Platforms/1.1.0": {
-      "sha512": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
-      "type": "package",
-      "path": "microsoft.netcore.platforms/1.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
-        "lib/netstandard1.0/_._",
-        "microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-        "microsoft.netcore.platforms.nuspec",
-        "runtime.json"
-      ]
-    },
     "Microsoft.Xaml.Behaviors.Wpf/1.1.135": {
       "sha512": "r8qBEXmQfORso2+MVHnt8PSH4761zJ0SIxgQTSEDVLU97EN2FZdG6/ZCYUPhQy+OrPKgnpYBCAs3PS6Bs7wRsg==",
       "type": "package",
@@ -4994,19 +5301,6 @@
         "lib/netstandard2.0/Mono.TextTemplating.dll",
         "mono.texttemplating.2.2.1.nupkg.sha512",
         "mono.texttemplating.nuspec"
-      ]
-    },
-    "NETStandard.Library/1.6.1": {
-      "sha512": "WcSp3+vP+yHNgS8EV5J7pZ9IRpeDuARBPN28by8zqff1wJQXm26PVU8L3/fYLBJVU7BtDyqNVWq2KlCVvSSR4A==",
-      "type": "package",
-      "path": "netstandard.library/1.6.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
-        "netstandard.library.1.6.1.nupkg.sha512",
-        "netstandard.library.nuspec"
       ]
     },
     "Newtonsoft.Json/13.0.1": {
@@ -5074,79 +5368,113 @@
         "ookii.dialogs.wpf.nuspec"
       ]
     },
-    "OxyPlot.Core/2.1.2": {
-      "sha512": "/BuPL1Wa7ZhpKA2DBe72md+S8PgIHF+UP/NsKfO9BiheXnbns1/tqS7s2MWIR1xFy5i+PWVC67KziGPY48mNgA==",
+    "OpenTK/3.3.1": {
+      "sha512": "vJ00JIs0EOEhqU3+1w6ocurNUFaewd7YXV8sixI029AQeQaht0QjDGgXm2Fk/y8A5Wtx6UsmrjJDKi4USoVeSg==",
       "type": "package",
-      "path": "oxyplot.core/2.1.2",
+      "path": "opentk/3.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/OpenTK.dll.config",
+        "lib/net20/OpenTK.dll",
+        "lib/net20/OpenTK.pdb",
+        "lib/net20/OpenTK.xml",
+        "opentk.3.3.1.nupkg.sha512",
+        "opentk.nuspec"
+      ]
+    },
+    "OpenTK.GLWpfControl/3.3.0": {
+      "sha512": "viHlwA0RIYLA1EyoA+gOkfqpA9xMZV6HigVYhaHaEsYb3jk518RdCKEdFggu/P4oYUNYZmmHaUYDC9pwarkXjA==",
+      "type": "package",
+      "path": "opentk.glwpfcontrol/3.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/GLWpfControl.dll",
+        "lib/net452/GLWpfControl.pdb",
+        "opentk.glwpfcontrol.3.3.0.nupkg.sha512",
+        "opentk.glwpfcontrol.nuspec"
+      ]
+    },
+    "OxyPlot.Core/2.2.0": {
+      "sha512": "QhXNdXR5FPpro/VoLx3BOp6AhQo7YrbfmWEZ9cgY+pnYM7RYORZjnu+aDMA8ka9A1r8hLkX//NbCPZNUv+l8qA==",
+      "type": "package",
+      "path": "oxyplot.core/2.2.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "OxyPlot_128.png",
-        "lib/net40/OxyPlot.dll",
-        "lib/net40/OxyPlot.xml",
-        "lib/net45/OxyPlot.dll",
-        "lib/net45/OxyPlot.xml",
-        "lib/netstandard1.0/OxyPlot.dll",
-        "lib/netstandard1.0/OxyPlot.xml",
+        "README.md",
+        "lib/net462/OxyPlot.dll",
+        "lib/net462/OxyPlot.xml",
+        "lib/net6.0/OxyPlot.dll",
+        "lib/net6.0/OxyPlot.xml",
+        "lib/net8.0/OxyPlot.dll",
+        "lib/net8.0/OxyPlot.xml",
         "lib/netstandard2.0/OxyPlot.dll",
         "lib/netstandard2.0/OxyPlot.xml",
-        "oxyplot.core.2.1.2.nupkg.sha512",
+        "oxyplot.core.2.2.0.nupkg.sha512",
         "oxyplot.core.nuspec"
       ]
     },
-    "OxyPlot.SkiaSharp/2.1.2": {
-      "sha512": "cR2wrcTvsykHNGm5kWxY4X1RsTDL/KZQ5xQU1mP6Fv+lGtcfmMQ2p1Ti+EQ5Lb5BuDWUTNoFhSCvj0/1LnFgxg==",
+    "OxyPlot.SkiaSharp/2.2.0": {
+      "sha512": "0+t9fNJK/pTPZdjUjFOeiE22s7KoVwDw4apCP7HVpGDVyUQ2FNIMxCQpJaN6qX/HK+n8xTnFv0DdG1g5MMcDLQ==",
       "type": "package",
-      "path": "oxyplot.skiasharp/2.1.2",
+      "path": "oxyplot.skiasharp/2.2.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "OxyPlot_128.png",
-        "lib/net45/OxyPlot.SkiaSharp.dll",
-        "lib/net45/OxyPlot.SkiaSharp.xml",
-        "lib/netstandard1.3/OxyPlot.SkiaSharp.dll",
-        "lib/netstandard1.3/OxyPlot.SkiaSharp.xml",
+        "README.md",
+        "lib/net462/OxyPlot.SkiaSharp.dll",
+        "lib/net462/OxyPlot.SkiaSharp.xml",
+        "lib/net6.0/OxyPlot.SkiaSharp.dll",
+        "lib/net6.0/OxyPlot.SkiaSharp.xml",
+        "lib/net8.0/OxyPlot.SkiaSharp.dll",
+        "lib/net8.0/OxyPlot.SkiaSharp.xml",
         "lib/netstandard2.0/OxyPlot.SkiaSharp.dll",
         "lib/netstandard2.0/OxyPlot.SkiaSharp.xml",
-        "oxyplot.skiasharp.2.1.2.nupkg.sha512",
+        "oxyplot.skiasharp.2.2.0.nupkg.sha512",
         "oxyplot.skiasharp.nuspec"
       ]
     },
-    "OxyPlot.Wpf/2.1.2": {
-      "sha512": "udX9T1YC5BnnTZkVSNgJqvzXLaBcZDYG32YHWlDELk1UDWQeJi0Z2jBLoIiv4hcW16N4ptYO5cGC3e8m5/z0hw==",
+    "OxyPlot.Wpf/2.2.0": {
+      "sha512": "69KzgsMWpJSZmeXZt07FwfV7B1D4CM1nl0MWMj4wjrCsb3USBMo32up1+fQIjxp5tHCPdGwX9VWhSxW8nsY7pQ==",
       "type": "package",
-      "path": "oxyplot.wpf/2.1.2",
+      "path": "oxyplot.wpf/2.2.0",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "OxyPlot_128.png",
-        "lib/net40/OxyPlot.Wpf.dll",
-        "lib/net40/OxyPlot.Wpf.xml",
-        "lib/net45/OxyPlot.Wpf.dll",
-        "lib/net45/OxyPlot.Wpf.xml",
-        "lib/netcoreapp3.1/OxyPlot.Wpf.dll",
-        "lib/netcoreapp3.1/OxyPlot.Wpf.xml",
-        "oxyplot.wpf.2.1.2.nupkg.sha512",
+        "README.md",
+        "lib/net462/OxyPlot.Wpf.dll",
+        "lib/net462/OxyPlot.Wpf.xml",
+        "lib/net6.0-windows7.0/OxyPlot.Wpf.dll",
+        "lib/net6.0-windows7.0/OxyPlot.Wpf.xml",
+        "lib/net8.0-windows7.0/OxyPlot.Wpf.dll",
+        "lib/net8.0-windows7.0/OxyPlot.Wpf.xml",
+        "oxyplot.wpf.2.2.0.nupkg.sha512",
         "oxyplot.wpf.nuspec",
         "tools/VisualStudioToolsManifest.xml"
       ]
     },
-    "OxyPlot.Wpf.Shared/2.1.2": {
-      "sha512": "6Cj7UET7AS5gVf77+avKG+PzaKQhTdqRYbyBTCPWW9JEbAsojpNdLICjVXO+5o/HP+DjshZJ6oCFw8eyRnHtCA==",
+    "OxyPlot.Wpf.Shared/2.2.0": {
+      "sha512": "JoOD/feTOlKFmgXqeTNrl4Ze0i0L6WizPapNw9pXwot+cnI0qhFgYv3tFjlSdu51hZw0EgmcgeRXMtm5bkueYA==",
       "type": "package",
-      "path": "oxyplot.wpf.shared/2.1.2",
+      "path": "oxyplot.wpf.shared/2.2.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "OxyPlot_128.png",
-        "lib/net40/OxyPlot.Wpf.Shared.dll",
-        "lib/net40/OxyPlot.Wpf.Shared.xml",
-        "lib/net45/OxyPlot.Wpf.Shared.dll",
-        "lib/net45/OxyPlot.Wpf.Shared.xml",
-        "lib/netcoreapp3.1/OxyPlot.Wpf.Shared.dll",
-        "lib/netcoreapp3.1/OxyPlot.Wpf.Shared.xml",
-        "oxyplot.wpf.shared.2.1.2.nupkg.sha512",
+        "README.md",
+        "lib/net462/OxyPlot.Wpf.Shared.dll",
+        "lib/net462/OxyPlot.Wpf.Shared.xml",
+        "lib/net6.0-windows7.0/OxyPlot.Wpf.Shared.dll",
+        "lib/net6.0-windows7.0/OxyPlot.Wpf.Shared.xml",
+        "lib/net8.0-windows7.0/OxyPlot.Wpf.Shared.dll",
+        "lib/net8.0-windows7.0/OxyPlot.Wpf.Shared.xml",
+        "oxyplot.wpf.shared.2.2.0.nupkg.sha512",
         "oxyplot.wpf.shared.nuspec"
       ]
     },
@@ -5444,6 +5772,24 @@
         "pdfsharp-wpf.nuspec"
       ]
     },
+    "RBush.Signed/4.0.0": {
+      "sha512": "aP5KQxL5RnFNGW1f0euYVBfCatkLw5iEzMRJcXKq8LWWP4Cp3+qoSq1tDDL2vvJ2rM0ychmVMa2VaEKLS6uX4w==",
+      "type": "package",
+      "path": "rbush.signed/4.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net47/RBush.dll",
+        "lib/net47/RBush.xml",
+        "lib/net8.0/RBush.dll",
+        "lib/net8.0/RBush.xml",
+        "lib/netstandard2.0/RBush.dll",
+        "lib/netstandard2.0/RBush.xml",
+        "rbush.signed.4.0.0.nupkg.sha512",
+        "rbush.signed.nuspec",
+        "readme.md"
+      ]
+    },
     "ShowMeTheXAML.MSBuild/2.1.1": {
       "sha512": "2alICGYDLTojTX9BgzD7G6ofQzHQ5YyQ3ezW5Qb7cF6QcjvX53WXMudiXUmS+QgNO+5BhWfOF5LRNX7dyckbIA==",
       "type": "package",
@@ -5485,79 +5831,180 @@
         "sixlabors.fonts.nuspec"
       ]
     },
-    "SkiaSharp/1.68.3": {
-      "sha512": "78YvBVmR52PoLPf0aTZMWOZVrMxlXlgPOgU3vGk7W50wrYHi3lSd886ccYd7MkJmm+oInP8shf0vSy1321ERCQ==",
+    "SkiaSharp/3.119.0": {
+      "sha512": "gR9yVoOta2Mc1Rxt15LD65AckfHMfwjIs/3kkD59C9bT2nYYISsE6uz3t4aMPNHA6CgsIL0Ssn+jE5OVilZ1yw==",
       "type": "package",
-      "path": "skiasharp/1.68.3",
+      "path": "skiasharp/3.119.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.txt",
-        "THIRD-PARTY-NOTICES.txt",
-        "build/net45/SkiaSharp.targets",
-        "build/net462/SkiaSharp.targets",
-        "build/tizen40/SkiaSharp.targets",
-        "buildTransitive/net45/SkiaSharp.targets",
-        "buildTransitive/net462/SkiaSharp.targets",
-        "lib/monoandroid1.0/SkiaSharp.dll",
-        "lib/monoandroid1.0/SkiaSharp.xml",
-        "lib/net45/SkiaSharp.dll",
-        "lib/net45/SkiaSharp.xml",
+        "README.md",
+        "icon.png",
+        "interactive-extensions/dotnet/SkiaSharp.DotNet.Interactive.dll",
         "lib/net462/SkiaSharp.dll",
-        "lib/net462/SkiaSharp.xml",
-        "lib/netstandard1.3/SkiaSharp.dll",
-        "lib/netstandard1.3/SkiaSharp.xml",
+        "lib/net462/SkiaSharp.pdb",
+        "lib/net6.0/SkiaSharp.dll",
+        "lib/net6.0/SkiaSharp.pdb",
+        "lib/net8.0-android34.0/SkiaSharp.dll",
+        "lib/net8.0-android34.0/SkiaSharp.pdb",
+        "lib/net8.0-android34.0/SkiaSharp.xml",
+        "lib/net8.0-ios17.0/SkiaSharp.dll",
+        "lib/net8.0-ios17.0/SkiaSharp.pdb",
+        "lib/net8.0-maccatalyst17.0/SkiaSharp.dll",
+        "lib/net8.0-maccatalyst17.0/SkiaSharp.pdb",
+        "lib/net8.0-macos14.0/SkiaSharp.dll",
+        "lib/net8.0-macos14.0/SkiaSharp.pdb",
+        "lib/net8.0-tizen7.0/SkiaSharp.dll",
+        "lib/net8.0-tizen7.0/SkiaSharp.pdb",
+        "lib/net8.0-tvos17.0/SkiaSharp.dll",
+        "lib/net8.0-tvos17.0/SkiaSharp.pdb",
+        "lib/net8.0-windows10.0.19041/SkiaSharp.dll",
+        "lib/net8.0-windows10.0.19041/SkiaSharp.pdb",
+        "lib/net8.0/SkiaSharp.dll",
+        "lib/net8.0/SkiaSharp.pdb",
         "lib/netstandard2.0/SkiaSharp.dll",
-        "lib/netstandard2.0/SkiaSharp.xml",
-        "lib/tizen40/SkiaSharp.dll",
-        "lib/tizen40/SkiaSharp.xml",
-        "lib/uap10.0.10240/SkiaSharp.dll",
-        "lib/uap10.0.10240/SkiaSharp.xml",
-        "lib/uap10.0.16299/SkiaSharp.dll",
-        "lib/uap10.0.16299/SkiaSharp.xml",
-        "lib/xamarinios1.0/SkiaSharp.dll",
-        "lib/xamarinios1.0/SkiaSharp.xml",
-        "lib/xamarinmac2.0/SkiaSharp.dll",
-        "lib/xamarinmac2.0/SkiaSharp.xml",
-        "lib/xamarintvos1.0/SkiaSharp.dll",
-        "lib/xamarintvos1.0/SkiaSharp.xml",
-        "lib/xamarinwatchos1.0/SkiaSharp.dll",
-        "lib/xamarinwatchos1.0/SkiaSharp.xml",
-        "runtimes/osx/native/libSkiaSharp.dylib",
-        "runtimes/tizen-armel/native/libSkiaSharp.so",
-        "runtimes/tizen-x86/native/libSkiaSharp.so",
-        "runtimes/win-x64/native/libSkiaSharp.dll",
-        "runtimes/win-x86/native/libSkiaSharp.dll",
-        "runtimes/win10-arm/nativeassets/uap10.0/libEGL.dll",
-        "runtimes/win10-arm/nativeassets/uap10.0/libGLESv2.dll",
-        "runtimes/win10-arm/nativeassets/uap10.0/libSkiaSharp.dll",
-        "runtimes/win10-x64/nativeassets/uap10.0/libEGL.dll",
-        "runtimes/win10-x64/nativeassets/uap10.0/libGLESv2.dll",
-        "runtimes/win10-x64/nativeassets/uap10.0/libSkiaSharp.dll",
-        "runtimes/win10-x86/nativeassets/uap10.0/libEGL.dll",
-        "runtimes/win10-x86/nativeassets/uap10.0/libGLESv2.dll",
-        "runtimes/win10-x86/nativeassets/uap10.0/libSkiaSharp.dll",
-        "skiasharp.1.68.3.nupkg.sha512",
-        "skiasharp.nuspec",
-        "xamarin.interactive/SkiaSharp.Workbooks.dll"
+        "lib/netstandard2.0/SkiaSharp.pdb",
+        "lib/netstandard2.1/SkiaSharp.dll",
+        "lib/netstandard2.1/SkiaSharp.pdb",
+        "ref/net462/SkiaSharp.dll",
+        "ref/net6.0/SkiaSharp.dll",
+        "ref/net8.0-android34.0/SkiaSharp.dll",
+        "ref/net8.0-ios17.0/SkiaSharp.dll",
+        "ref/net8.0-maccatalyst17.0/SkiaSharp.dll",
+        "ref/net8.0-macos14.0/SkiaSharp.dll",
+        "ref/net8.0-tizen7.0/SkiaSharp.dll",
+        "ref/net8.0-tvos17.0/SkiaSharp.dll",
+        "ref/net8.0-windows10.0.19041/SkiaSharp.dll",
+        "ref/net8.0/SkiaSharp.dll",
+        "ref/netstandard2.0/SkiaSharp.dll",
+        "ref/netstandard2.1/SkiaSharp.dll",
+        "skiasharp.3.119.0.nupkg.sha512",
+        "skiasharp.nuspec"
       ]
     },
-    "SkiaSharp.HarfBuzz/1.68.3": {
-      "sha512": "Zo/bZafpVYyUbl2W+Fvgqkt9tfLnUPsfm8NI2ULhxVgD56NI0PoOKrZL72fh9ORa2QG9agaRmW160308naGuuA==",
+    "SkiaSharp.HarfBuzz/3.119.0": {
+      "sha512": "5ocGzl+RYEZFnUPUbModshnEFvKTku4hTtOBsLvy5MCK2KAHjq5Nw2+uAVUx79Rjh0z8fTojT6ZVav8MJgW0ug==",
       "type": "package",
-      "path": "skiasharp.harfbuzz/1.68.3",
+      "path": "skiasharp.harfbuzz/3.119.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.txt",
-        "lib/net45/SkiaSharp.HarfBuzz.dll",
-        "lib/net45/SkiaSharp.HarfBuzz.xml",
-        "lib/netstandard1.3/SkiaSharp.HarfBuzz.dll",
-        "lib/netstandard1.3/SkiaSharp.HarfBuzz.xml",
+        "README.md",
+        "icon.png",
+        "lib/net462/SkiaSharp.HarfBuzz.dll",
+        "lib/net462/SkiaSharp.HarfBuzz.pdb",
+        "lib/net6.0/SkiaSharp.HarfBuzz.dll",
+        "lib/net6.0/SkiaSharp.HarfBuzz.pdb",
+        "lib/net8.0/SkiaSharp.HarfBuzz.dll",
+        "lib/net8.0/SkiaSharp.HarfBuzz.pdb",
         "lib/netstandard2.0/SkiaSharp.HarfBuzz.dll",
-        "lib/netstandard2.0/SkiaSharp.HarfBuzz.xml",
-        "skiasharp.harfbuzz.1.68.3.nupkg.sha512",
+        "lib/netstandard2.0/SkiaSharp.HarfBuzz.pdb",
+        "lib/netstandard2.1/SkiaSharp.HarfBuzz.dll",
+        "lib/netstandard2.1/SkiaSharp.HarfBuzz.pdb",
+        "skiasharp.harfbuzz.3.119.0.nupkg.sha512",
         "skiasharp.harfbuzz.nuspec"
+      ]
+    },
+    "SkiaSharp.NativeAssets.macOS/3.119.0": {
+      "sha512": "YE1vNn0Nyw2PWtv7hw1PYkKJO0itFiQp9vSqGppZUKzQJqwp28a2jgdCMPfYtOiR8KCnDgZqQoynqJRRaE2ZVg==",
+      "type": "package",
+      "path": "skiasharp.nativeassets.macos/3.119.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "THIRD-PARTY-NOTICES.txt",
+        "build/net462/SkiaSharp.NativeAssets.macOS.targets",
+        "buildTransitive/net462/SkiaSharp.NativeAssets.macOS.targets",
+        "buildTransitive/net8.0-macos14.0/SkiaSharp.NativeAssets.macOS.targets",
+        "icon.png",
+        "lib/net462/_._",
+        "lib/net6.0/_._",
+        "lib/net8.0-macos14.0/_._",
+        "lib/net8.0/_._",
+        "lib/netstandard2.0/_._",
+        "lib/netstandard2.1/_._",
+        "runtimes/osx/native/libSkiaSharp.dylib",
+        "skiasharp.nativeassets.macos.3.119.0.nupkg.sha512",
+        "skiasharp.nativeassets.macos.nuspec"
+      ]
+    },
+    "SkiaSharp.NativeAssets.Win32/3.119.0": {
+      "sha512": "IwC9yx36lOdXVT2DjgmWHl1qkVspfj8ctd4+li8CNnvqdfaTolXCOh6TLznURcPAvzatx9K/tLOB7zT6T8EA9w==",
+      "type": "package",
+      "path": "skiasharp.nativeassets.win32/3.119.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "THIRD-PARTY-NOTICES.txt",
+        "build/net462/SkiaSharp.NativeAssets.Win32.targets",
+        "buildTransitive/net462/SkiaSharp.NativeAssets.Win32.targets",
+        "icon.png",
+        "lib/net462/_._",
+        "lib/net6.0-windows10.0.19041/_._",
+        "lib/net6.0/_._",
+        "lib/net8.0-windows10.0.19041/_._",
+        "lib/net8.0/_._",
+        "lib/netstandard2.0/_._",
+        "lib/netstandard2.1/_._",
+        "runtimes/win-arm64/native/libSkiaSharp.dll",
+        "runtimes/win-x64/native/libSkiaSharp.dll",
+        "runtimes/win-x86/native/libSkiaSharp.dll",
+        "skiasharp.nativeassets.win32.3.119.0.nupkg.sha512",
+        "skiasharp.nativeassets.win32.nuspec"
+      ]
+    },
+    "SkiaSharp.Views.Desktop.Common/3.119.0": {
+      "sha512": "KST7Q3n+X5BhDj1aKTJXk9tITWWznveka9n+pBjOtE53Omc+wlZR0s4fQStybWCVVaWG9eaeOMaw93J3zEMklA==",
+      "type": "package",
+      "path": "skiasharp.views.desktop.common/3.119.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "icon.png",
+        "lib/net462/SkiaSharp.Views.Desktop.Common.dll",
+        "lib/net462/SkiaSharp.Views.Desktop.Common.pdb",
+        "lib/net6.0-windows10.0.19041/SkiaSharp.Views.Desktop.Common.dll",
+        "lib/net6.0-windows10.0.19041/SkiaSharp.Views.Desktop.Common.pdb",
+        "lib/net6.0/SkiaSharp.Views.Desktop.Common.dll",
+        "lib/net6.0/SkiaSharp.Views.Desktop.Common.pdb",
+        "lib/net8.0-windows10.0.19041/SkiaSharp.Views.Desktop.Common.dll",
+        "lib/net8.0-windows10.0.19041/SkiaSharp.Views.Desktop.Common.pdb",
+        "lib/net8.0/SkiaSharp.Views.Desktop.Common.dll",
+        "lib/net8.0/SkiaSharp.Views.Desktop.Common.pdb",
+        "lib/netstandard2.0/SkiaSharp.Views.Desktop.Common.dll",
+        "lib/netstandard2.0/SkiaSharp.Views.Desktop.Common.pdb",
+        "lib/netstandard2.1/SkiaSharp.Views.Desktop.Common.dll",
+        "lib/netstandard2.1/SkiaSharp.Views.Desktop.Common.pdb",
+        "skiasharp.views.desktop.common.3.119.0.nupkg.sha512",
+        "skiasharp.views.desktop.common.nuspec"
+      ]
+    },
+    "SkiaSharp.Views.WPF/3.119.0": {
+      "sha512": "1Dmj9RlBW/gvmJwSUER+N9plA/kcWOgiL5g3q2DB+USVQav8rQtfOZIQZ1Wt/AqhwepOacv1M6pZKDWtXmwDAg==",
+      "type": "package",
+      "path": "skiasharp.views.wpf/3.119.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "icon.png",
+        "lib/net462/SkiaSharp.Views.WPF.dll",
+        "lib/net462/SkiaSharp.Views.WPF.pdb",
+        "lib/net6.0-windows10.0.19041/SkiaSharp.Views.WPF.dll",
+        "lib/net6.0-windows10.0.19041/SkiaSharp.Views.WPF.pdb",
+        "lib/net8.0-windows10.0.19041/SkiaSharp.Views.WPF.dll",
+        "lib/net8.0-windows10.0.19041/SkiaSharp.Views.WPF.pdb",
+        "skiasharp.views.wpf.3.119.0.nupkg.sha512",
+        "skiasharp.views.wpf.nuspec"
       ]
     },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.6": {
@@ -5823,28 +6270,18 @@
         "wpf.ui.3.4.2.7.nupkg.sha512",
         "wpf.ui.nuspec"
       ]
-    },
-    "XLParser/1.5.2": {
-      "sha512": "8tnUCmMbn6c/HGuHFyq1sulHym8YReTKDNXFFQk0U8nldNx6RGrwRvLh0+aQjEc7YoC3Q1ztH1npLt7dClKqjw==",
-      "type": "package",
-      "path": "xlparser/1.5.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net452/XLParser.dll",
-        "lib/net461/XLParser.dll",
-        "lib/netstandard1.6/XLParser.dll",
-        "xlparser.1.5.2.nupkg.sha512",
-        "xlparser.nuspec"
-      ]
     }
   },
   "projectFileDependencyGroups": {
     "net10.0-windows7.0": [
-      "ClosedXML >= 0.102.3",
+      "ClosedXML >= 0.105.0",
       "ControlzEx >= 7.0.3",
       "FontAwesome.WPF >= 4.7.0.9",
       "LiveCharts >= 0.9.7",
+      "LiveCharts.Wpf >= 0.9.7",
+      "LiveChartsCore >= 2.0.4",
+      "LiveChartsCore.SkiaSharpView >= 2.0.4",
+      "LiveChartsCore.SkiaSharpView.WPF >= 2.0.4",
       "MahApps.Metro >= 2.4.11",
       "MahApps.Metro.IconPacks >= 6.2.1",
       "MaterialDesignColors >= 5.3.2",
@@ -5855,8 +6292,9 @@
       "ModernWPF >= 1.4.6",
       "Ookii.Dialogs >= 5.0.1",
       "Ookii.Dialogs.Wpf >= 5.0.1",
-      "OxyPlot.SkiaSharp >= 2.1.2",
-      "OxyPlot.Wpf >= 2.1.2",
+      "OxyPlot.Core >= 2.2.0",
+      "OxyPlot.SkiaSharp >= 2.2.0",
+      "OxyPlot.Wpf >= 2.2.0",
       "PDFsharp >= 6.2.4",
       "PDFsharp-WPF >= 6.2.4",
       "Panuon.WPF.UI >= 1.3.0.2",
@@ -5909,7 +6347,7 @@
         "dependencies": {
           "ClosedXML": {
             "target": "Package",
-            "version": "[0.102.3, )"
+            "version": "[0.105.0, )"
           },
           "ControlzEx": {
             "target": "Package",
@@ -5922,6 +6360,22 @@
           "LiveCharts": {
             "target": "Package",
             "version": "[0.9.7, )"
+          },
+          "LiveCharts.Wpf": {
+            "target": "Package",
+            "version": "[0.9.7, )"
+          },
+          "LiveChartsCore": {
+            "target": "Package",
+            "version": "[2.0.4, )"
+          },
+          "LiveChartsCore.SkiaSharpView": {
+            "target": "Package",
+            "version": "[2.0.4, )"
+          },
+          "LiveChartsCore.SkiaSharpView.WPF": {
+            "target": "Package",
+            "version": "[2.0.4, )"
           },
           "MahApps.Metro": {
             "target": "Package",
@@ -5965,13 +6419,17 @@
             "target": "Package",
             "version": "[5.0.1, )"
           },
+          "OxyPlot.Core": {
+            "target": "Package",
+            "version": "[2.2.0, )"
+          },
           "OxyPlot.SkiaSharp": {
             "target": "Package",
-            "version": "[2.1.2, )"
+            "version": "[2.2.0, )"
           },
           "OxyPlot.Wpf": {
             "target": "Package",
-            "version": "[2.1.2, )"
+            "version": "[2.2.0, )"
           },
           "PDFsharp": {
             "target": "Package",
@@ -6362,8 +6820,48 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
+      "message": "Пакет \"LiveCharts.Wpf 0.9.7\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "libraryId": "LiveCharts.Wpf",
+      "targetGraphs": [
+        "net10.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
       "message": "Пакет \"ModernWPF 1.4.6\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
       "libraryId": "ModernWPF",
+      "targetGraphs": [
+        "net10.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Пакет \"OpenTK 3.3.1\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "libraryId": "OpenTK",
+      "targetGraphs": [
+        "net10.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Пакет \"OpenTK.GLWpfControl 3.3.0\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "libraryId": "OpenTK.GLWpfControl",
+      "targetGraphs": [
+        "net10.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Пакет \"SkiaSharp.Views.WPF 3.119.0\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net10.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "libraryId": "SkiaSharp.Views.WPF",
       "targetGraphs": [
         "net10.0-windows7.0"
       ]

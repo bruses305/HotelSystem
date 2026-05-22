@@ -137,6 +137,15 @@ public static class PermissionInitializer
             ("Удаление ролей", "Право на удаление ролей", PermissionType.Delete)
         ));
         
+        // Дополнительные расходы
+        permissions.AddRange(CreatePermissions(PermissionCategory.Expenses, "Expenses",
+            ("Просмотр расходов", "Право на просмотр списка расходов", PermissionType.View),
+            ("Создание расходов", "Право на создание новых расходов", PermissionType.Create),
+            ("Редактирование расходов", "Право на редактирование расходов", PermissionType.Edit),
+            ("Удаление расходов", "Право на удаление расходов", PermissionType.Delete),
+            ("Оплата расходов", "Право на оплату расходов", PermissionType.Edit)
+        ));
+        
         return permissions;
     }
     

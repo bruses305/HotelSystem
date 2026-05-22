@@ -26,7 +26,8 @@ public enum PermissionCategory
     Reports,         // Отчёты
     Settings,        // Настройки
     Logs,            // Логи
-    RoleManagement   // Управление ролями
+    RoleManagement,  // Управление ролями
+    Expenses         // Дополнительные расходы
 }
 
 /// <summary>

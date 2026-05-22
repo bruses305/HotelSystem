@@ -1,22 +1,29 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using HotelSystem.Views;
 using System.Windows.Controls;
 using System.Windows.Input;
-using HotelSystem.Repositories;
-using HotelSystem.Services;
-using HotelSystem.Models.Entities;
 using HotelSystem.Helpers;
+using HotelSystem.Models.Entities;
+using HotelSystem.Services;
 
 namespace HotelSystem.Views;
 
 public partial class ClientsView : Page
 {
     private readonly IClientService _clientService;
+    private int? _highlightClientId;
+    private List<Client> _allClients = new();
 
-    public ClientsView()
+    public ClientsView() : this(null) { }
+
+    public ClientsView(int? highlightClientId = null)
     {
         InitializeComponent();
         _clientService = ServiceLocator.GetService<IClientService>();
+        _highlightClientId = highlightClientId;
         LoadClientsAsync();
         CheckPermissions();
     }
@@ -33,8 +40,19 @@ public partial class ClientsView : Page
     {
         try
         {
-            var clients = await _clientService.GetAllClientsAsync();
-            ClientsGrid.ItemsSource = clients;
+            _allClients = (await _clientService.GetAllClientsAsync()).ToList();
+            ClientsGrid.ItemsSource = _allClients;
+
+            // Выделение нужного клиента
+            if (_highlightClientId.HasValue)
+            {
+                var index = _allClients.FindIndex(c => c.Id == _highlightClientId.Value);
+                if (index >= 0)
+                {
+                    ClientsGrid.SelectedIndex = index;
+                    ClientsGrid.ScrollIntoView(ClientsGrid.Items[index]);
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -83,8 +101,16 @@ public partial class ClientsView : Page
         dialog.Owner = Window.GetWindow(this);
         if (dialog.ShowDialog() == true)
         {
-            try { await _clientService.CreateClientAsync(dialog.Client); LoadClientsAsync(); MessageBox.Show("Клиент добавлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information); }
-            catch (Exception ex) { MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
+            try
+            {
+                await _clientService.CreateClientAsync(dialog.Client);
+                LoadClientsAsync();
+                MessageBox.Show("Клиент добавлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 
@@ -164,7 +190,7 @@ public partial class ClientsView : Page
         ApplyClientSearch();
     }
 
-    private void SearchTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
         {

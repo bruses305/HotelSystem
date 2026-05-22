@@ -31,6 +31,295 @@ public class ExcelExporter
     }
     
     /// <summary>
+    /// Экспорт с выбором шаблона
+    /// </summary>
+    public async Task ExportWithTemplateAsync(DateTime startDate, DateTime endDate, string filePath, string template, bool compareWithPrevious = false)
+    {
+        var actualEndDate = endDate.Date.AddDays(1).AddSeconds(-1);
+
+        var allBookings = (await _bookingService.GetBookingsByDateRangeAsync(startDate, actualEndDate)).ToList();
+        var allClients = (await _clientService.GetAllClientsAsync()).ToList();
+        var allRooms = (await _roomService.GetAllRoomsAsync()).ToList();
+        var allServices = (await _serviceService.GetAllServicesAsync()).ToList();
+        var transactions = await _financeService.GetTransactionsAsync(startDate, actualEndDate);
+        var transactionsList = transactions.ToList();
+
+        decimal totalIncome = allBookings.Sum(b => b.PaidAmount) +
+                              transactionsList.Where(t => t.Type == TransactionType.Доход && t.Category == TransactionCategory.Дополнительная_услуга).Sum(t => t.Amount);
+        decimal totalExpenses = transactionsList.Where(t => t.Type == TransactionType.Расход).Sum(t => t.Amount);
+        decimal profit = totalIncome - totalExpenses;
+
+        decimal? prevIncome = null, prevExpenses = null, prevProfit = null;
+        if (compareWithPrevious)
+        {
+            var prevStart = startDate.AddDays(-(endDate - startDate).Days - 1);
+            var prevEnd = startDate.AddDays(-1);
+            var prevBookings = (await _bookingService.GetBookingsByDateRangeAsync(prevStart, prevEnd)).ToList();
+            var prevTransactions = await _financeService.GetTransactionsAsync(prevStart, prevEnd);
+            var prevTxList = prevTransactions.ToList();
+            prevIncome = prevBookings.Sum(b => b.PaidAmount) +
+                         prevTxList.Where(t => t.Type == TransactionType.Доход && t.Category == TransactionCategory.Дополнительная_услуга).Sum(t => t.Amount);
+            prevExpenses = prevTxList.Where(t => t.Type == TransactionType.Расход).Sum(t => t.Amount);
+            prevProfit = prevIncome - prevExpenses;
+        }
+
+        using var workbook = new XLWorkbook();
+
+        switch (template)
+        {
+            case "Executive":
+                CreateExecutiveSheet(workbook, startDate, endDate, totalIncome, totalExpenses, profit, allBookings.Count, transactionsList, allRooms, allBookings, prevIncome, prevExpenses, prevProfit);
+                break;
+            case "Financial":
+                CreateFinancialSheet(workbook, startDate, endDate, totalIncome, totalExpenses, profit, allBookings, transactionsList, prevIncome, prevExpenses, prevProfit);
+                break;
+            case "Rooms":
+                CreateRoomsOnlySheet(workbook, allRooms, allBookings, transactionsList, startDate, endDate);
+                break;
+            case "Clients":
+                CreateClientsOnlySheet(workbook, allClients, allBookings, transactionsList, startDate, endDate);
+                break;
+            default: // Full
+                CreateFullReport(workbook, startDate, endDate, totalIncome, totalExpenses, profit, allBookings, allClients, allRooms, allServices, transactionsList);
+                break;
+        }
+
+        workbook.SaveAs(filePath);
+    }
+
+    // ========== Шаблон: Полный отчёт (как раньше) ==========
+    private void CreateFullReport(IXLWorkbook workbook, DateTime startDate, DateTime endDate,
+        decimal totalIncome, decimal totalExpenses, decimal profit,
+        List<Booking> bookings, List<Client> clients, List<Room> rooms, List<Service> services, List<Transaction> transactions)
+    {
+        CreateFinanceSheet(workbook, startDate, endDate, bookings.Count, services.Count, totalIncome, totalExpenses, profit);
+        CreateAllOperationsSheet(workbook, bookings, clients, rooms, services, transactions);
+        CreateIncomeOnlySheet(workbook, bookings, clients, rooms, services, transactions);
+        CreateExpenseOnlySheet(workbook, clients, rooms, transactions);
+        CreateIncomeByTypesSheet(workbook, bookings, services, transactions, totalIncome);
+        CreateExpenseByTypesSheet(workbook, transactions, totalExpenses);
+        CreateIncomeByDaysSheet(workbook, bookings, transactions, totalIncome);
+        CreateIncomeByMonthsSheet(workbook, bookings, transactions, totalIncome);
+        CreateBookingsSheet(workbook, bookings, clients, rooms);
+        CreateRoomsSheet(workbook, bookings, rooms, transactions);
+        CreateServicesSheet(workbook, bookings, clients, services, transactions);
+        CreateServiceProfitSheet(workbook, services, transactions);
+        CreateClientsSheet(workbook, bookings, clients, transactions);
+    }
+
+    // ========== Шаблон: Краткий (директору) ==========
+    private void CreateExecutiveSheet(IXLWorkbook workbook, DateTime startDate, DateTime endDate,
+        decimal totalIncome, decimal totalExpenses, decimal profit, int bookingsCount,
+        List<Transaction> transactions, List<Room> allRooms, List<Booking> allBookings,
+        decimal? prevIncome, decimal? prevExpenses, decimal? prevProfit)
+    {
+        var sheet = workbook.Worksheets.Add("Дашборд");
+
+        sheet.Cell(1, 1).Value = $"Финансовый дашборд за {startDate:dd.MM.yyyy} - {endDate:dd.MM.yyyy}";
+        sheet.Cell(1, 1).Style.Font.Bold = true;
+        sheet.Cell(1, 1).Style.Font.FontSize = 16;
+        sheet.Range(1, 1, 1, 4).Merge();
+
+        int row = 3;
+        AddKpiRow(sheet, row, "Доходы", totalIncome, prevIncome);
+        AddKpiRow(sheet, row + 1, "Расходы", totalExpenses, prevExpenses);
+        AddKpiRow(sheet, row + 2, "Прибыль", profit, prevProfit);
+        AddKpiRow(sheet, row + 3, "Количество бронирований", bookingsCount, null);
+
+        row += 5;
+        sheet.Cell(row, 1).Value = "Топ-5 услуг по доходу";
+        sheet.Cell(row, 1).Style.Font.Bold = true;
+        row++;
+        sheet.Cell(row, 1).Value = "Услуга";
+        sheet.Cell(row, 2).Value = "Сумма";
+        row++;
+
+        var topServices = transactions
+            .Where(t => t.Type == TransactionType.Доход && t.ServiceId.HasValue)
+            .GroupBy(t => t.ServiceId)
+            .Select(g => new { ServiceName = _serviceService.GetServiceByIdAsync(g.Key.Value).Result?.Name ?? "Услуга", Amount = g.Sum(t => t.Amount) })
+            .OrderByDescending(s => s.Amount)
+            .Take(5);
+        foreach (var s in topServices)
+        {
+            sheet.Cell(row, 1).Value = s.ServiceName;
+            sheet.Cell(row, 2).Value = (double)s.Amount;
+            sheet.Cell(row, 2).Style.NumberFormat.Format = "#,##0";
+            row++;
+        }
+
+        int totalRooms = allRooms.Count;
+        int bookedDays = allBookings
+            .SelectMany(b => Enumerable.Range(0, (b.CheckOutDate - b.CheckInDate).Days)
+                .Select(d => b.CheckInDate.AddDays(d)))
+            .Distinct()
+            .Count();
+        int totalDays = (endDate - startDate).Days * totalRooms;
+        double occupancy = totalDays > 0 ? (double)bookedDays / totalDays * 100 : 0;
+        sheet.Cell(row + 2, 1).Value = "Загрузка отеля";
+        sheet.Cell(row + 2, 2).Value = $"{occupancy:F1}%";
+
+        sheet.Columns().AdjustToContents();
+    }
+
+    private void AddKpiRow(IXLWorksheet sheet, int row, string label, decimal value, decimal? previous)
+    {
+        sheet.Cell(row, 1).Value = label;
+        sheet.Cell(row, 1).Style.Font.Bold = true;
+        sheet.Cell(row, 2).Value = (double)value;
+        sheet.Cell(row, 2).Style.NumberFormat.Format = "#,##0";
+        if (previous.HasValue && previous != 0)
+        {
+            double change = (double)((value - previous.Value) / previous.Value * 100);
+            string arrow = change >= 0 ? "▲" : "▼";
+            sheet.Cell(row, 3).Value = $"{arrow} {change:F1}%";
+            sheet.Cell(row, 3).Style.Font.FontColor = change >= 0 ? XLColor.Green : XLColor.Red;
+        }
+    }
+
+    // ========== Шаблон: Финансовый анализ ==========
+    private void CreateFinancialSheet(IXLWorkbook workbook, DateTime startDate, DateTime endDate,
+        decimal totalIncome, decimal totalExpenses, decimal profit,
+        List<Booking> bookings, List<Transaction> transactions,
+        decimal? prevIncome, decimal? prevExpenses, decimal? prevProfit)
+    {
+        var sheet = workbook.Worksheets.Add("Финансовый отчёт");
+
+        sheet.Cell(1, 1).Value = $"Финансовый анализ за {startDate:dd.MM.yyyy} - {endDate:dd.MM.yyyy}";
+        sheet.Cell(1, 1).Style.Font.Bold = true;
+        sheet.Cell(1, 1).Style.Font.FontSize = 14;
+        sheet.Range(1, 1, 1, 4).Merge();
+
+        int row = 3;
+        AddKpiRow(sheet, row, "Общие доходы", totalIncome, prevIncome);
+        AddKpiRow(sheet, row + 1, "Общие расходы", totalExpenses, prevExpenses);
+        AddKpiRow(sheet, row + 2, "Прибыль", profit, prevProfit);
+
+        row += 4;
+        sheet.Cell(row, 1).Value = "Доходы по категориям";
+        sheet.Cell(row, 1).Style.Font.Bold = true;
+        row++;
+
+        var incomeByCat = transactions.Where(t => t.Type == TransactionType.Доход)
+            .GroupBy(t => t.Category)
+            .Select(g => new { Category = g.Key.ToString(), Amount = g.Sum(t => t.Amount) })
+            .OrderByDescending(g => g.Amount);
+        foreach (var cat in incomeByCat)
+        {
+            sheet.Cell(row, 1).Value = cat.Category;
+            sheet.Cell(row, 2).Value = (double)cat.Amount;
+            sheet.Cell(row, 2).Style.NumberFormat.Format = "#,##0";
+            row++;
+        }
+
+        row += 2;
+        sheet.Cell(row, 1).Value = "Расходы по категориям";
+        sheet.Cell(row, 1).Style.Font.Bold = true;
+        row++;
+
+        var expensesByCat = transactions.Where(t => t.Type == TransactionType.Расход)
+            .GroupBy(t => t.Category)
+            .Select(g => new { Category = g.Key.ToString(), Amount = g.Sum(t => t.Amount) })
+            .OrderByDescending(g => g.Amount);
+        foreach (var cat in expensesByCat)
+        {
+            sheet.Cell(row, 1).Value = cat.Category;
+            sheet.Cell(row, 2).Value = (double)cat.Amount;
+            sheet.Cell(row, 2).Style.NumberFormat.Format = "#,##0";
+            row++;
+        }
+
+        sheet.Columns().AdjustToContents();
+    }
+
+    // ========== Шаблон: Анализ номеров ==========
+    private void CreateRoomsOnlySheet(IXLWorkbook workbook, List<Room> rooms, List<Booking> bookings, List<Transaction> transactions, DateTime startDate, DateTime endDate)
+    {
+        var sheet = workbook.Worksheets.Add("Анализ номеров");
+
+        sheet.Cell(1, 1).Value = $"Анализ номеров за {startDate:dd.MM.yyyy} - {endDate:dd.MM.yyyy}";
+        sheet.Cell(1, 1).Style.Font.Bold = true;
+        sheet.Cell(1, 1).Style.Font.FontSize = 14;
+        sheet.Range(1, 1, 1, 6).Merge();
+
+        ExcelStyles.AddHeaderRow(sheet, 3, "Номер", "Тип", "Доход", "Расходы", "Прибыль", "Загрузка (%)");
+
+        int row = 4;
+        int totalDays = (endDate - startDate).Days;
+        foreach (var room in rooms)
+        {
+            var roomBookings = bookings.Where(b => b.RoomId == room.Id && b.Status != BookingStatus.Отменено);
+            var incomeBookings = roomBookings.Sum(b => b.PaidAmount);
+            var roomTx = transactions.Where(t => t.RoomId == room.Id && t.Type == TransactionType.Доход);
+            var incomeServices = roomTx.Sum(t => t.Amount);
+            var expenses = transactions.Where(t => t.RoomId == room.Id && t.Type == TransactionType.Расход).Sum(t => t.Amount);
+            var profit = incomeBookings + incomeServices - expenses;
+
+            // Загрузка номера
+            int bookedDays = roomBookings
+                .SelectMany(b => Enumerable.Range(0, (b.CheckOutDate - b.CheckInDate).Days)
+                    .Select(d => b.CheckInDate.AddDays(d)))
+                .Distinct()
+                .Count();
+            double occupancy = totalDays > 0 ? (double)bookedDays / totalDays * 100 : 0;
+
+            sheet.Cell(row, 1).Value = room.Name;
+            sheet.Cell(row, 2).Value = room.Type.ToString();
+            sheet.Cell(row, 3).Value = (double)(incomeBookings + incomeServices);
+            sheet.Cell(row, 3).Style.NumberFormat.Format = "#,##0";
+            sheet.Cell(row, 4).Value = (double)expenses;
+            sheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0";
+            sheet.Cell(row, 5).Value = (double)profit;
+            sheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
+            sheet.Cell(row, 6).Value = $"{occupancy:F1}%";
+            row++;
+        }
+
+        sheet.Columns().AdjustToContents();
+        sheet.Range(3, 1, row - 1, 6).SetAutoFilter();
+    }
+
+    // ========== Шаблон: Клиентская статистика ==========
+    private void CreateClientsOnlySheet(IXLWorkbook workbook, List<Client> clients, List<Booking> bookings, List<Transaction> transactions, DateTime startDate, DateTime endDate)
+    {
+        var sheet = workbook.Worksheets.Add("Клиентская статистика");
+
+        sheet.Cell(1, 1).Value = $"Клиентская статистика за {startDate:dd.MM.yyyy} - {endDate:dd.MM.yyyy}";
+        sheet.Cell(1, 1).Style.Font.Bold = true;
+        sheet.Cell(1, 1).Style.Font.FontSize = 14;
+        sheet.Range(1, 1, 1, 5).Merge();
+
+        ExcelStyles.AddHeaderRow(sheet, 3, "Клиент", "Бронирований", "Потрачено на номера", "Потрачено на услуги", "Всего потрачено");
+
+        int row = 4;
+        decimal totalSpentOverall = 0;
+        foreach (var client in clients)
+        {
+            var clientBookings = bookings.Where(b => b.ClientId == client.Id);
+            var spentOnRooms = clientBookings.Sum(b => b.PaidAmount);
+            var clientServiceTx = transactions.Where(t => t.BookingId.HasValue && bookings.Any(b => b.Id == t.BookingId && b.ClientId == client.Id));
+            var spentOnServices = clientServiceTx.Sum(t => t.Amount);
+            var totalSpent = spentOnRooms + spentOnServices;
+            if (totalSpent == 0) continue;
+
+            totalSpentOverall += totalSpent;
+            sheet.Cell(row, 1).Value = client.FullName;
+            sheet.Cell(row, 2).Value = clientBookings.Count();
+            sheet.Cell(row, 3).Value = (double)spentOnRooms;
+            sheet.Cell(row, 3).Style.NumberFormat.Format = "#,##0";
+            sheet.Cell(row, 4).Value = (double)spentOnServices;
+            sheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0";
+            sheet.Cell(row, 5).Value = (double)totalSpent;
+            sheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
+            row++;
+        }
+
+        ExcelStyles.AddTotalRow(sheet, row, "ИТОГО:", (double)totalSpentOverall, 5);
+        sheet.Columns().AdjustToContents();
+        sheet.Range(3, 1, row - 1, 5).SetAutoFilter();
+    }
+    
+    /// <summary>
     /// Экспортировать полный финансовый отчёт
     /// </summary>
     public async Task ExportAsync(DateTime startDate, DateTime endDate, string filePath)

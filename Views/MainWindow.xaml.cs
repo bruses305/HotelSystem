@@ -42,6 +42,8 @@ public partial class MainWindow : Window
                     SettingsMenuItem.Visibility = Visibility.Collapsed;
                 if (RolesMenuItem != null && !PermissionChecker.CanView(PermissionCategory.RoleManagement))
                     RolesMenuItem.Visibility = Visibility.Collapsed;
+                if (ExpensesMenuItem != null && !PermissionChecker.CanView(PermissionCategory.Expenses))
+                    ExpensesMenuItem.Visibility = Visibility.Collapsed;
             }
 
             // Подписываемся на событие навигации для анимации
@@ -108,6 +110,19 @@ public partial class MainWindow : Window
         MainFrame.Navigate(new ClientsView());
         PageTitle.Text = "Клиенты";
     }
+    public void NavigateToRooms(int? roomId = null)
+    {
+        var roomsView = new RoomsView(roomId);
+        MainFrame.Navigate(roomsView);
+        PageTitle.Text = "Номера";
+    }
+
+    public void NavigateToClients(int? clientId = null)
+    {
+        var clientsView = new ClientsView(clientId);
+        MainFrame.Navigate(clientsView);
+        PageTitle.Text = "Клиенты";
+    }
 
     private void NavigateToCalendar(object sender, RoutedEventArgs e)
     {
@@ -160,6 +175,17 @@ public partial class MainWindow : Window
     {
         MainFrame.Navigate(new ServicesPaymentView());
         PageTitle.Text = "Оплата услуг";
+    }
+
+    private void NavigateToExpenses(object sender, RoutedEventArgs e)
+    {
+        if (!PermissionChecker.CanView(PermissionCategory.Expenses))
+        {
+            MessageBox.Show("Недостаточно прав для просмотра расходов!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        MainFrame.Navigate(new ExpensesView());
+        PageTitle.Text = "Дополнительные расходы";
     }
 
     private void ShowNotifications_Click(object sender, RoutedEventArgs e)

@@ -2,239 +2,376 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:oxy="http://oxyplot.org/wpf"
-      Background="#ECF0F1"
-      Language="ru-RU">
-    <Grid Margin="20">
+      Background="#F4F7FC"
+      Language="ru-RU"
+      Title="Отчёты">
+
+    <Page.Resources>
+        <Style x:Key="KpiCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="20,16"/>
+            <Setter Property="Margin" Value="0,0,16,0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="12" Opacity="0.1" ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+        </Style>
+
+        <Style x:Key="ChartTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#34495E"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+
+        <Style x:Key="ToggleButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#ECF0F1"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="20"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3498DB"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#7F8C8D"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0,0,0,3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="ContentSite"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              ContentSource="Header"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="BorderBrush" Value="#3498DB"/>
+                                <Setter Property="Foreground" Value="#2C3E50"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F0F3F8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        <!-- Панель управления -->
-        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+
+        <!-- Верхняя панель -->
+        <Border Grid.Row="0" Background="White" CornerRadius="16" Padding="16" Margin="0,0,0,24">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Период:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
-                    <DatePicker x:Name="StartDatePicker" Width="120" Margin="0,0,10,0"/>
-                    <TextBlock Text=" - " VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <DatePicker x:Name="EndDatePicker" Width="120" Margin="0,0,20,0"/>
-                    <Button Content="Сформировать" Click="GenerateReport_Click" Background="#3498DB" Foreground="White" Padding="15,5" BorderThickness="0">
+                    <DatePicker x:Name="StartDatePicker" Width="120" Margin="0,0,8,0" />
+                    <TextBlock Text="—" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <DatePicker x:Name="EndDatePicker" Width="120" Margin="0,0,20,0" />
+                    <Button Content="Сформировать" Click="GenerateReport_Click"
+                            Background="#3498DB" Foreground="White" Padding="16,8" BorderThickness="0" Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
                                     <ContentPresenter/>
                                 </Border>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
                 </StackPanel>
-                
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Шаблон:" VerticalAlignment="Center" Margin="10,0,8,0" FontWeight="SemiBold"/>
+                    <ComboBox x:Name="ReportTemplateComboBox" Width="150" SelectedIndex="0">
+                        <ComboBoxItem Content="Полный отчёт" Tag="Full" IsSelected="True"/>
+                        <ComboBoxItem Content="Краткий (директору)" Tag="Executive"/>
+                        <ComboBoxItem Content="Финансовый анализ" Tag="Financial"/>
+                        <ComboBoxItem Content="Анализ номеров" Tag="Rooms"/>
+                        <ComboBoxItem Content="Клиентская статистика" Tag="Clients"/>
+                    </ComboBox>
+                    <CheckBox x:Name="CompareWithPreviousCheckBox" Content="Сравнить с прошлым периодом" Margin="20,0,20,0" VerticalAlignment="Center"/>
+                </StackPanel>
+
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button x:Name="OpenLastExportBtn" Content="Открыть" Click="OpenLastExport_Click" Background="#95A5A6" Foreground="White" Padding="15,5" Margin="0,0,10,0" BorderThickness="0" IsEnabled="False">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                    <Button x:Name="ExportExcelBtn" Content="Экспорт Excel" Click="ExportExcel_Click" Background="#27AE60" Foreground="White" Padding="15,5" Margin="0,0,10,0" BorderThickness="0">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                    <Button x:Name="ExportChartsBtn" Content="Сохранить графики" Click="ExportCharts_Click" Background="#9B59B6" Foreground="White" Padding="15,5" BorderThickness="0">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+                    <Button x:Name="OpenLastExportBtn" Content="Открыть" Click="OpenLastExport_Click"
+                            Background="#95A5A6" Foreground="White" Padding="12,6" Margin="0,0,8,0"
+                            IsEnabled="False" Style="{StaticResource ToggleButtonStyle}"/>
+                    <Button x:Name="ExportExcelBtn" Content="Excel" Click="ExportExcel_Click"
+                            Background="#27AE60" Foreground="White" Padding="12,6" Margin="0,0,8,0"
+                            Style="{StaticResource ToggleButtonStyle}"/>
+                    <Button x:Name="ExportPdfBtn" Content="PDF" Click="ExportPdf_Click"
+                            Background="#E67E22" Foreground="White" Padding="12,6" Margin="0,0,8,0"
+                            Style="{StaticResource ToggleButtonStyle}"/>
+                    <Button x:Name="ExportChartsBtn" Content="Графики" Click="ExportCharts_Click"
+                            Background="#9B59B6" Foreground="White" Padding="12,6"
+                            Style="{StaticResource ToggleButtonStyle}"/>
                 </StackPanel>
             </Grid>
         </Border>
-        
-        <!-- Карточки с итогами -->
-        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                
-                <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                    <TextBlock Text="Доходы" FontSize="12" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="TotalIncomeText" Text="0" FontSize="20" FontWeight="Bold" Foreground="#27AE60" HorizontalAlignment="Center"/>
-                </StackPanel>
-                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                    <TextBlock Text="Расходы" FontSize="12" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="TotalExpensesText" Text="0" FontSize="20" FontWeight="Bold" Foreground="#E74C3C" HorizontalAlignment="Center"/>
-                </StackPanel>
-                <StackPanel Grid.Column="2" HorizontalAlignment="Center">
-                    <TextBlock Text="Прибыль" FontSize="12" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="ProfitText" Text="0" FontSize="20" FontWeight="Bold" Foreground="#3498DB" HorizontalAlignment="Center"/>
-                </StackPanel>
-                <StackPanel Grid.Column="3" HorizontalAlignment="Center">
-                    <TextBlock Text="Бронирований" FontSize="12" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="BookingsCountText" Text="0" FontSize="20" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center"/>
-                </StackPanel>
-                <StackPanel Grid.Column="4" HorizontalAlignment="Center">
-                    <TextBlock Text="Загрузка" FontSize="12" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="OccupancyText" Text="0%" FontSize="20" FontWeight="Bold" Foreground="#F39C12" HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Grid>
+
+        <!-- Карточки KPI -->
+        <Border Grid.Row="1" Margin="0,0,0,24">
+            <StackPanel Orientation="Horizontal">
+                <Border Style="{StaticResource KpiCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Доходы" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="TotalIncomeText" Text="0" FontSize="28" FontWeight="Bold" Foreground="#27AE60"/>
+                        <TextBlock x:Name="IncomeChangeText" Text="▲ 0%" FontSize="12" Foreground="#27AE60" Margin="0,4,0,0" Visibility="Collapsed"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource KpiCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Расходы" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="TotalExpensesText" Text="0" FontSize="28" FontWeight="Bold" Foreground="#E74C3C"/>
+                        <TextBlock x:Name="ExpensesChangeText" Text="▼ 0%" FontSize="12" Foreground="#E74C3C" Margin="0,4,0,0" Visibility="Collapsed"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource KpiCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Прибыль" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="ProfitText" Text="0" FontSize="28" FontWeight="Bold" Foreground="#3498DB"/>
+                        <TextBlock x:Name="ProfitChangeText" Text="▲ 0%" FontSize="12" Foreground="#3498DB" Margin="0,4,0,0" Visibility="Collapsed"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource KpiCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Бронирований" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="BookingsCountText" Text="0" FontSize="28" FontWeight="Bold" Foreground="#2C3E50"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource KpiCardStyle}" Margin="0,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Загрузка" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="OccupancyText" Text="0%" FontSize="28" FontWeight="Bold" Foreground="#F39C12"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </Border>
-        
-        <!-- Графики и таблицы -->
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-            <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-            
-            <!-- Загрузка отеля -->
-            <Border Grid.Row="0" Grid.Column="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,7,7">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Загрузка отеля" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" VerticalAlignment="Center"/>
-                        <Button x:Name="SwitchOccupancyChartBtn" Grid.Column="1" Content="По дням" Click="SwitchOccupancyChart_Click" 
-                                Background="#3498DB" Foreground="White" Padding="10,5" BorderThickness="0" Margin="0,0,0,10">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
+
+        <!-- Вкладки -->
+        <TabControl Grid.Row="2" Background="White" BorderThickness="0">
+            <!-- Финансы -->
+            <TabItem Header="📊 Финансы">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <WrapPanel Grid.Row="0" Margin="0,0,0,16" HorizontalAlignment="Right">
+                            <Button x:Name="SwitchChartBtn" Content="По дням" Click="SwitchChart_Click"
+                                    Style="{StaticResource ToggleButtonStyle}" Margin="0,0,8,0"/>
+                            <Button x:Name="ToggleExpensesBtn" Content="Показать расходы" Click="ToggleExpenses_Click"
+                                    Style="{StaticResource ToggleButtonStyle}"/>
+                        </WrapPanel>
+
+                        <Border Grid.Row="1" Background="#F8FAFD" CornerRadius="12" Padding="16" Margin="0,0,0,20">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Динамика доходов и расходов" Style="{StaticResource ChartTitleStyle}"/>
+                                <oxy:PlotView x:Name="IncomeChart" Grid.Row="1" Height="320" Margin="0,8,0,0"/>
+                            </Grid>
+                        </Border>
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Background="#F8FAFD" CornerRadius="12" Padding="16" Margin="0,0,12,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Накопленный доход" Style="{StaticResource ChartTitleStyle}"/>
+                                    <oxy:PlotView x:Name="CumulativeIncomeChart" Grid.Row="1" Height="200"/>
+                                </Grid>
+                            </Border>
+
+                            <Border Background="#F8FAFD" CornerRadius="12" Padding="16" Margin="12,0,0,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Структура доходов" Style="{StaticResource ChartTitleStyle}"/>
+                                    <oxy:PlotView x:Name="IncomeStructureChart" Grid.Row="1" Height="200"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
                     </Grid>
-                    <oxy:PlotView x:Name="OccupancyChart" Grid.Row="1"/>
-                </Grid>
-            </Border>
-            
-            <!-- Доходы по месяцам/дням -->
-            <Border Grid.Row="0" Grid.Column="1" Background="White" CornerRadius="8" Padding="15" Margin="7,0,0,7">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="IncomeChartTitle" Text="Доходы по месяцам" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" VerticalAlignment="Center"/>
-                        <Button x:Name="SwitchChartBtn" Grid.Column="1" Content="По дням" Click="SwitchChart_Click" 
-                                Background="#3498DB" Foreground="White" Padding="10,5" BorderThickness="0" Margin="0,0,5,10">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                        <Button x:Name="ToggleExpensesBtn" Grid.Column="2" Content="Показать расходы" Click="ToggleExpenses_Click" 
-                                Background="#95A5A6" Foreground="White" Padding="10,5" BorderThickness="0" Margin="0,0,0,10">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Номера -->
+            <TabItem Header="🏨 Номера">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Background="#F8FAFD" CornerRadius="12" Padding="16" Margin="0,0,0,24">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Загрузка отеля" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Style="{StaticResource ChartTitleStyle}"/>
+                                    <Button x:Name="SwitchOccupancyChartBtn" Grid.Column="1" Content="По дням" Click="SwitchOccupancyChart_Click"
+                                            Style="{StaticResource ToggleButtonStyle}"/>
+                                </Grid>
+                                <oxy:PlotView x:Name="OccupancyChart" Grid.Row="1" Height="280" Margin="0,12,0,0"/>
+                            </Grid>
+                        </Border>
+
+                        <TextBlock Text="Прибыльность номеров" Style="{StaticResource SectionTitleStyle}" Grid.Row="1"/>
+                        <DataGrid x:Name="RoomProfitGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" MouseDoubleClick="RoomProfitGrid_MouseDoubleClick"
+                                  CanUserAddRows="False" GridLinesVisibility="Horizontal" Background="White"
+                                  BorderThickness="0" RowBackground="White" AlternatingRowBackground="#F8FAFD"
+                                  FontSize="13" RowHeight="48" MinHeight="200">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Номер" Binding="{Binding Name}" Width="220"/>
+                                <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="150"/>
+                                <DataGridTextColumn Header="Доход" Binding="{Binding Income, Converter={StaticResource PriceConverter}}" Width="120">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="{Binding Income, Converter={StaticResource PriceConverter}}"/>
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Расходы" Binding="{Binding Expenses, Converter={StaticResource PriceConverter}}" Width="120">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="{Binding Expenses, Converter={StaticResource PriceConverter}}"/>
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Прибыль" Binding="{Binding Profit, Converter={StaticResource PriceConverter}}" Width="120">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="{Binding Profit, Converter={StaticResource PriceConverter}}"/>
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
-                    <oxy:PlotView x:Name="IncomeChart" Grid.Row="1"/>
-                </Grid>
-            </Border>
-            
-            <!-- Прибыльность номеров -->
-            <Border Grid.Row="1" Grid.Column="0" Background="White" CornerRadius="8" Padding="15" Margin="0,7,7,0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Text="Прибыльность номеров" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-                    <DataGrid x:Name="RoomProfitGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" Background="White" BorderThickness="0">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Номер" Binding="{Binding Name}" Width="*"/>
-                            <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="70"/>
-                            <DataGridTextColumn Header="Доход" Binding="{Binding Income}" Width="90">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding Income, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-                            <DataGridTextColumn Header="Расходы" Binding="{Binding Expenses}" Width="90">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding Expenses, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-                            <DataGridTextColumn Header="Прибыль" Binding="{Binding Profit}" Width="90">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding Profit, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </Border>
-            
-            <!-- Топ клиенты -->
-            <Border Grid.Row="1" Grid.Column="1" Background="White" CornerRadius="8" Padding="15" Margin="7,7,0,0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Text="Топ клиенты" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-                    <DataGrid x:Name="TopClientsGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" Background="White" BorderThickness="0">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Клиент" Binding="{Binding FullName}" Width="*"/>
-                            <DataGridTextColumn Header="Бронирований" Binding="{Binding BookingsCount}" Width="90"/>
-                            <DataGridTextColumn Header="Потрачено" Binding="{Binding TotalSpent}" Width="100">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding TotalSpent, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </Border>
-        </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Клиенты -->
+            <!-- Клиенты -->
+<TabItem Header="👥 Клиенты">
+    <Grid Margin="20">
+        <TextBlock Text="Топ клиенты" Style="{StaticResource SectionTitleStyle}"/>
+        <DataGrid x:Name="TopClientsGrid" AutoGenerateColumns="False" IsReadOnly="True" MouseDoubleClick="TopClientsGrid_MouseDoubleClick"
+                  CanUserAddRows="False" GridLinesVisibility="Horizontal" Background="White"
+                  BorderThickness="0" RowBackground="White" AlternatingRowBackground="#F8FAFD"
+                  FontSize="13" RowHeight="48" MinHeight="200">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding FullName}" Width="270" MinWidth="150"/>
+                <DataGridTextColumn Header="Бронирований" Binding="{Binding BookingsCount}" Width="100"/>
+                <DataGridTextColumn Header="Потрачено (номера)" Binding="{Binding SpentOnRooms, Converter={StaticResource PriceConverter}}" Width="160">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="{Binding SpentOnRooms, Converter={StaticResource PriceConverter}}"/>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Потрачено (услуги)" Binding="{Binding SpentOnServices, Converter={StaticResource PriceConverter}}" Width="160">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="{Binding SpentOnServices, Converter={StaticResource PriceConverter}}"/>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Всего потрачено" Binding="{Binding TotalSpent, Converter={StaticResource PriceConverter}}" Width="160">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="{Binding TotalSpent, Converter={StaticResource PriceConverter}}"/>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Средний чек" Binding="{Binding AverageCheck, Converter={StaticResource PriceConverter}}" Width="130">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="{Binding AverageCheck, Converter={StaticResource PriceConverter}}"/>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Последнее бронирование" Binding="{Binding LastBookingDate , StringFormat=dd.MM.yyyy}" Width="170"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</TabItem>
+        </TabControl>
     </Grid>
 </Page>

@@ -99,6 +99,7 @@
                         <Button Tag="Door" Content="Номера" Style="{StaticResource MenuButtonStyle}" Click="NavigateToRooms"/>
                         <Button Tag="AccountGroup" Content="Клиенты" Style="{StaticResource MenuButtonStyle}" Click="NavigateToClients"/>
                         <Button Tag="Calendar" Content="Календарь" Style="{StaticResource MenuButtonStyle}" Click="NavigateToCalendar"/>
+                        <Button Tag="CreditCardOutline" Content="Доп. расходы" Style="{StaticResource MenuButtonStyle}" Click="NavigateToExpenses" x:Name="ExpensesMenuItem"/>
                         <Button Tag="CreditCard" Content="Оплата услуг" Style="{StaticResource MenuButtonStyle}" Click="NavigateToServicesPayment"/>
 
                         <TextBlock Text="УПРАВЛЕНИЕ" Style="{StaticResource SectionHeaderStyle}"/>

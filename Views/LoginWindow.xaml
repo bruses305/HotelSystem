@@ -225,13 +225,6 @@
                               Foreground="{StaticResource TextSecondaryBrush}"
                               FontSize="12"
                               Margin="0,0,16,0"/>
-                    <TextBlock Grid.Column="2" 
-                               Text="Забыли пароль?"
-                               Foreground="{StaticResource AccentBrush}"
-                               FontSize="12"
-                               Cursor="Hand"
-                               TextDecorations="Underline"
-                               MouseLeftButtonDown="ForgotPassword_Click"/>
                 </Grid>
 
                 <Button x:Name="LoginButton"

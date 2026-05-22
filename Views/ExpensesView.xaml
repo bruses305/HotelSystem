@@ -1,0 +1,126 @@
+<Page x:Class="HotelSystem.Views.ExpensesView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:models="clr-namespace:HotelSystem.Models.Entities"
+      Title="Дополнительные расходы" 
+      Background="#FFF3F4F6">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Заголовок и кнопки -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,20">
+            <TextBlock Text="Дополнительные расходы" FontSize="28" FontWeight="Bold" VerticalAlignment="Center"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,20">
+            <Button x:Name="AddExpenseButton" Content="Добавить расход" Click="AddExpense_Click" 
+                    Padding="15,10" Margin="0,0,10,0" Background="#3B82F6" Foreground="White" BorderThickness="0">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            
+            <Button x:Name="PayAllButton" Content="Оплатить всё" Click="PayAll_Click" 
+                    Padding="15,10" Background="#10B981" Foreground="White" BorderThickness="0">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </StackPanel>
+        
+        <!-- Таблица расходов -->
+        <DataGrid x:Name="ExpensesGrid" Grid.Row="1" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  HeadersVisibility="Column"
+                  Margin="0,10,0,0"
+                  MouseDoubleClick="ExpensesGrid_MouseDoubleClick">
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#3B82F6"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Padding" Value="12,10"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Padding" Value="12,8"/>
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#EFF6FF"/>
+                            <Setter Property="Foreground" Value="#1E40AF"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
+                <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Категория" Binding="{Binding Category}" Width="150"/>
+                <DataGridTextColumn Header="Сумма" Binding="{Binding Amount, StringFormat={}{0:N2} ₽}" Width="120"/>
+                <DataGridTextColumn Header="Последняя оплата" Binding="{Binding LastPaymentDate, StringFormat={}{0:dd.MM.yyyy}}" Width="120"/>
+                <DataGridTemplateColumn Header="Статус" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:Expense">
+                            <Border CornerRadius="4" Padding="8,4" 
+                                    Background="{Binding IsPaid, Converter={StaticResource ExpenseStatusConverter}, FallbackValue='#9CA3AF'}">
+                                <TextBlock Text="{Binding IsPaid, Converter={StaticResource ExpenseStatusTextConverter}, FallbackValue='Не оплачено'}"
+                                          Foreground="White" FontSize="12" HorizontalAlignment="Center"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Действия" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:Expense">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Оплатить" Click="PayExpense_Click" Tag="{Binding}" 
+                                        Padding="8,6" Margin="0,0,5,0" Background="#10B981" Foreground="White" BorderThickness="0">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <Button Content="Редактировать" Click="EditExpense_Click" Tag="{Binding}" 
+                                        Padding="8,6" Background="#6B7280" Foreground="White" BorderThickness="0">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

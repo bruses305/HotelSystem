@@ -10,7 +10,6 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/materialdesigncolor.grey.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
-                <!-- Удаляем отдельные ссылки на Primary и Accent, так как они могут не существовать в вашей версии -->
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="Page">
                 <Setter Property="Background" Value="#ECF0F1"/>
