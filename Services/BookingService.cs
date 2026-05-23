@@ -144,53 +144,6 @@ public class BookingService : IBookingService
 
         await _bookingRepository.UpdateAsync(booking);
 
-        if (room != null)
-        {
-            var days = booking.Days;
-
-            if (room.WaterExpense > 0)
-            {
-                await _transactionRepository.AddAsync(new Transaction
-                {
-                    Type = TransactionType.Расход,
-                    Category = TransactionCategory.Коммунальные_услуги,
-                    Amount = room.WaterExpense * days,
-                    RoomId = booking.RoomId,
-                    BookingId = booking.Id,
-                    TransactionDate = DateTime.Now,
-                    Description = $"Расход воды по номеру {room.Name} за {days} дн."
-                });
-            }
-
-            if (room.ElectricityExpense > 0)
-            {
-                await _transactionRepository.AddAsync(new Transaction
-                {
-                    Type = TransactionType.Расход,
-                    Category = TransactionCategory.Коммунальные_услуги,
-                    Amount = room.ElectricityExpense * days,
-                    RoomId = booking.RoomId,
-                    BookingId = booking.Id,
-                    TransactionDate = DateTime.Now,
-                    Description = $"Расход электричества по номеру {room.Name} за {days} дн."
-                });
-            }
-
-            if (room.InternetExpense > 0)
-            {
-                await _transactionRepository.AddAsync(new Transaction
-                {
-                    Type = TransactionType.Расход,
-                    Category = TransactionCategory.Коммунальные_услуги,
-                    Amount = room.InternetExpense * days,
-                    RoomId = booking.RoomId,
-                    BookingId = booking.Id,
-                    TransactionDate = DateTime.Now,
-                    Description = $"Расход интернета по номеру {room.Name} за {days} дн."
-                });
-            }
-        }
-
         await _logService.LogAsync(
             LogLevel.Средние,
             $"Гость заселён в номер {room?.Name}. Бронирование #{id}",
@@ -227,21 +180,9 @@ public class BookingService : IBookingService
 
         await _bookingRepository.UpdateAsync(booking);
 
-        var cleaningExpense = new Transaction
-        {
-            Type = TransactionType.Расход,
-            Category = TransactionCategory.Обслуживание,
-            Amount = room?.CleaningExpense ?? 500,
-            RoomId = booking.RoomId,
-            BookingId = booking.Id,
-            TransactionDate = DateTime.Now,
-            Description = $"Расход на уборку номера {room?.Name ?? booking.RoomId.ToString()} после выезда"
-        };
-        await _transactionRepository.AddAsync(cleaningExpense);
-
         await _logService.LogAsync(
             LogLevel.Средние,
-            $"Завершено бронирование #{id}. Добавлен расход на уборку: {cleaningExpense.Amount:N0} ₽",
+            $"Завершено бронирование #{id}",
             "BookingService");
 
         NotificationService.Instance.AddNotification(

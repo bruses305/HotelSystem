@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET10_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NET10_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 D:\Project\Rider\HotelSystem\App.xaml
-331504577304
+341695599046
 222087095164
-116-1915653712
+122966587281
 336-757174683
-Styles\Animations.xaml;Styles\ButtonStyles.xaml;Styles\CardStyles.xaml;Styles\DataGridStyles.xaml;Themes\Brushes.xaml;Views\BookingDialog.xaml;Views\BookingsView.xaml;Views\CalendarView.xaml;Views\ClearLogsDialog.xaml;Views\ClientDialog.xaml;Views\ClientsView.xaml;Views\ColorPickerDialog.xaml;Views\EmployeeDialog.xaml;Views\EmployeesView.xaml;Views\ExpenseDialog.xaml;Views\ExpensesView.xaml;Views\FinanceView.xaml;Views\ForecastWindow.xaml;Views\LoginWindow.xaml;Views\LogsView.xaml;Views\MainWindow.xaml;Views\NotificationsWindow.xaml;Views\PaymentDialog.xaml;Views\ReportsView.xaml;Views\RoleManagerWindow.xaml;Views\RoomDialog.xaml;Views\RoomsView.xaml;Views\ServiceDialog.xaml;Views\ServicePaymentDialog.xaml;Views\ServicesPaymentView.xaml;Views\ServicesView.xaml;Views\SettingsView.xaml;Views\TransactionDialog.xaml;
+Styles\Animations.xaml;Styles\ButtonStyles.xaml;Styles\CardStyles.xaml;Styles\DataGridStyles.xaml;Themes\Brushes.xaml;Views\AdvancedForecastWindow.xaml;Views\BookingDialog.xaml;Views\BookingsView.xaml;Views\CalendarView.xaml;Views\ClearLogsDialog.xaml;Views\ClientDialog.xaml;Views\ClientsView.xaml;Views\ColorPickerDialog.xaml;Views\EmployeeDialog.xaml;Views\EmployeesView.xaml;Views\ExpenseDialog.xaml;Views\ExpensesView.xaml;Views\FinanceView.xaml;Views\ForecastWindow.xaml;Views\LoginWindow.xaml;Views\LogsView.xaml;Views\MainWindow.xaml;Views\NotificationsWindow.xaml;Views\PaymentDialog.xaml;Views\ReportsView.xaml;Views\RoleManagerWindow.xaml;Views\RoomDialog.xaml;Views\RoomsView.xaml;Views\ServiceDialog.xaml;Views\ServicePaymentDialog.xaml;Views\ServicesPaymentView.xaml;Views\ServicesView.xaml;Views\SettingsView.xaml;Views\TransactionDialog.xaml;
 
 False
 

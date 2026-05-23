@@ -46,11 +46,9 @@ public class HotelDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
-            entity.Property(e => e.WaterExpense).HasColumnType("decimal(18,2)");
-            entity.Property(e => e.ElectricityExpense).HasColumnType("decimal(18,2)");
-            entity.Property(e => e.InternetExpense).HasColumnType("decimal(18,2)");
-            entity.Property(e => e.CleaningExpense).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.Profit).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.Cost).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.Area).HasColumnType("decimal(18,2)");
         });
 
         // Client
@@ -166,10 +164,10 @@ public class HotelDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
-            entity.HasOne(e => e.Room)
-                  .WithMany()
-                  .HasForeignKey(e => e.RoomId)
-                  .OnDelete(DeleteBehavior.Cascade);
+            entity.Property(e => e.Name).HasMaxLength(200);
+            entity.Property(e => e.Category).HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.LastPaymentDate).HasDefaultValueSql("datetime('now')");
         });
 
         // SystemLog

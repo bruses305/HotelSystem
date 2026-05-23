@@ -19,15 +19,7 @@
                 <TextBox x:Name="NameTextBox" Padding="10" Margin="0,0,0,15"/>
                 
                 <TextBlock Text="Категория" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                <ComboBox x:Name="CategoryComboBox" Margin="0,0,0,15" Padding="10">
-                    <ComboBoxItem Content="Вода" Tag="Вода"/>
-                    <ComboBoxItem Content="Электричество" Tag="Электричество"/>
-                    <ComboBoxItem Content="Интернет" Tag="Интернет"/>
-                    <ComboBoxItem Content="Уборка" Tag="Уборка"/>
-                    <ComboBoxItem Content="Аренда" Tag="Аренда"/>
-                    <ComboBoxItem Content="Обслуживание" Tag="Обслуживание"/>
-                    <ComboBoxItem Content="Другое" Tag="Другое"/>
-                </ComboBox>
+                <ComboBox x:Name="CategoryComboBox" Margin="0,0,0,15" Padding="10"/>
                 
                 <TextBlock Text="Сумма (руб.)" FontWeight="SemiBold" Margin="0,0,0,5"/>
                 <TextBox x:Name="AmountTextBox" Padding="10" Margin="0,0,0,15"/>
@@ -37,8 +29,6 @@
                 
                 <TextBlock Text="Описание" FontWeight="SemiBold" Margin="0,0,0,5"/>
                 <TextBox x:Name="DescriptionTextBox" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Padding="10" Margin="0,0,0,15"/>
-                
-                <CheckBox x:Name="IsPaidCheckBox" Content="Оплачено" Margin="0,0,0,15"/>
             </StackPanel>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">

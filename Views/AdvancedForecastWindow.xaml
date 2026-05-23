@@ -1,0 +1,212 @@
+<Window x:Class="HotelSystem.Views.AdvancedForecastWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:helpers="clr-namespace:HotelSystem.Helpers"
+        Title="Прогнозирование доходов и загрузки" 
+        Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Background="#F3F4F6"
+        Language="ru-RU">
+    <Window.Resources>
+        <helpers:PriceConverter x:Key="PriceConverter"/>
+        <helpers:DayOfWeekConverter x:Key="DayOfWeekConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Шапка -->
+        <Border Grid.Row="0" Background="#1F2937" Padding="20">
+            <StackPanel>
+                <TextBlock Text="📊 Прогнозирование" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Анализ исторических данных и прогноз на основе трендов и сезонности" 
+                          FontSize="14" Foreground="#9CA3AF" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- Панель управления -->
+        <Border Grid.Row="1" Background="White" Margin="15" CornerRadius="8" Padding="15">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Период прогноза:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <DatePicker x:Name="FromDatePicker" Margin="0,0,10,0" Padding="5"/>
+                <TextBlock Text="—" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <DatePicker x:Name="ToDatePicker" Margin="0,0,20,0" Padding="5"/>
+                
+                <Button x:Name="CalculateButton" Content="Рассчитать прогноз" Click="CalculateButton_Click"
+                        Padding="15,8" Background="#10B981" Foreground="White" BorderThickness="0" FontWeight="SemiBold">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Border>
+        
+        <!-- Итоговые показатели -->
+        <Grid Grid.Row="2" Margin="15,0,15,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,7,0">
+                <StackPanel>
+                    <TextBlock Text="Прогноз дохода" FontSize="12" Foreground="#6B7280"/>
+                    <TextBlock x:Name="TotalIncomeText" Text="—" FontSize="20" FontWeight="Bold" Foreground="#10B981"/>
+                    <TextBlock x:Name="IncomeRangeText" Text="" FontSize="11" Foreground="#6B7280" Margin="0,2,0,0"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="15" Margin="7,0,7,0">
+                <StackPanel>
+                    <TextBlock Text="Расходы" FontSize="12" Foreground="#6B7280"/>
+                    <TextBlock x:Name="TotalExpensesText" Text="—" FontSize="20" FontWeight="Bold" Foreground="#EF4444"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="15" Margin="7,0,7,0">
+                <StackPanel>
+                    <TextBlock Text="Чистая прибыль" FontSize="12" Foreground="#6B7280"/>
+                    <TextBlock x:Name="NetProfitText" Text="—" FontSize="20" FontWeight="Bold" Foreground="#3B82F6"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Grid.Column="3" Background="White" CornerRadius="8" Padding="15" Margin="7,0,7,0">
+                <StackPanel>
+                    <TextBlock Text="Бронирований" FontSize="12" Foreground="#6B7280"/>
+                    <TextBlock x:Name="TotalBookingsText" Text="—" FontSize="20" FontWeight="Bold" Foreground="#8B5CF6"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Grid.Column="4" Background="White" CornerRadius="8" Padding="15" Margin="7,0,0,0">
+                <StackPanel>
+                    <TextBlock Text="Точность прогноза" FontSize="12" Foreground="#6B7280"/>
+                    <TextBlock x:Name="ConfidenceText" Text="—" FontSize="20" FontWeight="Bold" Foreground="#F59E0B"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+        
+        <!-- Контент -->
+        <Grid Grid.Row="3" Margin="15,0,15,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Левая панель - метрики и анализ -->
+            <ScrollViewer Grid.Column="0" Margin="0,0,7,0">
+                <StackPanel>
+                    <!-- Исторические метрики -->
+                    <Border Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="📈 Исторические метрики" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Загрузка:" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" x:Name="OccupancyText" Text="—"/>
+                                
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="ADR (средний чек):" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" x:Name="AdrText" Text="—"/>
+                                
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="RevPAR:" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" x:Name="RevparText" Text="—"/>
+                                
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Среднее проживание:" FontWeight="SemiBold"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" x:Name="AvgStayText" Text="—"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Тренд -->
+                    <Border Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="📊 Тренд" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                            <TextBlock x:Name="TrendText" Text="—" FontSize="14"/>
+                            <TextBlock x:Name="TrendDetailsText" Text="" FontSize="12" Foreground="#6B7280" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Сезонность -->
+                    <Border Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="🗓 Сезонные коэффициенты" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                            <Grid x:Name="SeasonalGrid">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Дни недели -->
+                    <Border Background="White" CornerRadius="8" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="📅 Коэффициенты по дням недели" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                            <Grid x:Name="DowGrid">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+            
+            <!-- Правая панель - таблица прогноза -->
+            <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="15" Margin="7,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="📋 Детальный прогноз по дням" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                    
+                    <DataGrid Grid.Row="1" x:Name="ForecastDataGrid" AutoGenerateColumns="False" 
+                             IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal"
+                             HeadersVisibility="Column" Background="White" BorderThickness="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy}}" Width="90"/>
+                            <DataGridTextColumn Header="День" Binding="{Binding Date, Converter={StaticResource DayOfWeekConverter}}" Width="90"/>
+                            <DataGridTextColumn Header="Броней" Binding="{Binding PredictedBookings, StringFormat={}{0:N1}}" Width="100"/>
+                            <DataGridTextColumn Header="Доход" Binding="{Binding PredictedIncome, Converter={StaticResource PriceConverter}}" Width="100">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding PredictedIncome, Converter={StaticResource PriceConverter}}"/>
+                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Загрузка %" Binding="{Binding OccupancyRate, StringFormat={}{0:N1}%}" Width="100"/>
+                            <DataGridTextColumn Header="Сезон" Binding="{Binding SeasonalFactor}" Width="80"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

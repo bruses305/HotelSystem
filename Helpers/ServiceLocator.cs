@@ -26,6 +26,8 @@ public static class ServiceLocator
         services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<ILogRepository, LogRepository>();
         services.AddScoped<IExpenseRepository, ExpenseRepository>();
+        services.AddScoped<IRoomCostCalculationService, RoomCostCalculationService>();
+        services.AddScoped<IForecastService, ForecastService>();
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IClientService, ClientService>();

@@ -115,7 +115,7 @@
                     <TextBlock Text="—" VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <DatePicker x:Name="EndDatePicker" Width="120" Margin="0,0,20,0" />
                     <Button Content="Сформировать" Click="GenerateReport_Click"
-                            Background="#3498DB" Foreground="White" Padding="16,8" BorderThickness="0" Cursor="Hand">
+                            Background="#3498DB" Foreground="White" Padding="16,5" BorderThickness="0" Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
@@ -139,18 +139,37 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button x:Name="OpenLastExportBtn" Content="Открыть" Click="OpenLastExport_Click"
-                            Background="#95A5A6" Foreground="White" Padding="12,6" Margin="0,0,8,0"
-                            IsEnabled="False" Style="{StaticResource ToggleButtonStyle}"/>
-                    <Button x:Name="ExportExcelBtn" Content="Excel" Click="ExportExcel_Click"
-                            Background="#27AE60" Foreground="White" Padding="12,6" Margin="0,0,8,0"
-                            Style="{StaticResource ToggleButtonStyle}"/>
-                    <Button x:Name="ExportPdfBtn" Content="PDF" Click="ExportPdf_Click"
-                            Background="#E67E22" Foreground="White" Padding="12,6" Margin="0,0,8,0"
-                            Style="{StaticResource ToggleButtonStyle}"/>
-                    <Button x:Name="ExportChartsBtn" Content="Графики" Click="ExportCharts_Click"
-                            Background="#9B59B6" Foreground="White" Padding="12,6"
-                            Style="{StaticResource ToggleButtonStyle}"/>
+                    <Button x:Name="OpenLastExportBtn" Content="Открыть" Click="OpenLastExport_Click" Width="80"
+                            Background="#768283" Foreground="White" Padding="12,6" Margin="0,0,8,0"
+                            IsEnabled="False">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="ExportExcelBtn" Content="Excel" Click="ExportExcel_Click" Width="80"
+                            Background="#27AE60" Foreground="White" Padding="12,6" Margin="0,0,8,0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="ExportChartsBtn" Content="Графики" Click="ExportCharts_Click" Width="80"
+                            Background="#9B59B6" Foreground="White" Padding="12,6">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>

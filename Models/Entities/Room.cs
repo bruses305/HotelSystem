@@ -19,18 +19,15 @@ public class Room : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
     public RoomType Type { get; set; }
-    public decimal Price { get; set; }
+    public decimal Profit { get; set; } = 0; // Прибыль за сутки
+    public decimal Cost { get; set; } = 0; // Себестоимость за сутки (авторасчёт)
     public RoomStatus Status { get; set; }
     public int Capacity { get; set; }
     public string Description { get; set; } = string.Empty;
+    public decimal Area { get; set; } = 0; // Площадь помещения в м²
 
-    // Расходы на содержание
-    public decimal WaterExpense { get; set; }
-    public decimal ElectricityExpense { get; set; }
-    public decimal InternetExpense { get; set; }
-    public decimal CleaningExpense { get; set; }
-
-    public decimal TotalExpenses => WaterExpense + ElectricityExpense + InternetExpense + CleaningExpense;
+    // Цена = Себестоимость + Прибыль
+    public decimal Price => Cost + Profit;
 
     // Навигационные свойства
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();

@@ -111,7 +111,7 @@ public partial class FinanceView : Page
             return;
         }
         
-        var forecastWindow = new ForecastWindow();
+        var forecastWindow = new AdvancedForecastWindow();
         forecastWindow.Owner = Window.GetWindow(this);
         forecastWindow.ShowDialog();
     }

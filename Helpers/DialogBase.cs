@@ -39,11 +39,15 @@ public abstract class DialogBase : Window
         switch (result)
         {
             case MessageBoxResult.Yes:
-                // Сохраняем и закрываем
+                // Сохраняем без вызова Close (Save сам закроет или мы закроем после)
                 try
                 {
                     Save();
-                    _isSaved = true;
+                    // Save должен установить _isSaved или DialogResult
+                    if (!_isSaved && DialogResult != true)
+                    {
+                        _isSaved = true;
+                    }
                     DialogSaved?.Invoke(this, EventArgs.Empty);
                 }
                 catch (Exception ex)

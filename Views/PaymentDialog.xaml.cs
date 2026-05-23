@@ -30,7 +30,7 @@ public partial class PaymentDialog : Window
             return;
         }
 
-        if (amount > _remainingAmount)
+        if (amount > _remainingAmount && $"{(amount - _remainingAmount):N0}" != "0")
         {
             var result = MessageBox.Show(
                 $"Сумма превышает остаток на {AppConstants.FormatPrice(amount - _remainingAmount)}. Продолжить?",

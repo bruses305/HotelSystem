@@ -42,9 +42,8 @@ public class RoomRepository : Repository<Room>, IRoomRepository
 
     public async Task<decimal> GetTotalExpensesAsync()
     {
-        // SQLite Р В Р вЂ¦Р В Р’Вµ Р В РЎвЂ”Р В РЎвЂўР В РўвЂР В РўвЂР В Р’ВµР РЋР вЂљР В Р’В¶Р В РЎвЂР В Р вЂ Р В Р’В°Р В Р’ВµР РЋРІР‚С™ SumAsync Р В РўвЂР В Р’В»Р РЋР РЏ decimal, Р В Р’В·Р В Р’В°Р В РЎвЂ“Р РЋР вЂљР РЋРЎвЂњР В Р’В¶Р В Р’В°Р В Р’ВµР В РЎВ Р В Р вЂ¦Р В Р’В° Р В РЎвЂќР В Р’В»Р В РЎвЂР В Р’ВµР В Р вЂ¦Р РЋРІР‚С™
+        // Возвращаем сумму себестоимости всех номеров
         var rooms = await _dbSet.ToListAsync();
-        return rooms.Sum(r => r.WaterExpense + r.ElectricityExpense + 
-                              r.InternetExpense + r.CleaningExpense);
+        return rooms.Sum(r => r.Cost);
     }
 }

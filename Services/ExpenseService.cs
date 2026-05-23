@@ -1,3 +1,4 @@
+using System.Windows;
 using HotelSystem.Models.Entities;
 using HotelSystem.Repositories;
 
@@ -62,7 +63,6 @@ public class ExpenseService : IExpenseService
         var expense = await _expenseRepository.GetByIdAsync(id);
         if (expense != null)
         {
-            expense.IsPaid = true;
             expense.LastPaymentDate = DateTime.Now;
             expense.UpdatedAt = DateTime.Now;
             await _expenseRepository.UpdateAsync(expense);

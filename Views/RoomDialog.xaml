@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:helpers="clr-namespace:HotelSystem.Helpers"
                     x:Class="HotelSystem.Views.RoomDialog"
-                    Title="Номер" Height="600" Width="400"
+                    Title="Номер" Height="650" Width="400"
                     WindowStartupLocation="CenterOwner"
                     ResizeMode="NoResize"
                     Background="#ECF0F1">
@@ -23,41 +23,18 @@
                     <ComboBoxItem Content="Люкс" Tag="Люкс"/>
                     <ComboBoxItem Content="Апартаменты" Tag="Апартаменты"/>
                 </ComboBox>
-                <TextBlock Text="Цена за сутки" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                <TextBox x:Name="PriceTextBox" Padding="10" Margin="0,0,0,15"/>
+                <TextBlock Text="Площадь помещения (м²)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="AreaTextBox" Padding="10" Margin="0,0,0,15"/>
+                <TextBlock Text="Прибыль за сутки (руб.)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="ProfitTextBox" Padding="10" Margin="0,0,0,15"/>
+                <TextBlock Text="Себестоимость за сутки (руб.)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="CostTextBox" IsReadOnly="True" Padding="10" Margin="0,0,0,15" Background="#E5E7EB"/>
+                <TextBlock Text="Цена за сутки (авторасчёт)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="PriceTextBox" IsReadOnly="True" Padding="10" Margin="0,0,0,15" Background="#E5E7EB"/>
                 <TextBlock Text="Вместимость (чел.)" FontWeight="SemiBold" Margin="0,0,0,5"/>
                 <TextBox x:Name="CapacityTextBox" Padding="10" Margin="0,0,0,15"/>
                 <TextBlock Text="Описание" FontWeight="SemiBold" Margin="0,0,0,5"/>
                 <TextBox x:Name="DescriptionTextBox" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Padding="10" Margin="0,0,0,15"/>
-                <TextBlock Text="Расходы на содержание" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                <Grid Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Margin="0,0,5,0">
-                        <TextBlock Text="Вода (Br)" Margin="0,0,0,5"/>
-                        <TextBox x:Name="WaterTextBox" Padding="10"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
-                        <TextBlock Text="Электричество (Br)" Margin="0,0,0,5"/>
-                        <TextBox x:Name="ElectricityTextBox" Padding="10"/>
-                    </StackPanel>
-                </Grid>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Margin="0,0,5,0">
-                        <TextBlock Text="Интернет (Br)" Margin="0,0,0,5"/>
-                        <TextBox x:Name="InternetTextBox" Padding="10"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
-                        <TextBlock Text="Уборка (Br)" Margin="0,0,0,5"/>
-                        <TextBox x:Name="CleaningTextBox" Padding="10"/>
-                    </StackPanel>
-                </Grid>
             </StackPanel>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">

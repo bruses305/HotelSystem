@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HotelSystem — Скрытые операции и аналитика</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #1a252f;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+        .slide {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        .chart-container {
+            background: #fafbfc;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .chart-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        svg { max-width: 100%; }
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .note strong { color: #856404; }
+        .formula-box {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+        }
+        .highlight { 
+            color: #e74c3c; 
+            font-weight: bold;
+            background: #fff3cd;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .result { 
+            color: #27ae60; 
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Скрытые операции и аналитика системы</h1>
+        <p class="subtitle">Визуализация процессов, которые работают "за кулисами"</p>
+
+        <!-- График 1: Точка безубыточности -->
+        <div class="slide">
+            <h2>1. Точка безубыточности номера</h2>
+            <p style="margin-bottom: 20px; color: #7f8c8d;">Показывает минимальное количество занятых суток, при котором номер начинает приносить прибыль</p>
+            
+            <div class="formula-box">
+                <span class="highlight">Точка безубыточности</span> = 
+                <span class="highlight">Месячные расходы на номер</span> ÷ 
+                <span class="highlight">Цена за сутки</span>
+            </div>
+
+            <svg viewBox="0 0 700 350" width="700" height="350">
+                <!-- Оси -->
+                <line x1="60" y1="300" x2="650" y2="300" stroke="#2c3e50" stroke-width="2"/>
+                <line x1="60" y1="300" x2="60" y2="30" stroke="#2c3e50" stroke-width="2"/>
+                
+                <!-- Подписи осей -->
+                <text x="350" y="335" text-anchor="middle" font-size="13" font-weight="bold">Занятые сутки в месяц</text>
+                <text x="25" y="165" text-anchor="middle" font-size="13" font-weight="bold" transform="rotate(-90, 25, 165)">Br</text>
+                
+                <!-- Метки X -->
+                <text x="60" y="318" text-anchor="middle" font-size="11">0</text>
+                <text x="180" y="318" text-anchor="middle" font-size="11">10</text>
+                <text x="300" y="318" text-anchor="middle" font-size="11">20</text>
+                <text x="420" y="318" text-anchor="middle" font-size="11">30</text>
+                <text x="540" y="318" text-anchor="middle" font-size="11">40</text>
+                
+                <!-- Метки Y -->
+                <text x="50" y="305" text-anchor="end" font-size="11">0</text>
+                <text x="50" y="240" text-anchor="end" font-size="11">500</text>
+                <text x="50" y="180" text-anchor="end" font-size="11">1000</text>
+                <text x="50" y="120" text-anchor="end" font-size="11">1500</text>
+                <text x="50" y="60" text-anchor="end" font-size="11">2000</text>
+                
+                <!-- Линия расходов (постоянная) -->
+                <line x1="60" y1="240" x2="540" y2="240" stroke="#e74c3c" stroke-width="3"/>
+                <text x="550" y="245" font-size="12" fill="#e74c3c" font-weight="bold">Расходы = 240 Br</text>
+                
+                <!-- Линия доходов (растущая) -->
+                <line x1="60" y1="300" x2="540" y2="60" stroke="#27ae60" stroke-width="3"/>
+                <text x="550" y="70" font-size="12" fill="#27ae60" font-weight="bold">Доходы</text>
+                
+                <!-- Точка пересечения -->
+                <circle cx="300" cy="240" r="6" fill="#f39c12" stroke="white" stroke-width="2"/>
+                <line x1="300" y1="240" x2="300" y2="300" stroke="#f39c12" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="300" y="220" text-anchor="middle" font-size="12" font-weight="bold" fill="#f39c12">Точка безубыточности</text>
+                <text x="300" y="235" text-anchor="middle" font-size="11" fill="#f39c12">20 суток</text>
+                
+                <!-- Зона прибыли -->
+                <polygon points="300,240 540,60 540,240" fill="#e8f5e9" opacity="0.5"/>
+                <text x="450" y="150" text-anchor="middle" font-size="12" fill="#27ae60" font-weight="bold">Прибыль</text>
+                
+                <!-- Зона убытка -->
+                <polygon points="60,300 300,240 300,300" fill="#ffebee" opacity="0.5"/>
+                <text x="180" y="280" text-anchor="middle" font-size="12" fill="#e74c3c" font-weight="bold">Убыток</text>
+            </svg>
+
+            <div class="note">
+                <strong>💡 Скрытая операция:</strong> Система автоматически рассчитывает точку безубыточности для каждого номера 
+                при каждом изменении расходов. Менеджер видит, сколько суток в месяц номер должен быть занят, чтобы окупиться.
+                Для Стандарта (цена 45 Br, расходы 240 Br/мес) это ровно 20 суток. При загрузке 80% (24 дня) номер приносит прибыль 72 Br/мес.
+            </div>
+        </div>
+
+        <!-- График 2: Обратная зависимость загрузки и себестоимости -->
+        <div class="slide">
+            <h2>2. Обратная зависимость: загрузка vs себестоимость</h2>
+            <p style="margin-bottom: 20px; color: #7f8c8d;">Чем ниже загрузка отеля, тем выше себестоимость каждого занятого номера</p>
+            
+            <svg viewBox="0 0 700 350" width="700" height="350">
+                <!-- Оси -->
+                <line x1="60" y1="300" x2="650" y2="300" stroke="#2c3e50" stroke-width="2"/>
+                <line x1="60" y1="300" x2="60" y2="30" stroke="#2c3e50" stroke-width="2"/>
+                
+                <text x="350" y="335" text-anchor="middle" font-size="13" font-weight="bold">Загрузка отеля (%)</text>
+                <text x="25" y="165" text-anchor="middle" font-size="13" font-weight="bold" transform="rotate(-90, 25, 165)">Себестоимость сутки (Br)</text>
+                
+                <!-- Метки X -->
+                <text x="60" y="318" text-anchor="middle" font-size="11">0%</text>
+                <text x="180" y="318" text-anchor="middle" font-size="11">25%</text>
+                <text x="300" y="318" text-anchor="middle" font-size="11">50%</text>
+                <text x="420" y="318" text-anchor="middle" font-size="11">75%</text>
+                <text x="540" y="318" text-anchor="middle" font-size="11">100%</text>
+                
+                <!-- Метки Y -->
+                <text x="50" y="305" text-anchor="end" font-size="11">0</text>
+                <text x="50" y="240" text-anchor="end" font-size="11">10</text>
+                <text x="50" y="180" text-anchor="end" font-size="11">20</text>
+                <text x="50" y="120" text-anchor="end" font-size="11">30</text>
+                <text x="50" y="60" text-anchor="end" font-size="11">40</text>
+                
+                <!-- Кривая обратной зависимости -->
+                <path d="M 60,60 Q 150,100 240,150 Q 330,200 420,240 Q 510,270 540,280" 
+                      fill="none" stroke="#e74c3c" stroke-width="3"/>
+                
+                <!-- Текущая точка (80%) -->
+                <circle cx="420" cy="240" r="6" fill="#3498db" stroke="white" stroke-width="2"/>
+                <line x1="420" y1="240" x2="420" y2="300" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5"/>
+                <line x1="60" y1="240" x2="420" y2="240" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="430" y="235" font-size="12" font-weight="bold" fill="#3498db">Текущая: 80% → 9 Br</text>
+                
+                <!-- Критическая точка (50%) -->
+                <circle cx="300" cy="180" r="6" fill="#f39c12" stroke="white" stroke-width="2"/>
+                <text x="310" y="175" font-size="12" font-weight="bold" fill="#f39c12">50% → 15 Br</text>
+                
+                <!-- Асимптота -->
+                <line x1="540" y1="30" x2="540" y2="300" stroke="#95a5a6" stroke-width="1" stroke-dasharray="3,3"/>
+                <text x="550" y="50" font-size="11" fill="#95a5a6">Асимптота: мин. себестоимость</text>
+            </svg>
+
+            <div class="note">
+                <strong>💡 Скрытая операция:</strong> Когда менеджер видит низкую загрузку, он может не осознавать, 
+                что себестоимость каждого проданного номера растёт. При загрузке 50% себестоимость Стандарта вырастает 
+                с 9 Br до 15 Br — цена должна быть минимум 51 Br, иначе номер работает в убыток. Система 
+                автоматически пересчитывает это при каждом изменении расходов.
+            </div>
+        </div>
+
+        <!-- График 3: Распределение прибыли (Waterfall) -->
+        <div class="slide">
+            <h2>3. Распределение выручки номера (Waterfall Chart)</h2>
+            <p style="margin-bottom: 20px; color: #7f8c8d;">Куда деваются деньги от продажи одного номера</p>
+            
+            <svg viewBox="0 0 700 350" width="700" height="350">
+                <!-- Ось Y -->
+                <line x1="80" y1="300" x2="80" y2="30" stroke="#2c3e50" stroke-width="2"/>
+                <text x="30" y="165" text-anchor="middle" font-size="13" font-weight="bold" transform="rotate(-90, 30, 165)">Br</text>
+                
+                <!-- Метки Y -->
+                <text x="70" y="305" text-anchor="end" font-size="11">0</text>
+                <text x="70" y="240" text-anchor="end" font-size="11">15</text>
+                <text x="70" y="180" text-anchor="end" font-size="11">30</text>
+                <text x="70" y="120" text-anchor="end" font-size="11">45</text>
+                <text x="70" y="60" text-anchor="end" font-size="11">60</text>
+                
+                <!-- Столбцы -->
+                <!-- Цена -->
+                <rect x="100" y="60" width="80" height="240" fill="#3498db" rx="4"/>
+                <text x="140" y="50" text-anchor="middle" font-size="12" font-weight="bold" fill="#3498db">45 Br</text>
+                <text x="140" y="315" text-anchor="middle" font-size="11">Цена</text>
+                
+                <!-- Минус коммунальные -->
+                <rect x="220" y="180" width="80" height="120" fill="#e74c3c" rx="4"/>
+                <text x="260" y="170" text-anchor="middle" font-size="12" font-weight="bold" fill="#e74c3c">−5 Br</text>
+                <text x="260" y="315" text-anchor="middle" font-size="11">Коммунальные</text>
+                
+                <!-- Минус зарплата -->
+                <rect x="340" y="150" width="80" height="90" fill="#e67e22" rx="4"/>
+                <text x="380" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#e67e22">−4 Br</text>
+                <text x="380" y="315" text-anchor="middle" font-size="11">Зарплата</text>
+                
+                <!-- Минус прочее -->
+                <rect x="460" y="120" width="80" height="60" fill="#f39c12" rx="4"/>
+                <text x="500" y="110" text-anchor="middle" font-size="12" font-weight="bold" fill="#f39c12">−3 Br</text>
+                <text x="500" y="315" text-anchor="middle" font-size="11">Прочее</text>
+                
+                <!-- Прибыль -->
+                <rect x="580" y="120" width="80" height="60" fill="#27ae60" rx="4"/>
+                <text x="620" y="110" text-anchor="middle" font-size="12" font-weight="bold" fill="#27ae60">36 Br</text>
+                <text x="620" y="315" text-anchor="middle" font-size="11">Прибыль</text>
+                
+                <!-- Стрелки между столбцами -->
+                <line x1="180" y1="180" x2="220" y2="180" stroke="#7f8c8d" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="300" y1="150" x2="340" y2="150" stroke="#7f8c8d" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="420" y1="120" x2="460" y2="120" stroke="#7f8c8d" stroke-width="2" marker-end="url(#arrow)"/>
+                
+                <!-- Линия итога -->
+                <line x1="80" y1="120" x2="680" y2="120" stroke="#27ae60" stroke-width="1" stroke-dasharray="5,5"/>
+            </svg>
+
+            <div class="note">
+                <strong>💡 Скрытая операция:</strong> Каждый раз при открытии отчёта система пересчитывает 
+                структуру выручки для каждого номера. Менеджер видит не просто "прибыль 36 Br", а детальный 
+                разбор: из 45 Br цены 5 Br уходит на коммунальные, 4 Br на зарплату персонала, 3 Br на прочие 
+                расходы. Это позволяет находить "узкие места" — например, если коммунальные резко выросли.
+            </div>
+        </div>
+
+        <!-- График 4: Sankey-подобная диаграмма потоков -->
+        <div class="slide">
+            <h2>4. Поток денег: от общих расходов к конкретным номерам</h2>
+            <p style="margin-bottom: 20px; color: #7f8c8d;">Визуализация распределения 14 500 Br общих расходов по номерам</p>
+            
+            <svg viewBox="0 0 800 400" width="800" height="400">
+                <!-- Левый блок: Источники расходов -->
+                <rect x="20" y="50" width="150" height="60" fill="#e74c3c" rx="8" opacity="0.9"/>
+                <text x="95" y="75" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Зарплаты</text>
+                <text x="95" y="95" text-anchor="middle" fill="white" font-size="14" font-weight="bold">7 250 Br</text>
+                
+                <rect x="20" y="150" width="150" height="60" fill="#3498db" rx="8" opacity="0.9"/>
+                <text x="95" y="175" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Электричество</text>
+                <text x="95" y="195" text-anchor="middle" fill="white" font-size="14" font-weight="bold">5 400 Br</text>
+                
+                <rect x="20" y="250" width="150" height="60" fill="#27ae60" rx="8" opacity="0.9"/>
+                <text x="95" y="275" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Вода + Прочее</text>
+                <text x="95" y="295" text-anchor="middle" fill="white" font-size="14" font-weight="bold">1 850 Br</text>
+                
+                <!-- Центральный блок: Распределитель -->
+                <rect x="280" y="120" width="160" height="120" fill="#f39c12" rx="12" opacity="0.95"/>
+                <text x="360" y="160" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Распределитель</text>
+                <text x="360" y="185" text-anchor="middle" fill="white" font-size="12">пропорционально</text>
+                <text x="360" y="205" text-anchor="middle" fill="white" font-size="12">площади номера</text>
+                <text x="360" y="225" text-anchor="middle" fill="white" font-size="11">(1 330 м² всего)</text>
+                
+                <!-- Правый блок: Номера -->
+                <rect x="540" y="30" width="140" height="50" fill="#9b59b6" rx="6" opacity="0.9"/>
+                <text x="610" y="50" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Стандарт 101</text>
+                <text x="610" y="68" text-anchor="middle" fill="white" font-size="12">240 Br/мес</text>
+                
+                <rect x="540" y="100" width="140" height="50" fill="#9b59b6" rx="6" opacity="0.9"/>
+                <text x="610" y="120" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Стандарт 102</text>
+                <text x="610" y="138" text-anchor="middle" fill="white" font-size="12">240 Br/мес</text>
+                
+                <rect x="540" y="170" width="140" height="50" fill="#e74c3c" rx="6" opacity="0.9"/>
+                <text x="610" y="190" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Люкс 201</text>
+                <text x="610" y="208" text-anchor="middle" fill="white" font-size="12">490 Br/мес</text>
+                
+                <rect x="540" y="240" width="140" height="50" fill="#e74c3c" rx="6" opacity="0.9"/>
+                <text x="610" y="260" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Люкс 202</text>
+                <text x="610" y="278" text-anchor="middle" fill="white" font-size="12">490 Br/мес</text>
+                
+                <rect x="540" y="310" width="140" height="50" fill="#1abc9c" rx="6" opacity="0.9"/>
+                <text x="610" y="330" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Апартаменты</text>
+                <text x="610" y="348" text-anchor="middle" fill="white" font-size="12">1 200 Br/мес</text>
+                
+                <!-- Потоки (линии) -->
+                <path d="M 170,80 Q 220,80 280,160" fill="none" stroke="#e74c3c" stroke-width="25" opacity="0.4"/>
+                <path d="M 170,180 Q 220,180 280,180" fill="none" stroke="#3498db" stroke-width="20" opacity="0.4"/>
+                <path d="M 170,280 Q 220,280 280,200" fill="none" stroke="#27ae60" stroke-width="8" opacity="0.4"/>
+                
+                <!-- Выходные потоки -->
+                <path d="M 440,160 Q 490,55 540,55" fill="none" stroke="#9b59b6" stroke-width="12" opacity="0.4"/>
+                <path d="M 440,170 Q 490,125 540,125" fill="none" stroke="#9b59b6" stroke-width="12" opacity="0.4"/>
+                <path d="M 440,180 Q 490,195 540,195" fill="none" stroke="#e74c3c" stroke-width="14" opacity="0.4"/>
+                <path d="M 440,190 Q 490,265 540,265" fill="none" stroke="#e74c3c" stroke-width="14" opacity="0.4"/>
+                <path d="M 440,200 Q 490,335 540,335" fill="none" stroke="#1abc9c" stroke-width="18" opacity="0.4"/>
+                
+                <!-- Аннотация -->
+                <rect x="700" y="150" width="90" height="80" fill="#fff3cd" stroke="#ffc107" rx="8"/>
+                <text x="745" y="175" text-anchor="middle" font-size="11" fill="#856404">22 м² → 240 Br</text>
+                <text x="745" y="195" text-anchor="middle" font-size="11" fill="#856404">45 м² → 490 Br</text>
+                <text x="745" y="215" text-anchor="middle" font-size="11" fill="#856404">90 м² → 1 200 Br</text>
+            </svg>
+
+            <div class="note">
+                <strong>💡 Скрытая операция:</strong> Каждый раз при добавлении нового расхода система 
+                пересчитывает долю каждого номера. Пользователь не видит этот расчёт напрямую, но он лежит 
+                в основе всех финансовых метрик. Если отель добавляет новый Люкс площадью 90 м² — его доля 
+                в общих расходах вырастет, и себестоимость всех остальных номеров немного снизится 
+                (потому что общая площадь увеличилась, а расходы распределяются на большее количество метров).
+            </div>
+        </div>
+
+        <!-- График 5: Календарь-тепловая карта загрузки -->
+        <div class="slide">
+            <h2>5. Тепловая карта загрузки номеров (скрытый анализ)</h2>
+            <p style="margin-bottom: 20px; color: #7f8c8d;">Система анализирует историю и выявляет паттерны загрузки</p>
+            
+            <svg viewBox="0 0 700 280" width="700" height="280">
+                <!-- Заголовок дней недели -->
+                <text x="100" y="25" text-anchor="middle" font-size="12" font-weight="bold">Пн</text>
+                <text x="170" y="25" text-anchor="middle" font-size="12" font-weight="bold">Вт</text>
+                <text x="240" y="25" text-anchor="middle" font-size="12" font-weight="bold">Ср</text>
+                <text x="310" y="25" text-anchor="middle" font-size="12" font-weight="bold">Чт</text>
+                <text x="380" y="25" text-anchor="middle" font-size="12" font-weight="bold">Пт</text>
+                <text x="450" y="25" text-anchor="middle" font-size="12" font-weight="bold">Сб</text>
+                <text x="520" y="25" text-anchor="middle" font-size="12" font-weight="bold">Вс</text>
+                
+                <!-- Недели -->
+                <!-- Неделя 1 -->
+                <rect x="65" y="40" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="95" y="62" text-anchor="middle" font-size="11">65%</text>
+                
+                <rect x="135" y="40" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="165" y="62" text-anchor="middle" font-size="11">70%</text>
+                
+                <rect x="205" y="40" width="60" height="35" fill="#fff3cd" rx="4" stroke="#ffe082"/>
+                <text x="235" y="62" text-anchor="middle" font-size="11">78%</text>
+                
+                <rect x="275" y="40" width="60" height="35" fill="#fff3cd" rx="4" stroke="#ffe082"/>
+                <text x="305" y="62" text-anchor="middle" font-size="11">82%</text>
+                
+                <rect x="345" y="40" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="375" y="62" text-anchor="middle" font-size="11">95%</text>
+                
+                <rect x="415" y="40" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="445" y="62" text-anchor="middle" font-size="11">100%</text>
+                
+                <rect x="485" y="40" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="515" y="62" text-anchor="middle" font-size="11">98%</text>
+                
+                <!-- Неделя 2 -->
+                <rect x="65" y="85" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="95" y="107" text-anchor="middle" font-size="11">60%</text>
+                
+                <rect x="135" y="85" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="165" y="107" text-anchor="middle" font-size="11">68%</text>
+                
+                <rect x="205" y="85" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="235" y="107" text-anchor="middle" font-size="11">72%</text>
+                
+                <rect x="275" y="85" width="60" height="35" fill="#fff3cd" rx="4" stroke="#ffe082"/>
+                <text x="305" y="107" text-anchor="middle" font-size="11">80%</text>
+                
+                <rect x="345" y="85" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="375" y="107" text-anchor="middle" font-size="11">92%</text>
+                
+                <rect x="415" y="85" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="445" y="107" text-anchor="middle" font-size="11">100%</text>
+                
+                <rect x="485" y="85" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="515" y="107" text-anchor="middle" font-size="11">95%</text>
+                
+                <!-- Неделя 3 -->
+                <rect x="65" y="130" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="95" y="152" text-anchor="middle" font-size="11">55%</text>
+                
+                <rect x="135" y="130" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="165" y="152" text-anchor="middle" font-size="11">62%</text>
+                
+                <rect x="205" y="130" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="235" y="152" text-anchor="middle" font-size="11">70%</text>
+                
+                <rect x="275" y="130" width="60" height="35" fill="#fff3cd" rx="4" stroke="#ffe082"/>
+                <text x="305" y="152" text-anchor="middle" font-size="11">85%</text>
+                
+                <rect x="345" y="130" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="375" y="152" text-anchor="middle" font-size="11">90%</text>
+                
+                <rect x="415" y="130" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="445" y="152" text-anchor="middle" font-size="11">100%</text>
+                
+                <rect x="485" y="130" width="60" height="35" fill="#fff3cd" rx="4" stroke="#ffe082"/>
+                <text x="515" y="152" text-anchor="middle" font-size="11">88%</text>
+                
+                <!-- Неделя 4 -->
+                <rect x="65" y="175" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="95" y="197" text-anchor="middle" font-size="11">50%</text>
+                
+                <rect x="135" y="175" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="165" y="197" text-anchor="middle" font-size="11">58%</text>
+                
+                <rect x="205" y="175" width="60" height="35" fill="#e8f5e9" rx="4" stroke="#c8e6c9"/>
+                <text x="235" y="197" text-anchor="middle" font-size="11">66%</text>
+                
+                <rect x="275" y="175" width="60" height="35" fill="#fff3cd" rx="4" stroke="#ffe082"/>
+                <text x="305" y="197" text-anchor="middle" font-size="11">75%</text>
+                
+                <rect x="345" y="175" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="375" y="197" text-anchor="middle" font-size="11">88%</text>
+                
+                <rect x="415" y="175" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="445" y="197" text-anchor="middle" font-size="11">100%</text>
+                
+                <rect x="485" y="175" width="60" height="35" fill="#ffebee" rx="4" stroke="#ef9a9a"/>
+                <text x="515" y="197" text-anchor="middle" font-size="11">92%</text>
+                
+                <!-- Легенда -->
+                <rect x="580" y="40" width="20" height="20" fill="#e8f5e9" stroke="#c8e6c9" rx="3"/>
+                <text x="610" y="55" font-size="11">&lt; 70% низкая</text>
+                
+                <rect x="580" y="70" width="20" height="20" fill="#fff3cd" stroke="#ffe082" rx="3"/>
+                <text x="610" y="85" font-size="11">70-85% средняя</text>
+                
+                <rect x="580" y="100" width="20" height="20" fill="#ffebee" stroke="#ef9a9a" rx="3"/>
+                <text x="610" y="115" font-size="11">&gt; 85% высокая</text>
+                
+                <!-- Вывод -->
+                <rect x="580" y="150" width="110" height="80" fill="#e3f2fd" stroke="#3498db" rx="8"/>
+                <text x="635" y="172" text-anchor="middle" font-size="11" font-weight="bold" fill="#1565c0">Паттерн:</text>
+                <text x="635" y="190" text-anchor="middle" font-size="10" fill="#1565c0">Пт-Вс — пик</text>
+                <text x="635" y="205" text-anchor="middle" font-size="10" fill="#1565c0">Пн-Ср — спад</text>
+                <text x="635" y="220" text-anchor="middle" font-size="10" fill="#1565c0">Коэфф: 1.3x / 0.7x</text>
+            </svg>
+
+            <div class="note">
+                <strong>💡 Скрытая операция:</strong> Система автоматически анализирует историю бронирований 
+                и строит такую тепловую карту. Она не отображается в UI напрямую, но используется в модуле 
+                прогнозирования для расчёта коэффициентов дней недели. Менеджер может не знать, что система 
+                "знает" о пятничном всплеске бронирований, но прогноз на пятницу будет выше именно из-за 
+                этого скрытого анализа.
+            </div>
+        </div>
+
+        <!-- График 6: Амортизация и скрытые затраты -->
+        <div class="slide">
+            <h2>6. Скрытые затраты: что не видно сразу</h2>
+            <p style="margin-bottom: 20px; color: #7f8c8d;">Система учитывает затраты, которые не очевидны при ручном расчёте</p>
+            
+            <svg viewBox="0 0 700 300" width="700" height="300">
+                <!-- Ось Y -->
+                <line x1="80" y1="260" x2="80" y2="30" stroke="#2c3e50" stroke-width="2"/>
+                <text x="30" y="145" text-anchor="middle" font-size="13" font-weight="bold" transform="rotate(-90, 30, 145)">Br / сутки</text>
+                
+                <!-- Ось X -->
+                <line x1="80" y1="260" x2="650" y2="260" stroke="#2c3e50" stroke-width="2"/>
+                <text x="365" y="285" text-anchor="middle" font-size="13" font-weight="bold">Тип затрат</text>
+                
+                <!-- Столбцы -->
+                <!-- Коммунальные (видимые) -->
+                <rect x="110" y="140" width="70" height="120" fill="#3498db" rx="4"/>
+                <text x="145" y="130" text-anchor="middle" font-size="12" font-weight="bold" fill="#3498db">5 Br</text>
+                <text x="145" y="275" text-anchor="middle" font-size="11">Коммун.</text>
+                
+                <!-- Зарплата (видимая) -->
+                <rect x="210" y="170" width="70" height="90" fill="#e74c3c" rx="4"/>
+                <text x="245" y="160" text-anchor="middle" font-size="12" font-weight="bold" fill="#e74c3c">4 Br</text>
+                <text x="245" y="275" text-anchor="middle" font-size="11">Зарплата</text>
+                
+                <!-- Прочее (видимое) -->
+                <rect x="310" y="200" width="70" height="60" fill="#f39c12" rx="4"/>
+                <text x="345" y="190" text-anchor="middle" font-size="12" font-weight="bold" fill="#f39c12">3 Br</text>
+                <text x="345" y="275" text-anchor="middle" font-size="11">Прочее</text>
+                
+                <!-- Амортизация (скрытая!) -->
+                <rect x="410" y="185" width="70" height="75" fill="#9b59b6" rx="4" opacity="0.6"/>
+                <text x="445" y="175" text-anchor="middle" font-size="12" font-weight="bold" fill="#9b59b6">2 Br</text>
+                <text x="445" y="275" text-anchor="middle" font-size="11">Амортизация</text>
+                
+                <!-- Резерв (скрытый!) -->
+                <rect x="510" y="215" width="70" height="45" fill="#1abc9c" rx="4" opacity="0.6"/>
+                <text x="545" y="205" text-anchor="middle" font-size="12" font-weight="bold" fill="#1abc9c">1 Br</text>
+                <text x="545" y="275" text-anchor="middle" font-size="11">Резерв</text>
+                
+                <!-- Итого -->
+                <line x1="80" y1="110" x2="650" y2="110" stroke="#27ae60" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="660" y="115" font-size="12" font-weight="bold" fill="#27ae60">Итого: 15 Br</text>
+                
+                <!-- Аннотация -->
+                <rect x="400" y="30" width="240" height="70" fill="#fff3cd" stroke="#ffc107" rx="8"/>
+                <text x="520" y="52" text-anchor="middle" font-size="11" font-weight="bold" fill="#856404">⚠️ Часто забывают:</text>
+                <text x="520" y="70" text-anchor="middle" font-size="10" fill="#856404">• Амортизация мебели и ремонта</text>
+                <text x="520" y="85" text-anchor="middle" font-size="10" fill="#856404">• Резерв на внештатные ситуации</text>
+            </svg>
+
+            <div class="note">
+                <strong>💡 Скрытая операция:</strong> В текущей версии система учитывает прямые расходы 
+                (коммунальные, зарплаты). Но архитектура позволяет легко добавить скрытые статьи: 
+                амортизация мебели (ежемесячный износ), резервный фонд на ремонт, страховые взносы. 
+                Эти статьи не видны при обычном взгляде на счета, но они реально "съедают" прибыль. 
+                Система может включить их в расчёт себестоимости через отдельную категорию расходов.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

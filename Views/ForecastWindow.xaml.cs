@@ -55,11 +55,11 @@ public partial class ForecastWindow : Window
                 var income = room.Price * booking.StayDays * booking.Count;
                 totalIncome += income;
                 
-                // Реальные расходы на номер (вода + свет + интернет + уборка) * дни * количество
-                var roomExpenses = room.TotalExpenses * booking.StayDays * booking.Count;
+                // Расходы = себестоимость
+                var roomExpenses = room.Cost * booking.StayDays * booking.Count;
                 totalExpenses += roomExpenses;
                 
-                System.Diagnostics.Debug.WriteLine($"Номер {room.Name}: Доход={income:N0}, Расходы={roomExpenses:N0} (ставка={room.TotalExpenses:F0}/ночь)");
+                System.Diagnostics.Debug.WriteLine($"Номер {room.Name}: Доход={income:N0}, Расходы={roomExpenses:N0} (себестоимость={room.Cost:F0}/ночь)");
             }
         }
         
@@ -110,8 +110,8 @@ public partial class ForecastWindow : Window
             {
                 var room = booking.Room;
                 var roomName = room?.Name ?? $"Номер {booking.RoomId}";
-                var income = (room?.Price ?? 0) * booking.StayDays * booking.Count;
-                var expenses = (room?.TotalExpenses ?? 0) * booking.StayDays * booking.Count;
+                var income = (room?.Profit ?? 0) * booking.StayDays * booking.Count;
+                var expenses = (room?.Cost ?? 0) * booking.StayDays * booking.Count;
                 var profit = income - expenses;
                 details.AppendLine($"• {roomName} - {booking.Count}x{booking.StayDays}дней");
                 details.AppendLine($"  Доход: {AppConstants.FormatPriceDouble((double)income)} | Расходы: {AppConstants.FormatPriceDouble((double)expenses)} | Прибыль: {AppConstants.FormatPriceDouble((double)profit)}");
@@ -269,8 +269,8 @@ public partial class ForecastWindow : Window
             var booking = bookingsCopy[i];
             var originalIndex = _forecastBookings.IndexOf(booking);
             var room = booking.Room;
-            var income = (room?.Price ?? 0) * booking.StayDays * booking.Count;
-            var expenses = (room?.TotalExpenses ?? 0) * booking.StayDays * booking.Count;
+            var income = (room?.Profit ?? 0) * booking.StayDays * booking.Count;
+            var expenses = (room?.Cost ?? 0) * booking.StayDays * booking.Count;
             var profit = income - expenses;
             
             var stackPanel = new StackPanel

@@ -6,22 +6,38 @@ namespace HotelSystem.Services;
 public class RoomService : IRoomService
 {
     private readonly IRoomRepository _roomRepository;
+    private readonly IRoomCostCalculationService _costCalculationService;
     private readonly ILogService _logService;
 
-    public RoomService(IRoomRepository roomRepository, ILogService logService)
+    public RoomService(IRoomRepository roomRepository, IRoomCostCalculationService costCalculationService, ILogService logService)
     {
         _roomRepository = roomRepository;
+        _costCalculationService = costCalculationService;
         _logService = logService;
     }
 
     public async Task<IEnumerable<Room>> GetAllRoomsAsync()
     {
-        return await _roomRepository.GetAllAsync();
+        var rooms = await _roomRepository.GetAllAsync();
+        
+        // Автоматический пересчёт себестоимости для всех номеров
+        foreach (var room in rooms)
+        {
+            room.Cost = await _costCalculationService.CalculateRoomCostAsync(room);
+        }
+        
+        return rooms;
     }
 
     public async Task<Room?> GetRoomByIdAsync(int id)
     {
-        return await _roomRepository.GetByIdAsync(id);
+        var room = await _roomRepository.GetByIdAsync(id);
+        if (room != null)
+        {
+            // Автоматический пересчёт себестоимости
+            room.Cost = await _costCalculationService.CalculateRoomCostAsync(room);
+        }
+        return room;
     }
 
     public async Task<Room> CreateRoomAsync(Room room)

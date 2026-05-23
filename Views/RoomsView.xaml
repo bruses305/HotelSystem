@@ -26,6 +26,7 @@
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="120"/>
                     <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="115"/>
+                    <DataGridTextColumn Header="Площадь" Binding="{Binding Area, StringFormat={}{0:N1} м²}" Width="90"/>
                     <DataGridTextColumn Header="Цена" 
                                         Binding="{Binding Price, Converter={StaticResource PriceConverter}}" 
                                         Width="100">
@@ -37,7 +38,29 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Вместимость" Binding="{Binding Capacity, Converter={StaticResource PeopleCountConverter}}" Width="120"/>
+                    <DataGridTextColumn Header="Прибыль" 
+                                        Binding="{Binding Profit, Converter={StaticResource PriceConverter}}" 
+                                        Width="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="TextAlignment" Value="Right"/>
+                                <Setter Property="Margin" Value="0,0,8,0"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Себестоимость" 
+                                        Binding="{Binding Cost, Converter={StaticResource PriceConverter}}" 
+                                        Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="TextAlignment" Value="Right"/>
+                                <Setter Property="Margin" Value="0,0,8,0"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Вместимость" Binding="{Binding Capacity, Converter={StaticResource PeopleCountConverter}}" Width="100"/>
                     <DataGridTemplateColumn Header="Статус" Width="110">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -57,17 +80,6 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Расходы" 
-                                        Binding="{Binding TotalExpenses, Converter={StaticResource PriceConverter}}" 
-                                        Width="100">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                <Setter Property="TextAlignment" Value="Right"/>
-                                <Setter Property="Margin" Value="0,0,8,0"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="320"/>
                     <DataGridTemplateColumn Header="Действия" Width="110">
                         <DataGridTemplateColumn.CellTemplate>

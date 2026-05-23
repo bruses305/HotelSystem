@@ -28,8 +28,8 @@
             </StackPanel>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-            <Button Content="Отмена" Click="Cancel_Click" Padding="20,10" Margin="0,0,10,0"/>
-            <Button Content="Сохранить" Click="Save_Click" Background="#27AE60" Foreground="White" Padding="20,10" BorderThickness="0">
+            <Button Content="Отмена" Click="Cancel_Click" Padding="20,5" Margin="0,0,10,0"/>
+            <Button Content="Сохранить" Click="Save_Click" Background="#27AE60" Foreground="White" Padding="20,5" BorderThickness="0">
                 <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center"/></Border></ControlTemplate></Button.Template>
             </Button>
         </StackPanel>

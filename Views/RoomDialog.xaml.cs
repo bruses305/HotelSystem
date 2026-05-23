@@ -1,89 +1,121 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.ComponentModel;
-using HotelSystem.Repositories;
-using HotelSystem.Services;
 using HotelSystem.Models.Entities;
 using HotelSystem.Helpers;
+using HotelSystem.Services;
 
 namespace HotelSystem.Views;
 
 public partial class RoomDialog : DialogBase
 {
     public Room Room { get; private set; }
-    private readonly bool _isEdit;
+    private bool _dataLoaded;
+    private readonly IRoomCostCalculationService _costCalculationService;
         
-    private string _originalName = "";
-    private decimal _originalPrice;
-    private int _originalCapacity;
-    private string _originalDescription = "";
-
     public RoomDialog(Room? room = null)
     {
         InitializeComponent();
-        _isEdit = room != null;
         Room = room ?? new Room();
-        if (_isEdit) InitializeForm();
+        _costCalculationService = ServiceLocator.GetService<IRoomCostCalculationService>();
+        LoadData();
+        
+        // Подписка на изменения после загрузки данных
+        NameTextBox.TextChanged += MarkAsChanged;
+        ProfitTextBox.TextChanged += AreaTextBox_TextChanged;
+        AreaTextBox.TextChanged += AreaTextBox_TextChanged;
+        CapacityTextBox.TextChanged += MarkAsChanged;
+        DescriptionTextBox.TextChanged += MarkAsChanged;
+        TypeComboBox.SelectionChanged += MarkAsChanged;
     }
 
-    protected override bool HasChanges => 
-        NameTextBox.Text?.Trim() != _originalName ||
-        decimal.TryParse(PriceTextBox.Text, out var p) && p != _originalPrice ||
-        int.TryParse(CapacityTextBox.Text, out var c) && c != _originalCapacity ||
-        DescriptionTextBox.Text?.Trim() != _originalDescription;
+    private void MarkAsChanged(object sender, EventArgs e)
+    {
+        _dataLoaded = true; // Теперь это флаг "были изменения"
+    }
+
+    protected override bool HasChanges => _dataLoaded;
     
     protected override void Save()
     {
         if (string.IsNullOrWhiteSpace(NameTextBox.Text))
         {
-            MessageBoxHelper.ShowError("Введите название номера");
+            MessageBox.Show("Введите название номера", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
-        if (!decimal.TryParse(PriceTextBox.Text, out var price) || price < 0)
+        if (!decimal.TryParse(ProfitTextBox.Text, out var profit) || profit < 0)
         {
-            MessageBoxHelper.ShowError("Введите корректную цену");
+            MessageBox.Show("Введите корректную прибыль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         Room.Name = NameTextBox.Text;
-        Room.Price = price;
+        Room.Profit = profit;
+        Room.Cost = decimal.TryParse(CostTextBox.Text, out var cost) ? cost : 0;
         Room.Capacity = int.TryParse(CapacityTextBox.Text, out var cap) ? cap : 1;
         Room.Description = DescriptionTextBox.Text;
         Room.Type = Enum.Parse<RoomType>((TypeComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Стандартный");
-        Room.WaterExpense = decimal.TryParse(WaterTextBox.Text, out var w) ? w : 0;
-        Room.ElectricityExpense = decimal.TryParse(ElectricityTextBox.Text, out var el) ? el : 0;
-        Room.InternetExpense = decimal.TryParse(InternetTextBox.Text, out var inter) ? inter : 0;
-        Room.CleaningExpense = decimal.TryParse(CleaningTextBox.Text, out var cl) ? cl : 0;
+        Room.Area = decimal.TryParse(AreaTextBox.Text, out var area) ? area : 0;
         
         MarkAsSaved();
         DialogResult = true;
         CloseWithoutPrompt();
     }
-    
+
     protected override void Cancel()
     {
         base.Cancel();
         CloseWithoutPrompt();
     }
 
-    private void InitializeForm()
+    private async void LoadData()
     {
         NameTextBox.Text = Room.Name;
-        PriceTextBox.Text = Room.Price.ToString();
+        ProfitTextBox.Text = Room.Profit.ToString();
+        AreaTextBox.Text = Room.Area.ToString();
         CapacityTextBox.Text = Room.Capacity.ToString();
         DescriptionTextBox.Text = Room.Description;
-        WaterTextBox.Text = Room.WaterExpense.ToString();
-        ElectricityTextBox.Text = Room.ElectricityExpense.ToString();
-        InternetTextBox.Text = Room.InternetExpense.ToString();
-        CleaningTextBox.Text = Room.CleaningExpense.ToString();
+        
         foreach (ComboBoxItem item in TypeComboBox.Items)
             if (item.Tag?.ToString() == Room.Type.ToString()) { TypeComboBox.SelectedItem = item; break; }
 
-        _originalName = Room.Name ?? "";
-        _originalPrice = Room.Price;
-        _originalCapacity = Room.Capacity;
-        _originalDescription = Room.Description ?? "";
+        // Авторасчёт себестоимости и цены
+        await UpdateCostAndPriceAsync();
+    }
+
+    private async void AreaTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        _dataLoaded = true; // Были изменения
+        await UpdateCostAndPriceAsync();
+    }
+
+    private async Task UpdateCostAndPriceAsync()
+    {
+        if (decimal.TryParse(AreaTextBox.Text, out var area) && area > 0)
+        {
+            try
+            {
+                // Рассчитываем себестоимость через сервис
+                var room = new Room { Area = area };
+                var calculatedCost = await _costCalculationService.CalculateRoomCostAsync(room);
+                
+                CostTextBox.Text = calculatedCost.ToString();
+                
+                if (decimal.TryParse(ProfitTextBox.Text, out var profit))
+                {
+                    PriceTextBox.Text = (profit + calculatedCost).ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Ошибка расчёта себестоимости: {ex.Message}");
+            }
+        }
+        else
+        {
+            PriceTextBox.Text = "0";
+        }
     }
 
     private void Save_Click(object sender, RoutedEventArgs e)
@@ -94,10 +126,5 @@ public partial class RoomDialog : DialogBase
     private void Cancel_Click(object sender, RoutedEventArgs e)
     {
         Cancel();
-    }
-
-    private void Window_Closing(object sender, CancelEventArgs e)
-    {
-        // Логика перенесена в базовый класс
     }
 }

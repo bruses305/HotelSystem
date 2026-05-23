@@ -27,7 +27,7 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
     {
         var thresholdDate = DateTime.Now.AddDays(-weeks * 7);
         return await _context.Expenses
-            .Where(e => e.LastPaymentDate < thresholdDate || !e.IsPaid)
+            .Where(e => e.LastPaymentDate < thresholdDate)
             .OrderByDescending(e => e.LastPaymentDate)
             .ToListAsync();
     }
@@ -50,7 +50,6 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
     public async Task<IEnumerable<Expense>> GetExpensesWithRoomAsync()
     {
         return await _context.Expenses
-            .Include(e => e.Room)
             .OrderByDescending(e => e.LastPaymentDate)
             .ToListAsync();
     }

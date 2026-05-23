@@ -27,6 +27,16 @@ public partial class ExpenseDialog : DialogBase
         DescriptionTextBox.Text = Expense.Description;
         AmountTextBox.Text = Expense.Amount.ToString();
         
+        // Заполняем ComboBox из TransactionCategory enum
+        foreach (TransactionCategory category in Enum.GetValues(typeof(TransactionCategory)))
+        {
+            CategoryComboBox.Items.Add(new ComboBoxItem
+            {
+                Content = category.ToString(),
+                Tag = category.ToString()
+            });
+        }
+        
         // Установка категории
         if (!string.IsNullOrEmpty(Expense.Category))
         {
@@ -49,9 +59,6 @@ public partial class ExpenseDialog : DialogBase
         {
             LastPaymentDatePicker.SelectedDate = DateTime.Now;
         }
-
-        // Статус оплаты
-        IsPaidCheckBox.IsChecked = Expense.IsPaid;
     }
 
     protected override bool HasChanges => _dataLoaded;
@@ -81,9 +88,8 @@ public partial class ExpenseDialog : DialogBase
         Expense.Name = NameTextBox.Text.Trim();
         Expense.Description = DescriptionTextBox.Text.Trim();
         Expense.Amount = amount;
-        Expense.Category = (CategoryComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Другое";
+        Expense.Category = (CategoryComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? TransactionCategory.Бронирование.ToString();
         Expense.LastPaymentDate = LastPaymentDatePicker.SelectedDate.Value;
-        Expense.IsPaid = IsPaidCheckBox.IsChecked ?? false;
 
         _isSaved = true;
         DialogResult = true;
