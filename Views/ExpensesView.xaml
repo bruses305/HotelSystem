@@ -4,12 +4,14 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:models="clr-namespace:HotelSystem.Models.Entities"
       xmlns:views="clr-namespace:HotelSystem.Views"
+      xmlns:helpers="clr-namespace:HotelSystem.Helpers"
       Title="Дополнительные расходы" 
       Background="#FFF3F4F6">
 
     <Page.Resources>
         <views:ExpenseStatusConverter x:Key="ExpenseStatusConverter" />
         <views:ExpenseStatusTextConverter x:Key="ExpenseStatusTextConverter" />
+        <helpers:QuantityWithUnitConverter x:Key="QuantityWithUnitConverter" />
     </Page.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -59,12 +61,39 @@
         
         <!-- Таблица расходов -->
         <DataGrid x:Name="ExpensesGrid"  Grid.Row="1"  AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0" MouseDoubleClick="ExpensesGrid_MouseDoubleClick">
-        <DataGrid.Columns>
+            <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
-                <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="250"/>
-                <DataGridTextColumn Header="Категория" Binding="{Binding Category}" Width="150"/>
-                <DataGridTextColumn Header="Сумма" Binding="{Binding Amount, Converter={StaticResource PriceConverter}}" Width="120"/>
-                <DataGridTextColumn Header="Дата оплаты" Binding="{Binding LastPaymentDate, StringFormat={}{0:dd.MM.yyyy}}" Width="120"/>
+                <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="150"/>
+                <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="200"/>
+                <DataGridTextColumn Header="Категория" Binding="{Binding Category}" Width="100"/>
+                <DataGridTemplateColumn  MinWidth="100" MaxWidth="400">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Source=Сумма, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:Expense">
+                            <TextBlock Text="{Binding Amount}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Количество" Width="120">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text">
+                                <Setter.Value>
+                                    <MultiBinding Converter="{StaticResource QuantityWithUnitConverter}">
+                                        <Binding Path="Quantity"/>
+                                        <Binding Path="UnitName"/>
+                                    </MultiBinding>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Дата оплаты" Binding="{Binding LastPaymentDate, StringFormat={}{0:dd.MM.yyyy}}" Width="110"/>
                 <DataGridTemplateColumn Header="Статус" Width="130">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="models:Expense">

@@ -32,7 +32,6 @@ public partial class SettingsView : Page
             settings.LogRetentionDays = days;
         
         SettingsService.Instance.SaveSettings();
-        MessageBox.Show("Р СњР В°РЎРѓРЎвЂљРЎР‚Р С•Р в„–Р С”Р С‘ РЎРѓР С•РЎвЂ¦РЎР‚Р В°Р Р…Р ВµР Р…РЎвЂ№!", "Р Р€РЎРѓР С—Р ВµРЎвЂ¦", MessageBoxButton.OK, MessageBoxImage.Information);
     }
     
     private void ResetSettings_Click(object sender, RoutedEventArgs e)

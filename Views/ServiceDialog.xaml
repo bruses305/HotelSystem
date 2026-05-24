@@ -17,7 +17,7 @@
             <TextBox x:Name="NameTextBox" Padding="10" Margin="0,0,0,15"/>
             <TextBlock Text="Описание" FontWeight="SemiBold" Margin="0,0,0,5"/>
             <TextBox x:Name="DescriptionTextBox" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Padding="10" Margin="0,0,0,15"/>
-            <TextBlock Text="Цена" FontWeight="SemiBold" Margin="0,0,0,5"/>
+            <TextBlock Text="Цена руб." FontWeight="SemiBold" Margin="0,0,0,5"/>
             <TextBox x:Name="PriceTextBox" Padding="10" Margin="0,0,0,15"/>
             <CheckBox x:Name="IsActiveCheckBox" Content="Активна" IsChecked="True"/>
         </StackPanel>

@@ -21,6 +21,7 @@
             <helpers:PriceConverter x:Key="PriceConverter"/>
             <helpers:PriceOnlyConverter x:Key="PriceOnlyConverter"/>
             <converters:PeopleCountConverter x:Key="PeopleCountConverter" />
+            <helpers:CurrencyDisplayConverter x:Key="CurrencyDisplayConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

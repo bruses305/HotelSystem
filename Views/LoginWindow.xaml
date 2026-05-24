@@ -158,7 +158,7 @@
 
             <StackPanel>
                 <TextBlock Text="🏨" FontSize="48" HorizontalAlignment="Center" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,8"/>
-                <TextBlock Text="Hotel System" FontSize="28" FontWeight="SemiBold" Foreground="#FF2C3E50" HorizontalAlignment="Center" Margin="0,8,0,4"/>
+                <TextBlock Text="Гостиничная система" FontSize="28" FontWeight="SemiBold" Foreground="#FF2C3E50" HorizontalAlignment="Center" Margin="0,8,0,4"/>
                 <TextBlock Text="Вход в систему" FontSize="14" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,28"/>
 
                 <TextBox x:Name="LoginTextBox" 

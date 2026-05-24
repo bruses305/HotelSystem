@@ -312,3 +312,8 @@ D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\ExpenseDialog.baml
 D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\ExpensesView.baml
 D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\AdvancedForecastWindow.baml
 D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\AdvancedForecastWindow.g.cs
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\HelpDialog.g.cs
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\ParsingSourceDialog.g.cs
+D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\HtmlAgilityPack.dll
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\HelpDialog.baml
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\ParsingSourceDialog.baml

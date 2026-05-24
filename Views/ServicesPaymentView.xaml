@@ -57,18 +57,20 @@
                     <DataGridTextColumn Header="Дата" Binding="{Binding TransactionDate, StringFormat=dd.MM.yyyy HH:mm}" Width="130"/>
                     <DataGridTextColumn Header="Клиент" Binding="{Binding ClientName}" Width="200"/>
                     <DataGridTextColumn Header="Услуга" Binding="{Binding ServiceName}" Width="150"/>
-                    <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="100"/>
-                    <DataGridTextColumn Header="Сумма" 
-                                        Binding="{Binding Amount, Converter={StaticResource PriceConverter}}" 
-                                        Width="100">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                <Setter Property="TextAlignment" Value="Right"/>
-                                <Setter Property="Margin" Value="0,0,8,0"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" MinWidth="100" MaxWidth="400"/>
+                    <DataGridTemplateColumn Header="Сумма" MinWidth="100" MaxWidth="400">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Source=Прибыль, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Amount}" HorizontalAlignment="Right" TextAlignment="Right" Margin="0,0,8,0"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>

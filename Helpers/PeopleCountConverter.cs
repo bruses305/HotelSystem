@@ -11,6 +11,10 @@ public class PeopleCountConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
+        if (value is string s)
+        {
+            return s + " чел.";
+        }
         if (value == null)
             return "0 чел.";
 

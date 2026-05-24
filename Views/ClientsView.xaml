@@ -36,17 +36,18 @@
                     <DataGridTextColumn Header="Паспорт" Binding="{Binding Passport}" Width="120"/>
                     <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="130"/>
                     <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="180"/>
-                    <DataGridTextColumn Header="Потрачено" 
-                                        Binding="{Binding TotalSpent, Converter={StaticResource PriceConverter}}" 
-                                        Width="130">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                <Setter Property="TextAlignment" Value="Right"/>
-                                <Setter Property="Margin" Value="0,0,8,0"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Потрачено" Width="130">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Source=Потрачено, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding TotalSpent}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Действия" Width="110">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

@@ -297,13 +297,13 @@ public partial class ExpensesView : Page
             }
             
             var totalSalary = activeEmployees.Sum(e => e.Salary);
-            var salaryText = string.Join("\n", activeEmployees.Select(e => $"{e.FullName}: {e.Salary:N0} ₽"));
+            var salaryText = string.Join("\n", activeEmployees.Select(e => $"{e.FullName}: {e.Salary:N0} Руб."));
             
             var result = MessageBox.Show(
                 $"Выплатить зарплату {activeEmployees.Count} сотрудникам?\n\n" +
-                $"Общая сумма: {totalSalary:N0} ₽\n\n" +
+                $"Общая сумма: {totalSalary:N0} Руб.\n\n" +
                 $"Сотрудники:\n{salaryText}",
-                "Подтверждение выплаты ЗП",
+                "Подтверждение выплаты Зароботной платы",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
             

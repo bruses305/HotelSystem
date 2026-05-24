@@ -312,30 +312,42 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Номер" Binding="{Binding Name}" Width="220"/>
                                 <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="150"/>
-                                <DataGridTextColumn Header="Доход" Binding="{Binding Income, Converter={StaticResource PriceConverter}}" Width="120">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Text" Value="{Binding Income, Converter={StaticResource PriceConverter}}"/>
-                                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Header="Расходы" Binding="{Binding Expenses, Converter={StaticResource PriceConverter}}" Width="120">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Text" Value="{Binding Expenses, Converter={StaticResource PriceConverter}}"/>
-                                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Header="Прибыль" Binding="{Binding Profit, Converter={StaticResource PriceConverter}}" Width="120">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Text" Value="{Binding Profit, Converter={StaticResource PriceConverter}}"/>
-                                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                </DataGridTextColumn>
+                                <DataGridTemplateColumn Header="Доход"  MinWidth="100" MaxWidth="400">
+                                    <DataGridTemplateColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Source=Доход, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.HeaderTemplate>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Income}" HorizontalAlignment="Right"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Расходы"  MinWidth="100" MaxWidth="400">
+                                    <DataGridTemplateColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Source=Расходы, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.HeaderTemplate>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Expenses}" HorizontalAlignment="Right"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Прибыль"  MinWidth="100" MaxWidth="400">
+                                    <DataGridTemplateColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Source=Прибыль, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.HeaderTemplate>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Profit}" HorizontalAlignment="Right"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -354,38 +366,55 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Клиент" Binding="{Binding FullName}" Width="270" MinWidth="150"/>
                 <DataGridTextColumn Header="Бронирований" Binding="{Binding BookingsCount}" Width="100"/>
-                <DataGridTextColumn Header="Потрачено (номера)" Binding="{Binding SpentOnRooms, Converter={StaticResource PriceConverter}}" Width="160">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Text" Value="{Binding SpentOnRooms, Converter={StaticResource PriceConverter}}"/>
-                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Потрачено (услуги)" Binding="{Binding SpentOnServices, Converter={StaticResource PriceConverter}}" Width="160">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Text" Value="{Binding SpentOnServices, Converter={StaticResource PriceConverter}}"/>
-                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Всего потрачено" Binding="{Binding TotalSpent, Converter={StaticResource PriceConverter}}" Width="160">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Text" Value="{Binding TotalSpent, Converter={StaticResource PriceConverter}}"/>
-                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Средний чек" Binding="{Binding AverageCheck, Converter={StaticResource PriceConverter}}" Width="130">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Text" Value="{Binding AverageCheck, Converter={StaticResource PriceConverter}}"/>
-                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                
+                <DataGridTemplateColumn Header="Потрачено (номера)"  MinWidth="100" MaxWidth="400">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Source=Потрачено (номера), Converter={StaticResource CurrencyDisplayConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding SpentOnRooms}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Потрачено (услуги)"  MinWidth="100" MaxWidth="400">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Source=Потрачено (услуги), Converter={StaticResource CurrencyDisplayConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding SpentOnServices}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Всего потрачено"  MinWidth="100" MaxWidth="400">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Source=Всего потрачено, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TotalSpent}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Средний чек"  MinWidth="100" MaxWidth="400">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Source=Средний чек, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding AverageCheck}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Последнее бронирование" Binding="{Binding LastBookingDate , StringFormat=dd.MM.yyyy}" Width="170"/>
             </DataGrid.Columns>
         </DataGrid>

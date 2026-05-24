@@ -31,13 +31,18 @@
                     <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="120"/>
                     <DataGridTextColumn Header="Должность" Binding="{Binding Position}" Width="150"/>
                     <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="130"/>
-                    <DataGridTextColumn Header="Зарплата" Binding="{Binding Salary}" Width="100">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="{Binding Salary, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Зарплата" MinWidth="100" MaxWidth="400">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Source=Зарплата, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Salary}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Роль" Width="140">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

@@ -18,7 +18,7 @@
             </ComboBox>
             <TextBlock Text="Категория" FontWeight="SemiBold" Margin="0,0,0,5"/>
             <ComboBox x:Name="CategoryComboBox" Margin="0,0,0,15" Padding="10"/>
-            <TextBlock Text="Сумма" FontWeight="SemiBold" Margin="0,0,0,5"/>
+            <TextBlock Text="Сумма руб." FontWeight="SemiBold" Margin="0,0,0,5"/>
             <TextBox x:Name="AmountTextBox" Padding="10" Margin="0,0,0,15"/>
             <TextBlock Text="Описание" FontWeight="SemiBold" Margin="0,0,0,5"/>
             <TextBox x:Name="DescriptionTextBox" Padding="10"/>

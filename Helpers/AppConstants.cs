@@ -8,7 +8,7 @@ public static class AppConstants
     /// <summary>
     /// Валюта для отображения цен (можно изменить в настройках)
     /// </summary>
-    public static string Currency { get; set; } = "Br";
+    public static string Currency { get; set; } = "Руб.";
     
     /// <summary>
     /// Формат отображения цены с валютой (decimal)
@@ -38,4 +38,6 @@ public static class AppConstants
             return $"{i:N0} {Currency}";
         return $"{amount} {Currency}";
     }
+    
+    public static string FormatString(string text) => text + $" {Currency}";
 }

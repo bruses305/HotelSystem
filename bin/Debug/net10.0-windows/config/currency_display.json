@@ -1,0 +1,209 @@
+{
+  "defaultCurrency": "BYR",
+  "symbol": "\u0411r",
+  "groups": {
+    "Expenses": {
+      "group": "Expenses",
+      "locationSettings": {
+        "ExpensesTableAmount": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": null,
+          "decimalSeparator": "."
+        },
+        "ExpensesColumnHeader": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": null,
+          "decimalSeparator": "."
+        },
+        "ExpensesForm": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        }
+      }
+    },
+    "Reservations": {
+      "group": "Reservations",
+      "locationSettings": {
+        "ReservationsTableAmount": {
+          "useGlobalSettings": true,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "ReservationsColumnHeader": {
+          "useGlobalSettings": true,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "ReservationsCard": {
+          "useGlobalSettings": true,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "ReservationsForm": {
+          "useGlobalSettings": true,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "ReservationsTableAmountHeader": {
+          "useGlobalSettings": true,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        }
+      }
+    },
+    "Rooms": {
+      "group": "Rooms",
+      "locationSettings": {
+        "RoomsTablePrice": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "RoomsColumnHeader": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "RoomsCard": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "RoomsTablePriceHeader": {
+          "useGlobalSettings": true,
+          "showSymbolInHeader": true,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        }
+      }
+    },
+    "Transactions": {
+      "group": "Transactions",
+      "locationSettings": {
+        "TransactionsTableAmount": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "TransactionsHistory": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "TransactionsTableAmountHeader": {
+          "useGlobalSettings": true,
+          "showSymbolInHeader": true,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        }
+      }
+    },
+    "Reports": {
+      "group": "Reports",
+      "locationSettings": {
+        "ReportsFinancial": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "ReportsCharts": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        }
+      }
+    },
+    "General": {
+      "group": "General",
+      "locationSettings": {
+        "EmployeesSalary": {
+          "useGlobalSettings": true,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "ClientHistory": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "ClientHistoryHeader": {
+          "useGlobalSettings": true,
+          "showSymbolInHeader": true,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "ClientForm": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        }
+      }
+    },
+    "Settings": {
+      "group": "Settings",
+      "locationSettings": {
+        "EmployeesSalary": {
+          "useGlobalSettings": false,
+          "showSymbolInHeader": false,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        },
+        "EmployeesSalaryHeader": {
+          "useGlobalSettings": true,
+          "showSymbolInHeader": true,
+          "decimalPlaces": 2,
+          "thousandSeparator": " ",
+          "decimalSeparator": "."
+        }
+      }
+    }
+  },
+  "globalSettings": {
+    "useGlobalSettings": true,
+    "showSymbolInHeader": false,
+    "decimalPlaces": 2,
+    "thousandSeparator": null,
+    "decimalSeparator": "."
+  }
+}

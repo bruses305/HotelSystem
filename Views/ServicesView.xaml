@@ -33,13 +33,19 @@
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="200"/>
                     <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="*"/>
-                    <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="120">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="{Binding Price, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource PriceConverter}}"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Цена" MinWidth="100" MaxWidth="400">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Source=Цена, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Price}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Статус" Width="80">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate><CheckBox IsChecked="{Binding IsActive, Mode=OneWay}" IsEnabled="False" HorizontalAlignment="Center"/></DataTemplate>
@@ -49,8 +55,8 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="E" Click="EditService_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
-                                    <Button Content="X" Click="DeleteService_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
+                                    <Button Content="Ред." Click="EditService_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
+                                    <Button Content="Удал." Click="DeleteService_Click" Tag="{Binding}" Background="Transparent" BorderThickness="0" Padding="5"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

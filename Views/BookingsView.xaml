@@ -9,8 +9,7 @@
       Language="ru-RU">
     <Page.Resources>
         <converters:DaysConverter x:Key="DaysConverter"/>
-        <helpers:PriceConverter x:Key="PriceConverter"/>
-        <!-- другие конвертеры, если нужны -->
+        <helpers:CurrencyDisplayConverter x:Key="CurrencyDisplayConverter"/>
     </Page.Resources>
 
     <Grid Margin="0">
@@ -107,26 +106,30 @@
                     <DataGridTextColumn Header="Дней" 
                                         Binding="{Binding Days, Converter={StaticResource DaysConverter}}"
                                         Width="100"/>
-                    <DataGridTextColumn Header="Сумма" 
-                                        Binding="{Binding TotalPrice, Converter={StaticResource PriceConverter}}" 
-                                        Width="80">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                <Setter Property="TextAlignment" Value="Right"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Оплачено" 
-                                        Binding="{Binding PaidAmount, Converter={StaticResource PriceConverter}}" 
-                                        Width="100">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                <Setter Property="TextAlignment" Value="Right"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Сумма" MinWidth="100" MaxWidth="400">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Source=Сумма, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding TotalPrice}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Оплачено" MinWidth="100" MaxWidth="400">
+                        <DataGridTemplateColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Source=Оплачено, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.HeaderTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding PaidAmount}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     
                     <!-- Колонка статуса с фиксированной шириной и центрированием -->
                     <DataGridTemplateColumn Header="Статус" Width="110">

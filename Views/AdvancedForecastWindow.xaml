@@ -193,14 +193,18 @@
                             <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy}}" Width="90"/>
                             <DataGridTextColumn Header="День" Binding="{Binding Date, Converter={StaticResource DayOfWeekConverter}}" Width="90"/>
                             <DataGridTextColumn Header="Броней" Binding="{Binding PredictedBookings, StringFormat={}{0:N1}}" Width="100"/>
-                            <DataGridTextColumn Header="Доход" Binding="{Binding PredictedIncome, Converter={StaticResource PriceConverter}}" Width="100">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="{Binding PredictedIncome, Converter={StaticResource PriceConverter}}"/>
-                                        <Setter Property="HorizontalAlignment" Value="Right"/>
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
+                            <DataGridTemplateColumn Header="Доход"  MinWidth="100" MaxWidth="400">
+                                <DataGridTemplateColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Source=Доход, Converter={StaticResource CurrencyDisplayConverter}}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.HeaderTemplate>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding PredictedIncome}" HorizontalAlignment="Right"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Загрузка %" Binding="{Binding OccupancyRate, StringFormat={}{0:N1}%}" Width="100"/>
                             <DataGridTextColumn Header="Сезон" Binding="{Binding SeasonalFactor}" Width="80"/>
                         </DataGrid.Columns>

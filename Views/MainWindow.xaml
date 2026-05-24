@@ -86,8 +86,8 @@
                 <!-- Логотип и роль пользователя -->
                 <StackPanel Grid.Row="0" Margin="20,30,20,20">
                     <materialDesign:PackIcon Kind="Hotel" Width="48" Height="48" Foreground="#3498DB" HorizontalAlignment="Center"/>
-                    <TextBlock Text="HOTEL" FontSize="26" FontWeight="Bold" HorizontalAlignment="Center" Foreground="White" Margin="0,10,0,0"/>
-                    <TextBlock Text="System" FontSize="18" Foreground="#3498DB" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Гостиничная" FontSize="26" FontWeight="Bold" HorizontalAlignment="Center" Foreground="White" Margin="0,10,0,0"/>
+                    <TextBlock Text="Система" FontSize="18" Foreground="#3498DB" HorizontalAlignment="Center"/>
                     <TextBlock x:Name="UserRoleText" Text="Загрузка..." FontSize="12" Foreground="#A0A0A0" HorizontalAlignment="Center" Margin="0,12,0,0"/>
                 </StackPanel>
 
