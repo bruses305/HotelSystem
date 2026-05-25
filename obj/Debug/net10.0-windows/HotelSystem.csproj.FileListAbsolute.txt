@@ -317,3 +317,7 @@ D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\ParsingSourceDialog
 D:\Project\Rider\HotelSystem\bin\Debug\net10.0-windows\HtmlAgilityPack.dll
 D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\HelpDialog.baml
 D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\ParsingSourceDialog.baml
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\ExpensePriceUpdateDialog.baml
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\ExpensePriceUpdateDialog.g.cs
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\RoomProfitIncreaseDialog.baml
+D:\Project\Rider\HotelSystem\obj\Debug\net10.0-windows\Views\RoomProfitIncreaseDialog.g.cs

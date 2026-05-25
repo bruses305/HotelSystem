@@ -5,7 +5,8 @@
                     Title="Дополнительный расход" MinHeight="550" MaxHeight="650" Width="500" 
                     WindowStartupLocation="CenterOwner"
                     ResizeMode="NoResize"
-                    Background="#ECF0F1">
+                    Background="#ECF0F1"
+                    Language="ru-RU">
     <Window.Resources>
         <helpers:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter"/>
         <helpers:InvertedVisibilityConverter x:Key="InvertedVisibilityConverter"/>
@@ -56,7 +57,7 @@
                     </StackPanel>
                     
                     <StackPanel Grid.Row="0" Grid.Column="1" Margin="5,0,0,10">
-                        <TextBlock Text="ед." FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBlock Text="Количество" FontWeight="SemiBold" Margin="0,0,0,5"/>
                         <TextBox x:Name="QuantityTextBox" Padding="10" TextChanged="QuantityTextBox_TextChanged"/>
                     </StackPanel>
                     

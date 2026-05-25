@@ -7,7 +7,8 @@
         WindowState="Maximized"
         Background="#ECF0F1"
         AllowsTransparency="False"
-        WindowStyle="SingleBorderWindow">
+        WindowStyle="SingleBorderWindow"
+        Language="ru-RU">
 
     <Window.Resources>
         <!-- Стиль кнопки меню с иконками Material Design -->

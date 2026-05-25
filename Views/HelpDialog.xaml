@@ -4,7 +4,8 @@
                     Title="Помощь" Height="400" Width="500"
                     WindowStartupLocation="CenterOwner"
                     ResizeMode="NoResize"
-                    Background="White">
+                    Background="White"
+                    Language="ru-RU">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

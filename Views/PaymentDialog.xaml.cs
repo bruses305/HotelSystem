@@ -16,10 +16,10 @@ public partial class PaymentDialog : Window
 
         _remainingAmount = totalPrice - paidAmount;
 
-        TotalText.Text = AppConstants.FormatPrice(totalPrice);
-        PaidText.Text = AppConstants.FormatPrice(paidAmount);
+        TotalText.Text = $"{totalPrice:N2} {AppConstants.Currency}";
+        PaidText.Text = $"{totalPrice:N2} {AppConstants.Currency}";
         RemainingText.Text = AppConstants.FormatPrice(_remainingAmount);
-        AmountTextBox.Text = _remainingAmount.ToString("N0");
+        AmountTextBox.Text = _remainingAmount.ToString("N2");
     }
 
     private void Pay_Click(object sender, RoutedEventArgs e)

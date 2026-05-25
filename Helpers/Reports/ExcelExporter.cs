@@ -15,19 +15,24 @@ public class ExcelExporter
     private readonly IClientService _clientService;
     private readonly IBookingService _bookingService;
     private readonly IServiceService _serviceService;
+    private readonly IExpenseService _expenseService;
+    
+    private static string Curr(string header) => $"{header} ({AppConstants.Currency})";
     
     public ExcelExporter(
         IFinanceService financeService,
         IRoomService roomService,
         IClientService clientService,
         IBookingService bookingService,
-        IServiceService serviceService)
+        IServiceService serviceService,
+        IExpenseService expenseService)
     {
         _financeService = financeService;
         _roomService = roomService;
         _clientService = clientService;
         _bookingService = bookingService;
         _serviceService = serviceService;
+        _expenseService = expenseService;
     }
     
     /// <summary>
@@ -44,8 +49,14 @@ public class ExcelExporter
         var transactions = await _financeService.GetTransactionsAsync(startDate, actualEndDate);
         var transactionsList = transactions.ToList();
 
+        // Рассчитываем итоги
+        var totalBookingPayments = allBookings.Sum(b => b.PaidAmount);
+        var totalServiceIncome = transactionsList
+            .Where(t => t.Type == TransactionType.Доход && t.ServiceId.HasValue)
+            .Sum(t => t.Amount);
+        
         decimal totalIncome = allBookings.Sum(b => b.PaidAmount) +
-                              transactionsList.Where(t => t.Type == TransactionType.Доход && t.Category == TransactionCategory.Дополнительная_услуга).Sum(t => t.Amount);
+                              transactionsList.Where(t => t.Type == TransactionType.Доход && t.ServiceId.HasValue).Sum(t => t.Amount);
         decimal totalExpenses = transactionsList.Where(t => t.Type == TransactionType.Расход).Sum(t => t.Amount);
         decimal profit = totalIncome - totalExpenses;
 
@@ -58,7 +69,7 @@ public class ExcelExporter
             var prevTransactions = await _financeService.GetTransactionsAsync(prevStart, prevEnd);
             var prevTxList = prevTransactions.ToList();
             prevIncome = prevBookings.Sum(b => b.PaidAmount) +
-                         prevTxList.Where(t => t.Type == TransactionType.Доход && t.Category == TransactionCategory.Дополнительная_услуга).Sum(t => t.Amount);
+                         prevTxList.Where(t => t.Type == TransactionType.Доход && t.ServiceId.HasValue).Sum(t => t.Amount);
             prevExpenses = prevTxList.Where(t => t.Type == TransactionType.Расход).Sum(t => t.Amount);
             prevProfit = prevIncome - prevExpenses;
         }
@@ -80,7 +91,7 @@ public class ExcelExporter
                 CreateClientsOnlySheet(workbook, allClients, allBookings, transactionsList, startDate, endDate);
                 break;
             default: // Full
-                CreateFullReport(workbook, startDate, endDate, totalIncome, totalExpenses, profit, allBookings, allClients, allRooms, allServices, transactionsList);
+                CreateFullReport(workbook, startDate, endDate, totalIncome, totalExpenses, profit, allBookings, allClients, allRooms, allServices, transactionsList, totalBookingPayments, totalServiceIncome);
                 break;
         }
 
@@ -90,9 +101,10 @@ public class ExcelExporter
     // ========== Шаблон: Полный отчёт (как раньше) ==========
     private void CreateFullReport(IXLWorkbook workbook, DateTime startDate, DateTime endDate,
         decimal totalIncome, decimal totalExpenses, decimal profit,
-        List<Booking> bookings, List<Client> clients, List<Room> rooms, List<Service> services, List<Transaction> transactions)
+        List<Booking> bookings, List<Client> clients, List<Room> rooms, List<Service> services, List<Transaction> transactions,
+        decimal totalBookingPayments, decimal totalServiceIncome)
     {
-        CreateFinanceSheet(workbook, startDate, endDate, bookings.Count, services.Count, totalIncome, totalExpenses, profit);
+        CreateFinanceSheet(workbook, startDate, endDate, totalBookingPayments, totalServiceIncome, totalIncome, totalExpenses, profit);
         CreateAllOperationsSheet(workbook, bookings, clients, rooms, services, transactions);
         CreateIncomeOnlySheet(workbook, bookings, clients, rooms, services, transactions);
         CreateExpenseOnlySheet(workbook, clients, rooms, transactions);
@@ -105,6 +117,8 @@ public class ExcelExporter
         CreateServicesSheet(workbook, bookings, clients, services, transactions);
         CreateServiceProfitSheet(workbook, services, transactions);
         CreateClientsSheet(workbook, bookings, clients, transactions);
+        CreateExpensesByCategoriesSheet(workbook, transactions, totalExpenses);
+        CreateExpensesByTypesWithQuantitySheet(workbook, transactions, startDate, endDate);
     }
 
     // ========== Шаблон: Краткий (директору) ==========
@@ -242,7 +256,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 6).Merge();
 
-        ExcelStyles.AddHeaderRow(sheet, 3, "Номер", "Тип", "Доход", "Расходы", "Прибыль", "Загрузка (%)");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Номер", "Тип", Curr("Доход"), Curr("Расходы"), Curr("Прибыль"), "Загрузка (%)");
 
         int row = 4;
         int totalDays = (endDate - startDate).Days;
@@ -289,7 +303,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 5).Merge();
 
-        ExcelStyles.AddHeaderRow(sheet, 3, "Клиент", "Бронирований", "Потрачено на номера", "Потрачено на услуги", "Всего потрачено");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Клиент", "Бронирований", Curr("Потрачено на номера"), Curr("Потрачено на услуги"), Curr("Всего потрачено"));
 
         int row = 4;
         decimal totalSpentOverall = 0;
@@ -337,7 +351,7 @@ public class ExcelExporter
         // Рассчитываем итоги
         var totalBookingPayments = allBookings.Sum(b => b.PaidAmount);
         var totalServiceIncome = transactionsList
-            .Where(t => t.Type == TransactionType.Доход && t.Category == TransactionCategory.Дополнительная_услуга)
+            .Where(t => t.Type == TransactionType.Доход && t.ServiceId.HasValue)
             .Sum(t => t.Amount);
         var totalIncome = totalBookingPayments + totalServiceIncome;
         var totalExpenses = transactionsList.Where(t => t.Type == TransactionType.Расход).Sum(t => t.Amount);
@@ -359,6 +373,8 @@ public class ExcelExporter
         CreateServicesSheet(workbook, allBookings, allClients, allServices, transactionsList);
         CreateServiceProfitSheet(workbook, allServices, transactionsList);
         CreateClientsSheet(workbook, allBookings, allClients, transactionsList);
+        CreateExpensesByCategoriesSheet(workbook, transactionsList, totalExpenses);
+        CreateExpensesByTypesWithQuantitySheet(workbook, transactionsList, startDate, actualEndDate);
         
         workbook.SaveAs(filePath);
     }
@@ -417,7 +433,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 8).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Дата", "Тип", "Категория", "Номер", "Клиент", "Описание", "Сумма");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Дата", "Тип", "Категория", "Номер", "Клиент", "Описание", Curr("Сумма"));
         
         int row = 4;
         bool alternate = false;
@@ -459,7 +475,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 7).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Дата", "Категория", "Номер", "Клиент", "Описание", "Сумма");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Дата", "Категория", "Номер", "Клиент", "Описание", Curr("Сумма"));
         
         int row = 4;
         decimal total = 0;
@@ -497,7 +513,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 7).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Дата", "Категория", "Номер", "Описание", "Количество", "Сумма");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Дата", "Категория", "Номер", "Описание", "Количество", Curr("Сумма"));
         
         int row = 4;
         decimal total = 0;
@@ -534,7 +550,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 3).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Тип дохода", "Количество операций", "Сумма");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Тип дохода", "Количество операций", Curr("Сумма"));
         
         int row = 4;
         
@@ -584,7 +600,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 3).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Тип расхода", "Количество операций", "Сумма");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Тип расхода", "Количество операций", Curr("Сумма"));
         
         int row = 4;
         
@@ -618,7 +634,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 2).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Дата", "Сумма");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Дата", Curr("Сумма"));
         
         int row = 4;
         
@@ -662,7 +678,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 2).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Месяц", "Сумма");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Месяц", Curr("Сумма"));
         
         int row = 4;
         
@@ -708,7 +724,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 9).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "ID", "Номер", "Клиент", "Заезд", "Выезд", "Статус", "Оплачено", "Сумма", "Дней");
+        ExcelStyles.AddHeaderRow(sheet, 3, "ID", "Номер", "Клиент", "Заезд", "Выезд", "Статус", Curr("Оплачено"), Curr("Сумма"), "Дней");
         
         int row = 4;
         foreach (var booking in bookings)
@@ -743,7 +759,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 6).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Номер", "Тип", "Доход от бронирований", "Доход от услуг", "Расходы", "Прибыль");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Номер", "Тип", Curr("Доход от бронирований"), Curr("Доход от услуг"), Curr("Расходы"), Curr("Прибыль"));
         
         int row = 4;
         foreach (var room in rooms)
@@ -783,7 +799,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 7).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Дата", "Услуга", "Клиент", "Бронирование", "Количество", "Сумма");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Дата", "Услуга", "Клиент", "Бронирование", "Количество", Curr("Сумма"));
         
         int row = 4;
         decimal total = 0;
@@ -821,7 +837,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 4).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Услуга", "Количество продаж", "Выручка", "Цена за единицу");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Услуга", "Количество продаж", Curr("Выручка"), Curr("Цена за единицу"));
         
         int row = 4;
         decimal total = 0;
@@ -864,7 +880,7 @@ public class ExcelExporter
         sheet.Cell(1, 1).Style.Font.FontSize = 14;
         sheet.Range(1, 1, 1, 6).Merge();
         
-        ExcelStyles.AddHeaderRow(sheet, 3, "Клиент", "Бронирований", "Потрачено на номера", "Услуг куплено", "Потрачено на услуги", "Всего потрачено");
+        ExcelStyles.AddHeaderRow(sheet, 3, "Клиент", "Бронирований", Curr("Потрачено на номера"), "Услуг куплено", Curr("Потрачено на услуги"), Curr("Всего потрачено"));
         
         int row = 4;
         
@@ -899,6 +915,126 @@ public class ExcelExporter
         
         sheet.Columns().AdjustToContents();
         sheet.Range(3, 1, row - 1, 6).SetAutoFilter();
+    }
+    
+    private void CreateExpensesByCategoriesSheet(IXLWorkbook workbook, List<Transaction> transactions, decimal totalExpenses)
+    {
+        var sheet = workbook.Worksheets.Add("Расходы по категориям");
+        
+        sheet.Cell(1, 1).Value = "Расходы по категориям";
+        sheet.Cell(1, 1).Style.Font.Bold = true;
+        sheet.Cell(1, 1).Style.Font.FontSize = 14;
+        sheet.Range(1, 1, 1, 3).Merge();
+        
+        ExcelStyles.AddHeaderRow(sheet, 3, "Категория", "Количество операций", Curr("Сумма"));
+        
+        int row = 4;
+        
+        var expensesByCategory = transactions
+            .Where(t => t.Type == TransactionType.Расход)
+            .GroupBy(t => t.Category)
+            .Select(g => new { 
+                Category = g.Key, 
+                DisplayName = CategoryHelper.GetDisplayCategory(new Transaction { Category = g.Key }),
+                Count = g.Count(), 
+                Sum = g.Sum(t => t.Amount) 
+            })
+            .OrderByDescending(g => g.Sum);
+        
+        foreach (var item in expensesByCategory)
+        {
+            sheet.Cell(row, 1).Value = item.DisplayName;
+            sheet.Cell(row, 2).Value = item.Count;
+            sheet.Cell(row, 3).Value = (double)item.Sum;
+            sheet.Cell(row, 3).Style.NumberFormat.Format = "#,##0";
+            row++;
+        }
+        
+        ExcelStyles.AddTotalRow(sheet, row, "ИТОГО:", (double)totalExpenses, 3);
+        
+        sheet.Columns().AdjustToContents();
+        sheet.Range(3, 1, row - 1, 3).SetAutoFilter();
+    }
+    
+    private void CreateExpensesByTypesWithQuantitySheet(IXLWorkbook workbook, List<Transaction> transactions, DateTime startDate, DateTime endDate)
+    {
+        // Получаем данные из таблицы Expenses (дополнительные расходы) и фильтруем по периоду
+        var allExpenses = _expenseService.GetAllExpensesAsync().Result.ToList();
+        
+        // Нормализуем даты: начало дня - 00:00:00, конец дня - 23:59:59
+        var startOfDay = startDate.Date;
+        var endOfDay = endDate.Date.AddDays(1).AddSeconds(-1);
+        
+        var expenses = allExpenses
+            .Where(e => e.LastPaymentDate >= startOfDay && e.LastPaymentDate <= endOfDay)
+            .ToList();
+        
+        var sheet = workbook.Worksheets.Add("Расходы с количеством");
+        
+        sheet.Cell(1, 1).Value = $"Дополнительные расходы с количеством ({startDate:dd.MM.yyyy} - {endDate:dd.MM.yyyy})";
+        sheet.Cell(1, 1).Style.Font.Bold = true;
+        sheet.Cell(1, 1).Style.Font.FontSize = 14;
+        sheet.Range(1, 1, 1, 6).Merge();
+        
+        ExcelStyles.AddHeaderRow(sheet, 3, "Название", "Категория", Curr("Расход"), "Количество", "Ед. изм.", "Дата оплаты");
+        
+        int row = 4;
+        decimal total = 0;
+        decimal totalQuantity = 0;
+        
+        foreach (var expense in expenses.OrderBy(e => e.Category).ThenBy(e => e.Name))
+        {
+            sheet.Cell(row, 1).Value = expense.Name;
+            sheet.Cell(row, 2).Value = expense.Category;
+            sheet.Cell(row, 3).Value = (double)expense.Amount;
+            sheet.Cell(row, 3).Style.NumberFormat.Format = "#,##0";
+            
+            if (expense.Quantity > 0)
+            {
+                sheet.Cell(row, 4).Value = expense.Quantity.Value;
+                sheet.Cell(row, 5).Value = expense.UnitName ?? "шт";
+                totalQuantity += expense.Quantity.Value;
+            }
+            else
+            {
+                sheet.Cell(row, 4).Value = "-";
+                sheet.Cell(row, 5).Value = "-";
+            }
+            
+            sheet.Cell(row, 6).Value = expense.LastPaymentDate.ToString("dd.MM.yyyy");
+            
+            total += expense.Amount;
+            row++;
+        }
+        
+        // Итоговая строка
+        sheet.Cell(row, 1).Value = "ИТОГО:";
+        sheet.Cell(row, 1).Style.Font.Bold = true;
+        sheet.Cell(row, 3).Value = (double)total;
+        sheet.Cell(row, 3).Style.Font.Bold = true;
+        sheet.Cell(row, 3).Style.NumberFormat.Format = "#,##0";
+        if (totalQuantity > 0)
+        {
+            sheet.Cell(row, 4).Value = totalQuantity;
+            sheet.Cell(row, 4).Style.Font.Bold = true;
+        }
+        
+        sheet.Columns().AdjustToContents();
+        sheet.Range(3, 1, row - 1, 6).SetAutoFilter();
+    }
+    
+    private string GetExpenseUnit(TransactionCategory category)
+    {
+        return category switch
+        {
+            TransactionCategory.Зарплата => "часов",
+            TransactionCategory.Коммунальные_услуги => "услуг",
+            TransactionCategory.Закупки => "кг",
+            TransactionCategory.Обслуживание => "услуг",
+            TransactionCategory.Бронирование => "дней",
+            TransactionCategory.Дополнительная_услуга => "услуг",
+            _ => "шт"
+        };
     }
     
     private void AddNumberCell(IXLWorksheet sheet, int row, int col, double value)

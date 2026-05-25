@@ -49,8 +49,17 @@ public class RoomService : IRoomService
 
     public async Task UpdateRoomAsync(Room room)
     {
-        await _roomRepository.UpdateAsync(room);
-        await _logService.LogAsync(LogLevel.Обычные, $"Обновление номера: {room.Name} пользователем: {AuthService.CurrentEmployee.FullName}", "RoomService");
+        // Получаем актуальный объект из БД, чтобы избежать конфликтов отслеживания
+        var existingRoom = await _roomRepository.GetByIdAsync(room.Id);
+        if (existingRoom != null)
+        {
+            // Обновляем только нужные поля
+            existingRoom.Profit = room.Profit;
+            existingRoom.UpdatedAt = DateTime.Now;
+            
+            await _roomRepository.UpdateAsync(existingRoom);
+            await _logService.LogAsync(LogLevel.Обычные, $"Обновление номера: {existingRoom.Name} пользователем: {AuthService.CurrentEmployee.FullName}", "RoomService");
+        }
     }
 
     public async Task DeleteRoomAsync(int id)

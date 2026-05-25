@@ -6,7 +6,8 @@
       xmlns:views="clr-namespace:HotelSystem.Views"
       xmlns:helpers="clr-namespace:HotelSystem.Helpers"
       Title="Дополнительные расходы" 
-      Background="#FFF3F4F6">
+      Background="#FFF3F4F6"
+      Language="ru-RU">
 
     <Page.Resources>
         <views:ExpenseStatusConverter x:Key="ExpenseStatusConverter" />
@@ -38,6 +39,17 @@
             
             <Button x:Name="PaySalariesButton" Content="Выплатить ЗП сотрудникам" Click="PaySalaries_Click" 
                     Padding="15,5" Margin="0,0,10,0" Background="#8B5CF6" Foreground="White" BorderThickness="0">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            
+            <Button x:Name="UpdatePricesButton" Content="🔄 Обновить цены" Click="UpdatePrices_Click" 
+                    Padding="15,5" Margin="0,0,10,0" Background="#F59E0B" Foreground="White" BorderThickness="0">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">

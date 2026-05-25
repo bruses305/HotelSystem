@@ -26,6 +26,7 @@ public partial class ReportsView : Page
     private readonly IClientService _clientService;
     private readonly IBookingService _bookingService;
     private readonly IServiceService _serviceService;
+    private readonly IExpenseService _expenseService;
     private readonly ILogService _logService;
     private ExcelExporter? _excelExporter;
     
@@ -57,6 +58,7 @@ public partial class ReportsView : Page
         _clientService = ServiceLocator.GetService<IClientService>();
         _bookingService = ServiceLocator.GetService<IBookingService>();
         _serviceService = ServiceLocator.GetService<IServiceService>();
+        _expenseService = ServiceLocator.GetService<IExpenseService>();
         _logService = ServiceLocator.GetService<ILogService>();
         
         StartDatePicker.SelectedDate = DateTime.Today.AddMonths(-1);
@@ -538,7 +540,7 @@ public partial class ReportsView : Page
             var dialog = new SaveFileDialog { Filter = "Excel files (*.xlsx)|*.xlsx", DefaultExt = "xlsx", FileName = $"HotelReport_{DateTime.Now:yyyyMMdd}" };
             if (dialog.ShowDialog() == true)
             {
-                _excelExporter = new ExcelExporter(_financeService, _roomService, _clientService, _bookingService, _serviceService);
+                _excelExporter = new ExcelExporter(_financeService, _roomService, _clientService, _bookingService, _serviceService, _expenseService);
                 var selectedItem = ReportTemplateComboBox.SelectedItem as ComboBoxItem;
                 string template = selectedItem?.Tag?.ToString() ?? "Full";
                 await _excelExporter.ExportWithTemplateAsync(_startDate, _endDate, dialog.FileName, template, _compareWithPrevious);

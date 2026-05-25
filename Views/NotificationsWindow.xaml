@@ -3,7 +3,8 @@
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
  Title="Уведомления" Height="500" Width="500"
  WindowStartupLocation="CenterOwner"
- Background="#ECF0F1">
+ Background="#ECF0F1"
+ Language="ru-RU">
 <Grid Margin="20">
 <Grid.RowDefinitions>
 <RowDefinition Height="Auto"/>

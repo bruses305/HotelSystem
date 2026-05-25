@@ -27,10 +27,12 @@ public class UpdateResult
 public class ExpensePriceUpdateService : IExpensePriceUpdateService
 {
     private readonly IPriceParseService _parseService;
+    private readonly IExpenseRepository _expenseRepository;
 
-    public ExpensePriceUpdateService(IPriceParseService parseService)
+    public ExpensePriceUpdateService(IPriceParseService parseService, IExpenseRepository expenseRepository)
     {
         _parseService = parseService;
+        _expenseRepository = expenseRepository;
     }
 
     public async Task<UpdateResult> UpdatePriceAsync(Expense expense)
@@ -75,8 +77,24 @@ public class ExpensePriceUpdateService : IExpensePriceUpdateService
                 result.Success = true;
                 result.NewValue = parseResult.Value;
                 
-                // Сохраняем обновлённый источник
+                // Обновляем цену за единицу (UnitPrice), а не итоговую сумму
+                expense.UnitPrice = parseResult.Value;
+                
+                // Пересчитываем итоговую сумму: UnitPrice * Quantity
+                if (expense.Quantity.HasValue && expense.Quantity.Value > 0)
+                {
+                    expense.Amount = parseResult.Value * expense.Quantity.Value;
+                }
+                else
+                {
+                    // Если количество не задано, считаем что 1 шт.
+                    expense.Amount = parseResult.Value;
+                }
+                
                 expense.PriceSourceJson = JsonConvert.SerializeObject(source);
+                
+                // Сохраняем в БД
+                await _expenseRepository.UpdateAsync(expense);
                 break;
                 
             case ParseResultType.NoInternet:

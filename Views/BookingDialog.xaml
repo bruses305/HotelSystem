@@ -11,7 +11,8 @@
                     ResizeMode="NoResize"
                     Background="Transparent"
                     AllowsTransparency="True"
-                    WindowStyle="None">
+                    WindowStyle="None"
+                    Language="ru-RU">
     
     <Window.Resources>
         <SolidColorBrush x:Key="PaperBrush" Color="#FFFFFF"/>

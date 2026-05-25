@@ -4,7 +4,8 @@
                     Title="Настройка парсинга цены" Height="550" Width="600"
                     WindowStartupLocation="CenterOwner"
                     ResizeMode="NoResize"
-                    Background="#F5F6FA">
+                    Background="#F5F6FA"
+                    Language="ru-RU">
     <Grid Margin="25">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

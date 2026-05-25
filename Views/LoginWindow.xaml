@@ -8,7 +8,8 @@
         ResizeMode="NoResize"
         AllowsTransparency="True"
         WindowStyle="None"
-        Background="Transparent">
+        Background="Transparent"
+        Language="ru-RU">
 
     <Window.Resources >
         <local:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>

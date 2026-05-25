@@ -4,7 +4,8 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Background="#ECF0F1"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        Language="ru-RU">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

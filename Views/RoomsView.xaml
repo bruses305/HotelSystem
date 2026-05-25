@@ -12,20 +12,54 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,0,15">
-            <Button x:Name="AddRoomButton" Content="+ Добавить номер" Click="AddRoom_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left">
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
+        <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="15,5" Margin="0,0,0,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,0">
+                    <Button x:Name="AddRoomButton" Content="+ Добавить номер" Click="AddRoom_Click" Background="#27AE60" Foreground="White" Padding="15,8" BorderThickness="0" HorizontalAlignment="Left" Margin="0,0,15,0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    
+                    <Button x:Name="IncreaseProfitButton" Content="📈 Увеличить прибыль" Click="IncreaseProfit_Click" 
+                            Background="#9CA3AF" Foreground="White" Padding="15,5" BorderThickness="0" IsEnabled="False">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="Тип:" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold"/>
+                    <ComboBox x:Name="TypeFilterComboBox" Width="150" Padding="8,5" SelectedIndex="-1" SelectionChanged="TypeFilterComboBox_SelectionChanged">
+                        <ComboBoxItem Content="Все типы" Tag="All"/>
+                        <ComboBoxItem Content="Стандарт" Tag="Standard"/>
+                        <ComboBoxItem Content="Люкс" Tag="Lux"/>
+                        <ComboBoxItem Content="Апартамент" Tag="Apartment"/>
+                    </ComboBox>
+                    <TextBox x:Name="SearchTextBox" Width="250" Padding="8,5" Margin="15,0,0,0" 
+                             ToolTip="Поиск по названию или описанию"
+                             VerticalAlignment="Center" TextChanged="SearchTextBox_TextChanged"/>
+                    <TextBlock Text="🔍" FontSize="16" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </Grid>
         </Border>
 
         <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15">
-            <DataGrid x:Name="RoomsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0" MouseDoubleClick="RoomsGrid_MouseDoubleClick">
+            <DataGrid x:Name="RoomsGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" BorderThickness="0" MouseDoubleClick="RoomsGrid_MouseDoubleClick" SelectionChanged="RoomsGrid_SelectionChanged" AllowDrop="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                     <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="120"/>

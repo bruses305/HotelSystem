@@ -18,6 +18,7 @@ public partial class ExpensesView : Page
     private readonly IExpenseService _expenseService;
     private readonly IEmployeeService _employeeService;
     private readonly ITransactionRepository _transactionRepository;
+    private readonly IExpensePriceUpdateService _priceUpdateService;
     private List<Expense> _allExpenses = new();
 
     public ExpensesView()
@@ -26,6 +27,7 @@ public partial class ExpensesView : Page
         _expenseService = ServiceLocator.GetService<IExpenseService>();
         _employeeService = ServiceLocator.GetService<IEmployeeService>();
         _transactionRepository = ServiceLocator.GetService<ITransactionRepository>();
+        _priceUpdateService = ServiceLocator.GetService<IExpensePriceUpdateService>();
         LoadExpensesAsync();
         CheckPermissions();
         
@@ -49,6 +51,11 @@ public partial class ExpensesView : Page
         if (!PermissionChecker.CanEdit(PermissionCategory.Expenses) && FindName("PaySalariesButton") is Button paySalariesButton)
         {
             paySalariesButton.Visibility = Visibility.Collapsed;
+        }
+        
+        if (!PermissionChecker.CanEdit(PermissionCategory.Expenses) && FindName("UpdatePricesButton") is Button updatePricesButton)
+        {
+            updatePricesButton.Visibility = Visibility.Collapsed;
         }
     }
 
@@ -277,6 +284,36 @@ public partial class ExpensesView : Page
         }
     }
 
+    private async void UpdatePrices_Click(object sender, RoutedEventArgs e)
+    {
+        if (!PermissionChecker.CanEdit(PermissionCategory.Expenses))
+        {
+            MessageBox.Show("Недостаточно прав для обновления цен!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
+        // Фильтруем расходы с настроенным парсером
+        var expensesWithParser = _allExpenses
+            .Where(exp => !string.IsNullOrWhiteSpace(exp.PriceSourceJson))
+            .ToList();
+        
+        if (expensesWithParser.Count == 0)
+        {
+            MessageBox.Show("Нет расходов с настроенным парсингом цен.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+        
+        // Показываем диалог обновления
+        var dialog = new ExpensePriceUpdateDialog(expensesWithParser);
+        dialog.Owner = Window.GetWindow(this);
+        
+        if (dialog.ShowDialog() == true)
+        {
+            // Перезагружаем список расходов после обновления
+            LoadExpensesAsync();
+        }
+    }
+
     private async void PaySalaries_Click(object sender, RoutedEventArgs e)
     {
         if (!PermissionChecker.CanCreate(PermissionCategory.Expenses))
@@ -331,7 +368,7 @@ public partial class ExpensesView : Page
         }
     }
 }
-        
+
 // Конвертер для статуса оплаты
 // Определяет "оплачено" если дата меньше 1 месяца назад
 public class ExpenseStatusConverter : IValueConverter

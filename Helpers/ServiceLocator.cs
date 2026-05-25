@@ -29,6 +29,9 @@ public static class ServiceLocator
         services.AddScoped<IRoomCostCalculationService, RoomCostCalculationService>();
         services.AddScoped<IForecastService, ForecastService>();
         
+        services.AddScoped<IPriceParseService, PriceParseService>();
+        services.AddScoped<IExpensePriceUpdateService, ExpensePriceUpdateService>();
+        
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IClientService, ClientService>();

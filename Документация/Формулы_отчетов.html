@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Формулы финансовых отчётов HotelSystem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .toc {
+            background: #f8f9fa;
+            padding: 30px 40px;
+            border-bottom: 3px solid #3498db;
+        }
+        .toc h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .toc ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+        .toc li {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .toc li:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .toc li a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .content {
+            padding: 40px;
+        }
+        .formula-section {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+        .formula-section:last-child {
+            border-bottom: none;
+        }
+        .formula-section h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+        .formula-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        .formula-box code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 6px;
+        }
+        .visualization {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        .visualization h3 {
+            color: #34495e;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .flow-box {
+            background: white;
+            border: 3px solid #3498db;
+            border-radius: 10px;
+            padding: 15px 25px;
+            min-width: 180px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .flow-box.source {
+            border-color: #27ae60;
+            background: #e8f8f0;
+        }
+        .flow-box.result {
+            border-color: #8e44ad;
+            background: #f4ecf7;
+        }
+        .flow-box.operator {
+            border-color: #e67e22;
+            background: #fef5e7;
+            font-size: 2em;
+            min-width: 80px;
+        }
+        .flow-arrow {
+            font-size: 2em;
+            color: #3498db;
+            font-weight: bold;
+        }
+        .formula-description {
+            background: #fff9e6;
+            border-left: 4px solid #f39c12;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .formula-description p {
+            color: #5d4e37;
+            line-height: 1.6;
+        }
+        .source-list {
+            margin-top: 20px;
+        }
+        .source-list h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .source-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .source-list li {
+            padding: 8px 15px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #27ae60;
+        }
+        .source-list li code {
+            background: #ecf0f1;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #2c3e50;
+        }
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .category-finance {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .category-room {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        .category-client {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        .category-service {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Формулы финансовых отчётов</h1>
+            <p>HotelSystem - Визуализация расчётных показателей</p>
+        </div>
+
+        <div class="toc">
+            <h2>📑 Содержание</h2>
+            <ul>
+                <li><a href="#profit">1. Прибыль</a></li>
+                <li><a href="#income">2. Доходы</a></li>
+                <li><a href="#expenses">3. Расходы</a></li>
+                <li><a href="#booking-total">4. Сумма бронирования</a></li>
+                <li><a href="#booking-paid">5. Оплаченная сумма</a></li>
+                <li><a href="#room-income">6. Доход от номера</a></li>
+                <li><a href="#room-profit">7. Прибыль номера</a></li>
+                <li><a href="#occupancy">8. Загрузка отеля</a></li>
+                <li><a href="#service-income">9. Доход от услуги</a></li>
+                <li><a href="#service-price">10. Цена за единицу услуги</a></li>
+                <li><a href="#client-spent">11. Всего потрачено клиентом</a></li>
+                <li><a href="#expense-total">12. Итоговая сумма расхода</a></li>
+                <li><a href="#transaction-total">13. Общий итог операций</a></li>
+                <li><a href="#cost-monthly">14. Месячная себестоимость номера</a></li>
+                <li><a href="#cost-daily">15. Себестоимость номеро-сутки</a></li>
+                <li><a href="#room-price">16. Цена номера</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <!-- 1. Прибыль -->
+            <div id="profit" class="formula-section">
+                <h2>1. Прибыль <span class="category-badge category-finance">Финансы</span></h2>
+                <div class="formula-box">
+                    <code>Прибыль = Доходы - Расходы</code>
+                </div>
+                <div class="formula-description">
+                    <p>Основная финансовая метрика, показывающая разницу между всеми поступлениями и затратами за период.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Доходы</strong><br>
+                            <small>Все поступления</small>
+                        </div>
+                        <div class="flow-box operator">−</div>
+                        <div class="flow-box source">
+                            <strong>Расходы</strong><br>
+                            <small>Все затраты</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Прибыль</strong><br>
+                            <small>Чистый результат</small>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>Доходы:</strong> <code>Transaction.Type = Доход</code> + <code>Booking.PaidAmount</code></li>
+                            <li><strong>Расходы:</strong> <code>Transaction.Type = Расход</code> + <code>Expense.Amount</code></li>
+                            <li><strong>Расчёт:</strong> <code>HotelSystem.Services.FinanceService</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Доходы -->
+            <div id="income" class="formula-section">
+                <h2>2. Доходы <span class="category-badge category-finance">Финансы</span></h2>
+                <div class="formula-box">
+                    <code>Доходы = Σ(Оплаты бронирований) + Σ(Доходы от услуг)</code>
+                </div>
+                <div class="formula-description">
+                    <p>Суммарные поступления от всех операций: оплаты проживания и дополнительных услуг.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Бронирования</strong><br>
+                            <small>Booking.PaidAmount</small>
+                        </div>
+                        <div class="flow-box operator">+</div>
+                        <div class="flow-box source">
+                            <strong>Услуги</strong><br>
+                            <small>Transaction.Amount</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Общие доходы</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>Оплаты бронирований:</strong> <code>Booking.PaidAmount</code> (все бронирования с оплатой &gt; 0)</li>
+                            <li><strong>Доходы от услуг:</strong> <code>Transaction.Amount</code> где <code>Type = Доход</code> и <code>Category = Дополнительная_услуга</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Расходы -->
+            <div id="expenses" class="formula-section">
+                <h2>3. Расходы <span class="category-badge category-finance">Финансы</span></h2>
+                <div class="formula-box">
+                    <code>Расходы = Зарплаты + Дополнительные расходы</code>
+                </div>
+                <div class="formula-description">
+                    <p>Все затраты отеля за период. Расходы делятся на две большие группы: обязательные выплаты персоналу и операционные затраты на содержание отеля.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Зарплаты</strong><br>
+                            <small>Сотрудникам</small>
+                        </div>
+                        <div class="flow-box operator">+</div>
+                        <div class="flow-box source">
+                            <strong>Доп. расходы</strong><br>
+                            <small>Коммунальные, закупки</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Общие расходы</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Из чего состоят расходы:</h4>
+                        <ul>
+                            <li><strong>💰 Зарплаты сотрудников:</strong> Ежемесячные оклады всех активных сотрудников (администраторы, горничные, охрана, управляющий)</li>
+                            <li><strong>💡 Коммунальные услуги:</strong> Электричество, вода, отопление, интернет, телефония</li>
+                            <li><strong>🧹 Расходы на обслуживание:</strong> Хозяйственные принадлежности, постельное бельё, toiletries</li>
+                            <li><strong>🔧 Ремонт и содержание:</strong> Текущий ремонт номеров, обслуживание оборудования</li>
+                            <li><strong>📦 Закупки:</strong> Товары для продажи, мини-бар, продукты для завтраков</li>
+                            <li><strong>📊 Прочие расходы:</strong> Реклама, бухгалтерия, банковские комиссии, налоги</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Сумма бронирования -->
+            <div id="booking-total" class="formula-section">
+                <h2>4. Цена бронирования <span class="category-badge category-room">Номера</span></h2>
+                <div class="formula-box">
+                    <code>Цена = (Дни × Цена_номера) + Услуги</code>
+                </div>
+                <div class="formula-description">
+                    <p>Итоговая стоимость бронирования для клиента. Складывается из стоимости проживания (цена номера умноженная на количество дней) плюс все дополнительные услуги, заказанные во время проживания.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Дни</strong><br>
+                            <small>Количество</small>
+                        </div>
+                        <div class="flow-box operator">×</div>
+                        <div class="flow-box source">
+                            <strong>Цена номера</strong><br>
+                            <small>За сутки</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box source">
+                            <strong>Проживание</strong>
+                        </div>
+                        <div class="flow-box operator">+</div>
+                        <div class="flow-box source">
+                            <strong>Услуги</strong><br>
+                            <small>Дополнительные</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Итоговая сумма</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Из чего складывается:</h4>
+                        <ul>
+                            <li><strong>Количество дней:</strong> Разница между датой заезда и датой выезда</li>
+                            <li><strong>Цена номера за сутки:</strong> Формируется как <em>Себестоимость + Желаемая прибыль</em> (см. формулу №16)</li>
+                            <li><strong>Дополнительные услуги:</strong> Уборка, доставка еды, трансфер, мини-бар и другие заказанные услуги</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="formula-description" style="margin-top: 15px;">
+                    <p><strong>Пример:</strong> 3 дня × 46 Br + Услуги 150 Br = 138 + 150 = <strong>288 Br</strong></p>
+                </div>
+            </div>
+
+            <!-- 5. Оплаченная сумма -->
+            <div id="booking-paid" class="formula-section">
+                <h2>5. Оплаченная сумма <span class="category-badge category-room">Номера</span></h2>
+                <div class="formula-box">
+                    <code>Оплачено = Σ(Все платежи по бронированию)</code>
+                </div>
+                <div class="formula-description">
+                    <p>Сумма фактически внесённых клиентом денег за бронирование. Клиент может оплачивать счёт частями — например, внести предоплату при бронировании, затем доплатить при заезде, и остаток при выезде. Эта формула суммирует все платежи, которые клиент уже внёс.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Платёж 1</strong><br>
+                            <small>Предоплата</small>
+                        </div>
+                        <div class="flow-box operator">+</div>
+                        <div class="flow-box source">
+                            <strong>Платёж 2</strong><br>
+                            <small>При заезде</small>
+                        </div>
+                        <div class="flow-box operator">+</div>
+                        <div class="flow-box source">
+                            <strong>Платёж N</strong><br>
+                            <small>При выезде</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Всего оплачено</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Как это работает:</h4>
+                        <ul>
+                            <li><strong>Частичная оплата:</strong> Клиент может внести только часть суммы (например, 50% предоплаты)</li>
+                            <li><strong>Множественные платежи:</strong> Один клиент может платить несколько раз в течение проживания</li>
+                            <li><strong>Контроль задолженности:</strong> Если Оплачено &lt; Суммы, клиент должен доплатить при выезде</li>
+                            <li><strong>Полная оплата:</strong> Когда Оплачено = Сумма бронирования, долг отсутствует</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="formula-description" style="margin-top: 15px;">
+                    <p><strong>Пример:</strong> Бронирование на 288 Br. Клиент внёс 100 Br при бронировании + 150 Br при заезде = <strong>250 Br оплачено, 38 Br остаётся</strong></p>
+                </div>
+            </div>
+
+            <!-- 6. Доход от номера -->
+            <div id="room-income" class="formula-section">
+                <h2>6. Доход от номера <span class="category-badge category-room">Номера</span></h2>
+                <div class="formula-box">
+                    <code>Доход_номера = Доход_бронирований + Доход_услуг</code>
+                </div>
+                <div class="formula-description">
+                    <p>Суммарный доход, полученный от конкретного номера за период через бронирования и услуги.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Бронирования</strong><br>
+                            <small>RoomId = ID</small>
+                        </div>
+                        <div class="flow-box operator">+</div>
+                        <div class="flow-box source">
+                            <strong>Услуги</strong><br>
+                            <small>RoomId = ID</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Доход номера</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>Бронирования:</strong> <code>Σ(Booking.PaidAmount)</code> где <code>RoomId = ID_номера</code></li>
+                            <li><strong>Услуги:</strong> <code>Σ(Transaction.Amount)</code> где <code>RoomId = ID_номера</code> и <code>Type = Доход</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Прибыль номера -->
+            <div id="room-profit" class="formula-section">
+                <h2>7. Прибыль номера <span class="category-badge category-room">Номера</span></h2>
+                <div class="formula-box">
+                    <code>Прибыль_номера = Доходы - Расходы</code>
+                </div>
+                <div class="formula-description">
+                    <p>Чистая прибыль от конкретного номера после вычета всех связанных с ним расходов.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Доходы</strong><br>
+                            <small>Брон + Услуги</small>
+                        </div>
+                        <div class="flow-box operator">−</div>
+                        <div class="flow-box source">
+                            <strong>Расходы</strong><br>
+                            <small>На номер</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Прибыль</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>Доходы:</strong> <code>Σ(Booking.PaidAmount)</code> + <code>Σ(Transaction.Amount где Type=Доход)</code></li>
+                            <li><strong>Расходы:</strong> <code>Σ(Transaction.Amount где Type=Расход)</code></li>
+                            <li><strong>Фильтр:</strong> Все операции где <code>RoomId = ID_номера</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Загрузка отеля -->
+            <div id="occupancy" class="formula-section">
+                <h2>8. Загрузка отеля <span class="category-badge category-room">Номера</span></h2>
+                <div class="formula-box">
+                    <code>Загрузка(%) = (Занятые_дни / Всего_дней) × 100</code>
+                </div>
+                <div class="formula-description">
+                    <p>Процент загрузок от общего доступного фонда номеров за период.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Занятые дни</strong><br>
+                            <small>Уникальные даты</small>
+                        </div>
+                        <div class="flow-box operator">÷</div>
+                        <div class="flow-box source">
+                            <strong>Всего дней</strong><br>
+                            <small>Дней × Номеров</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Загрузка %</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>Занятые дни:</strong> <code>Distinct(Все_даты_бронирований)</code></li>
+                            <li><strong>Всего дней:</strong> <code>(endDate - startDate).Days × Count(Rooms)</code></li>
+                            <li><strong>Формула:</strong> <code>bookedDays / totalDays × 100</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. Доход от услуги -->
+            <div id="service-income" class="formula-section">
+                <h2>9. Доход от услуги <span class="category-badge category-service">Услуги</span></h2>
+                <div class="formula-box">
+                    <code>Доход_услуги = Σ(Количество × Цена)</code>
+                </div>
+                <div class="formula-description">
+                    <p>Общая выручка от продажи услуги за период.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Продажи</strong><br>
+                            <small>ServiceId = ID</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Выручка</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>Транзакции:</strong> <code>Σ(Transaction.Amount)</code> где <code>ServiceId = ID_услуги</code></li>
+                            <li><strong>Фильтр:</strong> <code>Type = Доход</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. Цена за единицу -->
+            <div id="service-price" class="formula-section">
+                <h2>10. Цена за единицу услуги <span class="category-badge category-service">Услуги</span></h2>
+                <div class="formula-box">
+                    <code>Цена_ед = Доход / Количество</code>
+                </div>
+                <div class="formula-description">
+                    <p>Средняя цена за одну единицу услуги (общая выручка делённая на общее количество продаж).</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Выручка</strong><br>
+                            <small>Σ(Сумма)</small>
+                        </div>
+                        <div class="flow-box operator">÷</div>
+                        <div class="flow-box source">
+                            <strong>Продано</strong><br>
+                            <small>Σ(Количество)</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Цена/ед</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>Выручка:</strong> <code>Σ(Transaction.Amount)</code></li>
+                            <li><strong>Количество:</strong> <code>Σ(Transaction.Quantity > 0 ? Quantity : 1)</code></li>
+                            <li><strong>Защита:</strong> Если количество = 0, считается как 1</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. Всего потрачено клиентом -->
+            <div id="client-spent" class="formula-section">
+                <h2>11. Всего потрачено клиентом <span class="category-badge category-client">Клиенты</span></h2>
+                <div class="formula-box">
+                    <code>Всего_потрачено = На_номера + На_услуги</code>
+                </div>
+                <div class="formula-description">
+                    <p>Общая сумма расходов клиента на проживание и дополнительные услуги.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>На номера</strong><br>
+                            <small>Оплата броней</small>
+                        </div>
+                        <div class="flow-box operator">+</div>
+                        <div class="flow-box source">
+                            <strong>На услуги</strong><br>
+                            <small>Покупки услуг</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Всего</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>На номера:</strong> <code>Σ(Booking.PaidAmount)</code> где <code>ClientId = ID</code></li>
+                            <li><strong>На услуги:</strong> <code>Σ(Transaction.Amount)</code> где <code>BookingId в бронях клиента</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12. Итоговая сумма расхода -->
+            <div id="expense-total" class="formula-section">
+                <h2>12. Итоговая сумма расхода <span class="category-badge category-finance">Финансы</span></h2>
+                <div class="formula-box">
+                    <code>Amount = UnitPrice × Quantity</code>
+                </div>
+                <div class="formula-description">
+                    <p>Итоговая сумма расхода рассчитывается как цена за единицу умноженная на количество.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>UnitPrice</strong><br>
+                            <small>Цена/ед</small>
+                        </div>
+                        <div class="flow-box operator">×</div>
+                        <div class="flow-box source">
+                            <strong>Quantity</strong><br>
+                            <small>Количество</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Amount</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>UnitPrice:</strong> <code>Expense.UnitPrice</code> (цена за единицу)</li>
+                            <li><strong>Quantity:</strong> <code>Expense.Quantity</code> (количество, если = 0 считается как 1)</li>
+                            <li><strong>Расчёт:</strong> <code>ExpensePriceUpdateService</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 13. Общий итог операций -->
+            <div id="transaction-total" class="formula-section">
+                <h2>13. Общий итог операций <span class="category-badge category-finance">Финансы</span></h2>
+                <div class="formula-box">
+                    <code>Итого = Σ(Все операции)</code>
+                </div>
+                <div class="formula-description">
+                    <p>Суммарный итог по всем операциям на листе отчёта.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Транзакции</strong><br>
+                            <small>Все строки</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>ИТОГО</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>Доходы:</strong> <code>Σ(Transaction.Amount)</code> где <code>Type = Доход</code></li>
+                            <li><strong>Расходы:</strong> <code>Σ(Transaction.Amount)</code> где <code>Type = Расход</code></li>
+                            <li><strong>Группировка:</strong> По датам, месяцам, категориям</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 14. Месячная себестоимость номера -->
+            <div id="cost-monthly" class="formula-section">
+                <h2>14. Месячная себестоимость номера <span class="category-badge category-room">Номера</span></h2>
+                <div class="formula-box">
+                    <code>Cost_месяц = (Расходы_отеля ÷ Площадь_общая) × Площадь_номера</code>
+                </div>
+                <div class="formula-description">
+                    <p>Распределение общих ежемесячных расходов отеля между всеми номерами пропорционально их площади. Чем больше площадь номера, тем большая доля общих расходов приходится на него (больше отопление, освещение, уборка).</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Все расходы</strong><br>
+                            <small>Зарплаты + коммунальные</small>
+                        </div>
+                        <div class="flow-box operator">÷</div>
+                        <div class="flow-box source">
+                            <strong>Общая площадь</strong><br>
+                            <small>Всех номеров</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box source">
+                            <strong>Стоимость 1 м²</strong><br>
+                            <small>Расход на квадрат</small>
+                        </div>
+                        <div class="flow-box operator">×</div>
+                        <div class="flow-box source">
+                            <strong>Площадь номера</strong><br>
+                            <small>Конкретного</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Доля номера</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Как считается пошагово:</h4>
+                        <ul>
+                            <li><strong>Шаг 1:</strong> Складываем все расходы отеля за месяц (зарплаты сотрудников + коммунальные услуги + закупки + ремонт)</li>
+                            <li><strong>Шаг 2:</strong> Складываем площади всех номеров в отеле</li>
+                            <li><strong>Шаг 3:</strong> Делим общие расходы на общую площадь — получаем стоимость одного квадратного метра</li>
+                            <li><strong>Шаг 4:</strong> Умножаем стоимость м² на площадь конкретного номера — получаем долю расходов этого номера</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="formula-description" style="margin-top: 15px;">
+                    <p><strong>Пример:</strong> Расходы 14 500 Br ÷ Площадь 1330 м² = 10.9 Br/м² × 22 м² (Стандарт) = <strong>240 Br/мес</strong></p>
+                    <p style="margin-top: 10px;"><strong>Почему площадь:</strong> Коммунальные расходы (отопление, кондиционирование, освещение) прямо зависят от площади помещения. Большой Люкс потребляет больше энергии, чем небольшой Стандарт.</p>
+                </div>
+            </div>
+
+            <!-- 15. Себестоимость номеро-сутки -->
+            <div id="cost-daily" class="formula-section">
+                <h2>15. Себестоимость номеро-сутки <span class="category-badge category-room">Номера</span></h2>
+                <div class="formula-box">
+                    <code>Cost_сутки = Cost_месяц / (30 × Коэффициент_загрузки)</code>
+                </div>
+                <div class="formula-description">
+                    <p>Перевод месячной себестоимости в дневную с учётом среднего уровня загрузки номера.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Cost_мес</strong><br>
+                            <small>Расчёт выше</small>
+                        </div>
+                        <div class="flow-box operator">÷</div>
+                        <div class="flow-box source">
+                            <strong>Дни_занятые</strong><br>
+                            <small>30 × 0.8</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Cost_сутки</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>Cost_месяц:</strong> Результат предыдущей формулы</li>
+                            <li><strong>Дни в месяце:</strong> 30 (фиксировано)</li>
+                            <li><strong>Коэффициент загрузки:</strong> <code>occupancyRate = 0.8</code> (80%)</li>
+                            <li><strong>Занятые дни:</strong> <code>30 × 0.8 = 24 дня</code></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="formula-description" style="margin-top: 15px;">
+                    <p><strong>Пример:</strong> 240 Br ÷ (30 × 0.8) = 240 ÷ 24 = <strong>10 Br/сутки</strong></p>
+                    <p style="margin-top: 10px;"><strong>⚠️ Важный нюанс:</strong> Расходы делятся не на 30 дней, а на фактические занятые дни (24). Это значит, что если номер не сдаётся, расходы всё равно распределяются на ожидаемые продажи.</p>
+                </div>
+                <div class="visualization" style="margin-top: 20px;">
+                    <h3>📉 Обратная зависимость: загрузка vs себестоимость</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source" style="border-color: #e74c3c; background: #fdeaea;">
+                            <strong>Загрузка ↓</strong><br>
+                            <small>50% = 15 дней</small>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box result" style="border-color: #e74c3c; background: #fdeaea;">
+                            <strong>Cost ↑</strong><br>
+                            <small>240 ÷ 15 = 16 Br</small>
+                        </div>
+                    </div>
+                    <div class="flow-diagram">
+                        <div class="flow-box source" style="border-color: #27ae60; background: #e8f8f0;">
+                            <strong>Загрузка ↑</strong><br>
+                            <small>90% = 27 дней</small>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box result" style="border-color: #27ae60; background: #e8f8f0;">
+                            <strong>Cost ↓</strong><br>
+                            <small>240 ÷ 27 = 8.9 Br</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 16. Цена номера -->
+            <div id="room-price" class="formula-section">
+                <h2>16. Цена номера <span class="category-badge category-room">Номера</span></h2>
+                <div class="formula-box">
+                    <code>Цена = Себестоимость + Прибыль</code>
+                </div>
+                <div class="formula-description">
+                    <p>Финальная цена номера для клиента складывается из рассчитанной себестоимости и желаемой прибыли.</p>
+                </div>
+                <div class="visualization">
+                    <h3>📈 Визуализация</h3>
+                    <div class="flow-diagram">
+                        <div class="flow-box source">
+                            <strong>Cost</strong><br>
+                            <small>Себестоимость</small>
+                        </div>
+                        <div class="flow-box operator">+</div>
+                        <div class="flow-box source">
+                            <strong>Profit</strong><br>
+                            <small>Желаемая</small>
+                        </div>
+                        <div class="flow-arrow">=</div>
+                        <div class="flow-box result">
+                            <strong>Price</strong>
+                        </div>
+                    </div>
+                    <div class="source-list">
+                        <h4>📍 Источники данных:</h4>
+                        <ul>
+                            <li><strong>Себестоимость:</strong> <code>Room.Cost</code> (авторасчёт через сервис)</li>
+                            <li><strong>Прибыль:</strong> <code>Room.Profit</code> (вводит менеджер)</li>
+                            <li><strong>Результат:</strong> <code>Room.Price</code> (property с вычислением)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="formula-description" style="margin-top: 15px;">
+                    <p><strong>Пример:</strong> Cost = 10 Br + Profit = 36 Br = <strong>Price = 46 Br/сутки</strong></p>
+                </div>
+                <div class="visualization" style="margin-top: 20px;">
+                    <h3>🏷️ Полный цикл расчёта цены</h3>
+                    <div class="flow-diagram" style="flex-wrap: wrap;">
+                        <div class="flow-box source">
+                            <small>1. Расходы</small><br>
+                            <strong>14 500 Br</strong>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box source">
+                            <small>2. ₽/м²</small><br>
+                            <strong>10.9 Br</strong>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box source">
+                            <small>3. Cost_мес</small><br>
+                            <strong>240 Br</strong>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box source">
+                            <small>4. Cost_сутки</small><br>
+                            <strong>10 Br</strong>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box source">
+                            <small>5. + Profit</small><br>
+                            <strong>+36 Br</strong>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box result">
+                            <small>Итог</small><br>
+                            <strong>46 Br</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <p>HotelSystem Documentation © 2024 | Формулы финансовых отчётов</p>
+        </div>
+    </div>
+</body>
+</html>

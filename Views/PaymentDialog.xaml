@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Оплата бронирования" Height="350" Width="400"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
-        Background="#F5F6FA">
+        Background="#F5F6FA"
+        Language="ru-RU">
     <Grid Margin="25">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

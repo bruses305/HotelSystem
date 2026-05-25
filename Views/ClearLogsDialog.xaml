@@ -3,7 +3,8 @@
         Title="Очистка логов" Height="220" Width="280"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="#ECF0F1">
+        Background="#ECF0F1"
+        Language="ru-RU">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
